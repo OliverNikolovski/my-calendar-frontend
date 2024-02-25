@@ -1,0 +1,8 @@
+@import 'variables';
+
+.slot {
+  display: block;
+  height: 5rem;
+  border-bottom: 1px solid $gray-color;
+  border-left: 1px solid $gray-color;
+}
