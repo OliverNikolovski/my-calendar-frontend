@@ -1,7 +1,7 @@
 <div class="calendar-grid">
   <div class="calendar-grid-header">
     @for (day of days; track day) {
-      <div class='date-label'>
+      <div class='date' [class.active-day]='day | isCurrentDate'>
         <span class="day-of-week">{{ day.getDay() | weekDay }} </span>
         <span class="day-of-month">{{ day.getDate() }}</span>
       </div>

@@ -1,1 +1,4 @@
-<app-calendar-grid></app-calendar-grid>
+<div class="wrapper">
+  <app-sidebar (dateChange)="onDateChange($event)"></app-sidebar>
+  <app-calendar-grid [date]="selectedDate"></app-calendar-grid>
+</div>
