@@ -1,3 +1,4 @@
+<button (click)="changeTimeFormat()">CHANGE TIME FORMAT</button>
 <div class="calendar-grid">
   <div class="calendar-grid-header">
     @for (day of days; track day) {
@@ -7,10 +8,19 @@
       </div>
     }
   </div>
-    <div class='calendar-columns'>
+  <div class="calendar-grid-content">
+    <div class="content intervals">
+      @for (time of times; track time) {
+        <div class='interval'>
+          <span>{{ time | date: (isAmPm | apply: getTimeFormat) }}</span>
+        </div>
+      }
+    </div>
+    <div class='content calendar-columns'>
       @for (day of days; track day) {
         <app-day-column [date]='day'></app-day-column>
       }
     </div>
+  </div>
 </div>
 

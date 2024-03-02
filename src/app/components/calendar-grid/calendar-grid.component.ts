@@ -3,6 +3,8 @@ import {DayColumnComponent} from "../day-column/day-column.component";
 import {addDays, startOfWeek} from "date-fns";
 import {WeekDayPipe} from "../../pipes/week-day.pipe";
 import {IsCurrentDatePipe} from "../../pipes/is-current-date.pipe";
+import {DatePipe} from "@angular/common";
+import {ApplyPipe} from "../../pipes/apply.pipe";
 
 const components = [DayColumnComponent];
 const pipes = [WeekDayPipe]
@@ -10,7 +12,7 @@ const pipes = [WeekDayPipe]
 @Component({
   selector: 'app-calendar-grid',
   standalone: true,
-  imports: [...components, ...pipes, IsCurrentDatePipe],
+  imports: [...components, ...pipes, IsCurrentDatePipe, DatePipe, ApplyPipe],
   templateUrl: './calendar-grid.component.html',
   styleUrl: './calendar-grid.component.scss'
 })
@@ -18,6 +20,8 @@ export class CalendarGridComponent implements OnInit {
 
   days: Date[] = [];
   selectedDate!: Date;
+  times: Date[] = [];
+  isAmPm: boolean = true;
 
   @Input({required: true}) set date(date: Date | null) {
     this.selectedDate = date ?? new Date();
@@ -25,6 +29,19 @@ export class CalendarGridComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.times.push('');
+    // for (let i = 1; i <= 11; i++)  {
+    //   this.times.push(i + ' AM')
+    // }
+    // this.times.push('12 PM');
+    // for (let i = 1; i <= 11; i++)  {
+    //   this.times.push(i + ' PM')
+    // }
+    this.times = Array.from({ length: 24 }, (_, hour) => {
+      const date = new Date();
+      date.setHours(hour, 0, 0, 0);
+      return date;
+    });
   }
 
   private _changeCurrentDate() {
@@ -36,4 +53,11 @@ export class CalendarGridComponent implements OnInit {
     this.days = dates;
   }
 
+  changeTimeFormat() {
+    this.isAmPm = !this.isAmPm;
+  }
+
+  getTimeFormat(amPm: boolean): string {
+    return amPm ? 'shortTime' : 'H:mm';
+  }
 }

@@ -16,7 +16,6 @@ export class CalendarComponent {
   selectedDate: Date | null = new Date();
 
   onDateChange(date: Date | null) {
-    console.log('in calendar component', date);
     this.selectedDate = date;
   }
 }

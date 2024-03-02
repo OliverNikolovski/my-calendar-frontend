@@ -1,27 +1,70 @@
 @import 'variables';
 
 .calendar-grid {
-  height: calc(100vh - 190px);
+  height: calc(100vh - 5.5rem);
   padding-left: 1rem;
+}
+
+.calendar-grid-content {
+  overflow-y: auto;
+  height: 100%;
+  display: flex;
 }
 
 .calendar-columns {
   display: grid;
-  //grid-template-columns: 100px repeat(7, 1fr);
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: auto;
-  overflow-y: auto;
-  margin-top: 1rem;
-  height: 100%;
+  flex-grow: 1;
 }
 
 .calendar-grid-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  margin-left: $calendar-interval-width;
+  border-bottom: $calendar-grid-border-style;
+  padding-bottom: 1rem;
+}
+
+.intervals {
+  width: $calendar-interval-width;
+}
+
+.interval {
+  height: $calendar-interval-height;
+  text-align: center;
+  position: relative;
+
+  span {
+    color: darken($darker-gray-color, 20%);
+    font-size: 0.7rem;
+    position: relative;
+    top: -0.7rem;
+  }
+
+  &::after {
+    content: '';
+    border-bottom: 1px solid $gray-color;
+    width: 10px;
+    display: inline-block;
+    position: absolute;
+    top: -1px;
+    right: 0;
+  }
+
+  &:first-child {
+    span {
+      display: none;
+    }
+    &::after {
+      content: none;
+    }
+  }
 }
 
 .date {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
 }
@@ -54,12 +97,13 @@
     border: 1px solid $active-day-color;
     background-color: $active-day-color;
   }
+
   .day-of-month:hover {
     background-color: $active-day-hover-color;
     border: 1px solid $active-day-hover-color;
   }
+
   .day-of-week {
     color: $active-day-color;
   }
 }
-

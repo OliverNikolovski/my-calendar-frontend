@@ -1,5 +1,14 @@
+// colors
 $gray-color: #dfe1e5;
+$darker-gray-color: #a6a7a8;
 $past-dates-color: #cbb79d;
 $future-dates-color: #d7d6d6;
 $active-day-color: #1a73e8;
 $active-day-hover-color: darken($active-day-color, 10%);
+
+// sizes
+$calendar-interval-width: 4.5rem;
+$calendar-interval-height: 5rem;
+
+// styles
+$calendar-grid-border-style: 1px solid $gray-color;
