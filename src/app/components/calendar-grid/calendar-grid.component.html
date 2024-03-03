@@ -1,10 +1,15 @@
-<button (click)="changeTimeFormat()">CHANGE TIME FORMAT</button>
+<!--<button (click)="changeTimeFormat()">CHANGE TIME FORMAT</button>-->
 <div class="calendar-grid">
   <div class="calendar-grid-header">
     @for (day of days; track day) {
-      <div class='date' [class.active-day]='day | isCurrentDate'>
-        <span class="day-of-week">{{ day.getDay() | weekDay }} </span>
-        <span class="day-of-month">{{ day.getDate() }}</span>
+      <div class="header-content">
+        <div class='date' [class.active-day]='day | isCurrentDate'>
+          <span class="day-of-week">{{ day.getDay() | weekDay }} </span>
+          <span class="day-of-month">{{ day.getDate() }}</span>
+        </div>
+        <div class='whole-day-event'>
+
+        </div>
       </div>
     }
   </div>
