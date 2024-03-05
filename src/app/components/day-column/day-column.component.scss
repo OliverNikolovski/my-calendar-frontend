@@ -1,8 +1,19 @@
 @import 'variables';
 
+.day-column {
+  position: relative;
+}
+
 .slot {
   display: block;
   height: $calendar-interval-height;
   border-bottom: $calendar-grid-border-style;
   border-left: $calendar-grid-border-style;
+}
+
+.area {
+  position: absolute;
+  width: 0;
+  height: 0;
+  background-color: teal;
 }
