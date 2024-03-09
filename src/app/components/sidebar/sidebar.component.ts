@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Output} from '@angular/core';
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatDatepickerModule} from "@angular/material/datepicker";
@@ -9,6 +9,7 @@ import {MatCard} from "@angular/material/card";
   selector: 'app-sidebar',
   standalone: true,
   providers: [provideNativeDateAdapter()],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatDatepickerModule, MatCard],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'

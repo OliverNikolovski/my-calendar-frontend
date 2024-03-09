@@ -13,7 +13,7 @@
       </div>
     }
   </div>
-  <div class="calendar-grid-content">
+  <div class="calendar-grid-content" #calendarGrid>
     <div class="content intervals">
       @for (time of times; track time) {
         <div class='interval'>
@@ -23,7 +23,7 @@
     </div>
     <div class='content calendar-columns'>
       @for (day of days; track day) {
-        <app-day-column [date]='day'></app-day-column>
+        <app-day-column [date]='day' [calendarGridScrollTop]='calendarGrid.scrollTop'></app-day-column>
       }
     </div>
   </div>

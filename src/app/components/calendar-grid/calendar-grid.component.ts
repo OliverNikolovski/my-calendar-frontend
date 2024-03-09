@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {DayColumnComponent} from "../day-column/day-column.component";
 import {addDays, startOfWeek} from "date-fns";
 import {WeekDayPipe} from "../../pipes/week-day.pipe";
@@ -12,6 +12,7 @@ const pipes = [WeekDayPipe]
 @Component({
   selector: 'app-calendar-grid',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [...components, ...pipes, IsCurrentDatePipe, DatePipe, ApplyPipe],
   templateUrl: './calendar-grid.component.html',
   styleUrl: './calendar-grid.component.scss'
