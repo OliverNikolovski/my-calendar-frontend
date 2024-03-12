@@ -5,6 +5,8 @@ import {WeekDayPipe} from "../../pipes/week-day.pipe";
 import {IsCurrentDatePipe} from "../../pipes/is-current-date.pipe";
 import {DatePipe} from "@angular/common";
 import {ApplyPipe} from "../../pipes/apply.pipe";
+import {ComponentStore} from "@ngrx/component-store";
+import {MousePositionState} from "../../states/mouse-position.state";
 
 const components = [DayColumnComponent];
 const pipes = [WeekDayPipe]
@@ -15,7 +17,11 @@ const pipes = [WeekDayPipe]
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [...components, ...pipes, IsCurrentDatePipe, DatePipe, ApplyPipe],
   templateUrl: './calendar-grid.component.html',
-  styleUrl: './calendar-grid.component.scss'
+  styleUrl: './calendar-grid.component.scss',
+  providers: [ComponentStore],
+  host: {
+    '(document:mousemove)': 'onMouseMove($event)'
+  }
 })
 export class CalendarGridComponent implements OnInit {
 
@@ -29,7 +35,12 @@ export class CalendarGridComponent implements OnInit {
     this._changeCurrentDate();
   }
 
+  constructor(private readonly componentStore: ComponentStore<MousePositionState>) {
+  }
+
   ngOnInit(): void {
+    this.componentStore.setState({x: 0, y: 0});
+
     // this.times.push('');
     // for (let i = 1; i <= 11; i++)  {
     //   this.times.push(i + ' AM')
@@ -60,5 +71,9 @@ export class CalendarGridComponent implements OnInit {
 
   getTimeFormat(amPm: boolean): string {
     return amPm ? 'shortTime' : 'H:mm';
+  }
+
+  onMouseMove(event: MouseEvent) {
+    this.componentStore.setState({x: event.x, y: event.y});
   }
 }

@@ -2,13 +2,15 @@ import {
   AfterViewInit, ChangeDetectionStrategy,
   Component,
   ElementRef,
-  Input,
-  OnChanges,
+  Input, NgZone,
+  OnChanges, OnInit,
   Renderer2,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
 import {WeekDayPipe} from "../../pipes/week-day.pipe";
+import {ComponentStore} from "@ngrx/component-store";
+import {MousePositionState} from "../../states/mouse-position.state";
 
 @Component({
   selector: 'app-day-column',
@@ -19,14 +21,14 @@ import {WeekDayPipe} from "../../pipes/week-day.pipe";
   templateUrl: './day-column.component.html',
   styleUrl: './day-column.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    '(mousedown)': 'onmousedown($event)',
-    '(mouseup)': 'onmouseup($event)',
-    '(mousemove)': 'onmousemove($event)'
-  }
+  // host: {
+  //   '(mousedown)': 'onmousedown($event)',
+  //   '(mouseup)': 'onmouseup($event)',
+  //   '(mousemove)': 'onmousemove($event)'
+  // }
 })
-export class DayColumnComponent implements AfterViewInit, OnChanges {
-  @Input({ required: true }) date!: Date;
+export class DayColumnComponent implements AfterViewInit, OnChanges, OnInit {
+  @Input({required: true}) date!: Date;
   @Input() calendarGridScrollTop = 0;
 
   draggable: boolean = false;
@@ -37,7 +39,20 @@ export class DayColumnComponent implements AfterViewInit, OnChanges {
 
   @ViewChild('area') area!: ElementRef;
 
-  constructor(private _renderer: Renderer2) {
+  private mouseDownUnlisten?: () => void;
+
+  constructor(private readonly renderer: Renderer2,
+              private readonly elementRef: ElementRef,
+              private readonly ngZone: NgZone,
+              private readonly componentStore: ComponentStore<MousePositionState>) {
+  }
+
+  ngOnInit() {
+    this.componentStore.select(state => state)
+      .subscribe(({x, y}) => console.log('from day column:', x, y));
+
+    this.mouseDownUnlisten = this.renderer.listen(this.elementRef.nativeElement, 'mousedown', this.onmousedown);
+    //this.renderer.
   }
 
   ngAfterViewInit() {
@@ -59,28 +74,28 @@ export class DayColumnComponent implements AfterViewInit, OnChanges {
     this.draggable = true;
     // this.start = event.y;
     this.start = this.calendarGridScrollTop + event.y - 104;
-    this._renderer.setStyle(this.area.nativeElement, 'top', `${this.start}px`);
-    this._renderer.setStyle(this.area.nativeElement, 'width', `100%`);
-    //this._renderer.setStyle(this.area.nativeElement, 'height', `20px`);
+    this.renderer.setStyle(this.area.nativeElement, 'top', `${this.start}px`);
+    this.renderer.setStyle(this.area.nativeElement, 'width', `100%`);
+    //this.renderer.setStyle(this.area.nativeElement, 'height', `20px`);
 
-    // this.eventDiv = this._renderer.createElement('div') as HTMLElement;
-    // this._renderer.setStyle(this.eventDiv, 'background-color', 'blue');
-    // this._renderer.setStyle(this.eventDiv, 'width', '100%');
-    // this._renderer.setStyle(this.eventDiv, 'height', '0px');
+    // this.eventDiv = this.renderer.createElement('div') as HTMLElement;
+    // this.renderer.setStyle(this.eventDiv, 'background-color', 'blue');
+    // this.renderer.setStyle(this.eventDiv, 'width', '100%');
+    // this.renderer.setStyle(this.eventDiv, 'height', '0px');
   }
 
   onmouseup(event: MouseEvent) {
     this.draggable = false;
     this.end = event.y;
-    this._renderer.setStyle(this.area.nativeElement,  'height', `0px`);
+    this.renderer.setStyle(this.area.nativeElement, 'height', `0px`);
   }
 
   onmousemove(event: MouseEvent) {
     if (this.draggable) {
-      console.log(this.start);
+      //console.log(this.start);
       const height = (this.calendarGridScrollTop + event.y - 104) - this.start!!;
-     // console.log('height', height)
-      this._renderer.setStyle(this.area.nativeElement,  'height', `${height}px`);
+      // console.log('height', height)
+      this.renderer.setStyle(this.area.nativeElement, 'height', `${height}px`);
     }
   }
 }
