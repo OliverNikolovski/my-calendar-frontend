@@ -1,29 +1,8 @@
 <div class='day-column'>
   <div class="slots">
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
-    <time class='slot'></time>
+    @for (interval of intervals; track interval) {
+      <time class='slot' [ngStyle]='{ height: intervalHeight + "px" }'></time>
+    }
   </div>
   <div class='area' #area></div>
 </div>

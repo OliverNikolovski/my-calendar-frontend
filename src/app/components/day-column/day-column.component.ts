@@ -1,9 +1,14 @@
 import {
-  AfterViewInit, ChangeDetectionStrategy,
+  AfterViewInit,
+  ChangeDetectionStrategy,
   Component,
+  DoCheck,
   ElementRef,
-  Input, NgZone,
-  OnChanges, OnInit,
+  Input,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  OnInit,
   Renderer2,
   SimpleChanges,
   ViewChild
@@ -11,91 +16,101 @@ import {
 import {WeekDayPipe} from "../../pipes/week-day.pipe";
 import {ComponentStore} from "@ngrx/component-store";
 import {MousePositionState} from "../../states/mouse-position.state";
+import {NgStyle} from "@angular/common";
+import {addMinutes, startOfDay} from "date-fns";
+import {startOfToday} from "date-fns/startOfToday";
 
 @Component({
   selector: 'app-day-column',
   standalone: true,
   imports: [
-    WeekDayPipe
+    WeekDayPipe,
+    NgStyle
   ],
   templateUrl: './day-column.component.html',
   styleUrl: './day-column.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  // host: {
-  //   '(mousedown)': 'onmousedown($event)',
-  //   '(mouseup)': 'onmouseup($event)',
-  //   '(mousemove)': 'onmousemove($event)'
-  // }
 })
-export class DayColumnComponent implements AfterViewInit, OnChanges, OnInit {
+export class DayColumnComponent implements OnInit, OnDestroy {
   @Input({required: true}) date!: Date;
+  @Input({required: true}) intervals!: Date[];
+  @Input({required: true}) intervalHeight!: number;
+  @Input({required: true}) intervalDuration!: number;
+  @Input({required: true}) slotDuration!: number;
   @Input() calendarGridScrollTop = 0;
 
-  draggable: boolean = false;
-  start: number | null = null;
-  end: number | null = null;
-  //y: number | null = null;
-  eventDiv: HTMLElement | null = null;
+  isDraggingArea: boolean = false;
+  startOfClickedSlot: number | null = null;
 
   @ViewChild('area') area!: ElementRef;
 
   private mouseDownUnlisten?: () => void;
 
   constructor(private readonly renderer: Renderer2,
-              private readonly elementRef: ElementRef,
-              private readonly ngZone: NgZone,
+              private readonly hostElement: ElementRef,
               private readonly componentStore: ComponentStore<MousePositionState>) {
   }
 
   ngOnInit() {
     this.componentStore.select(state => state)
-      .subscribe(({x, y}) => console.log('from day column:', x, y));
+      .subscribe(({y, mouseUp}) => this.onMouseMove(y, mouseUp));
 
-    this.mouseDownUnlisten = this.renderer.listen(this.elementRef.nativeElement, 'mousedown', this.onmousedown);
-    //this.renderer.
+    this.mouseDownUnlisten = this.renderer.listen(this.hostElement.nativeElement, 'mousedown', this.onMouseDown.bind(this));
   }
 
-  ngAfterViewInit() {
-    //console.log('area', this.area);
+  ngOnDestroy() {
+    this.mouseDownUnlisten?.();
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    // if (changes['calendarGridScrollTop']) {
-    //   console.log('scroll top', this.calendarGridScrollTop)
-    // }
-  }
-
-  onmousedown(event: MouseEvent) {
-    // console.log('y', event.y);
-    // console.log('page y', event.pageY);
-    // console.log('offset y', event.offsetY);
-    // console.log('screen y', event.screenY);
-    //console.log('scroll top', this.calendarGridScrollTop);
-    this.draggable = true;
-    // this.start = event.y;
-    this.start = this.calendarGridScrollTop + event.y - 104;
-    this.renderer.setStyle(this.area.nativeElement, 'top', `${this.start}px`);
+  onMouseDown(event: MouseEvent) {
+    this.isDraggingArea = true;
+    this.startOfClickedSlot = this._getStartOfSlotContaining(event.y);
+    this.renderer.setStyle(this.area.nativeElement, 'top', `${this.startOfClickedSlot}px`);
     this.renderer.setStyle(this.area.nativeElement, 'width', `100%`);
-    //this.renderer.setStyle(this.area.nativeElement, 'height', `20px`);
-
-    // this.eventDiv = this.renderer.createElement('div') as HTMLElement;
-    // this.renderer.setStyle(this.eventDiv, 'background-color', 'blue');
-    // this.renderer.setStyle(this.eventDiv, 'width', '100%');
-    // this.renderer.setStyle(this.eventDiv, 'height', '0px');
   }
 
-  onmouseup(event: MouseEvent) {
-    this.draggable = false;
-    this.end = event.y;
+  onMouseUp(y: number) {
+    this.isDraggingArea = false;
     this.renderer.setStyle(this.area.nativeElement, 'height', `0px`);
+
+    const firstSelectedSlotNumber = this.startOfClickedSlot! / this._slotHeight;
+    const numberOfSlotsUntilLastSelectedSlot = Math.floor(y / this._slotHeight);
+    const numberOfSlotsInSelection = numberOfSlotsUntilLastSelectedSlot - firstSelectedSlotNumber;
+    const minutesInEvent = numberOfSlotsInSelection * this.slotDuration;
+    const minutesFromMidnightToFirstSelectedSlot = firstSelectedSlotNumber * this.slotDuration;
+    const eventStartTime = addMinutes(startOfToday(), minutesFromMidnightToFirstSelectedSlot);
+    const eventEndTime = addMinutes(eventStartTime, minutesInEvent);
+    console.log('eventEndTime',eventEndTime);
+    // open dialog to select repeating pattern
   }
 
-  onmousemove(event: MouseEvent) {
-    if (this.draggable) {
-      //console.log(this.start);
-      const height = (this.calendarGridScrollTop + event.y - 104) - this.start!!;
-      // console.log('height', height)
-      this.renderer.setStyle(this.area.nativeElement, 'height', `${height}px`);
+  onMouseMove(y: number, isMouseUp: boolean) {
+    if (!this.isDraggingArea)
+      return;
+    if (isMouseUp) {
+      this.onMouseUp(this._getDistanceToCursor(y));
+      return;
     }
+    const slotY = this._getStartOfSlotContaining(y);
+    const height = Math.abs(slotY - this.startOfClickedSlot!);
+    const top = Math.min(slotY, this.startOfClickedSlot!);
+    this.renderer.setStyle(this.area.nativeElement, 'top', `${top}px`);
+    this.renderer.setStyle(this.area.nativeElement, 'height', `${height}px`);
+  }
+
+  private _getStartOfSlotContaining(y: number): number {
+    const distanceToMouseCursor = this._getDistanceToCursor(y);
+    const orderNumberOfClickedSlot = Math.floor(distanceToMouseCursor / this._slotHeight);
+    return this._slotHeight * orderNumberOfClickedSlot;
+  }
+
+  private _getDistanceToCursor(y: number): number {
+    const bcr: DOMRect = (this.hostElement.nativeElement as HTMLElement).getBoundingClientRect();
+    return y - bcr.y; // the vertical distance from the top of weekly-calendar to the mouse click;
+  }
+
+  private get _slotHeight(): number {
+    const numberOfSlotsInInterval = this.intervalDuration / this.slotDuration;
+    return this.intervalHeight / numberOfSlotsInInterval;
   }
 }
