@@ -1,0 +1,25 @@
+<!--<h2 mat-dialog-title>Create event</h2>-->
+<form [formGroup]='form'>
+  <mat-dialog-content class="dialog-content">
+    <mat-form-field>
+      <mat-label>Add title</mat-label>
+      <input type='text' matInput>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Start date</mat-label>
+      <input matInput [matDatepicker]="start">
+      <mat-datepicker-toggle matIconSuffix [for]="start"></mat-datepicker-toggle>
+      <mat-datepicker #start></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Until</mat-label>
+      <input matInput [matDatepicker]="until">
+      <mat-datepicker-toggle matIconSuffix [for]="until"></mat-datepicker-toggle>
+      <mat-datepicker #until></mat-datepicker>
+    </mat-form-field>
+  </mat-dialog-content>
+  <button mat-button mat-flat-button color='primary' type='button'>Save</button>
+  <mat-icon aria-hidden="false" aria-label="Close" fontIcon="close" class="close-btn" (click)="onClose()"></mat-icon>
+</form>

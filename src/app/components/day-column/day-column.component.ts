@@ -19,6 +19,8 @@ import {MousePositionState} from "../../states/mouse-position.state";
 import {NgStyle} from "@angular/common";
 import {addMinutes, startOfDay} from "date-fns";
 import {startOfToday} from "date-fns/startOfToday";
+import {CreateEventDialog} from "../../dialogs/create-event.dialog/create-event.dialog";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-day-column',
@@ -48,7 +50,8 @@ export class DayColumnComponent implements OnInit, OnDestroy {
 
   constructor(private readonly renderer: Renderer2,
               private readonly hostElement: ElementRef,
-              private readonly componentStore: ComponentStore<MousePositionState>) {
+              private readonly componentStore: ComponentStore<MousePositionState>,
+              private readonly matDialog: MatDialog) {
   }
 
   ngOnInit() {
@@ -82,6 +85,9 @@ export class DayColumnComponent implements OnInit, OnDestroy {
     const eventEndTime = addMinutes(eventStartTime, minutesInEvent);
     console.log('eventEndTime',eventEndTime);
     // open dialog to select repeating pattern
+    this.matDialog.open(CreateEventDialog, {
+      data: { start: eventStartTime, end: eventEndTime }
+    });
   }
 
   onMouseMove(y: number, isMouseUp: boolean) {
