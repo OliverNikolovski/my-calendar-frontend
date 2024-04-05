@@ -21,6 +21,7 @@ import {addMinutes, startOfDay} from "date-fns";
 import {startOfToday} from "date-fns/startOfToday";
 import {CreateEventDialog} from "../../dialogs/create-event.dialog/create-event.dialog";
 import {MatDialog} from "@angular/material/dialog";
+import {TimeConfig} from "../../configs/time-config";
 
 @Component({
   selector: 'app-day-column',
@@ -40,6 +41,7 @@ export class DayColumnComponent implements OnInit, OnDestroy {
   @Input({required: true}) intervalDuration!: number;
   @Input({required: true}) slotDuration!: number;
   @Input() calendarGridScrollTop = 0;
+  @Input() timeFormat?: string;
 
   isDraggingArea: boolean = false;
   startOfClickedSlot: number | null = null;
@@ -86,7 +88,12 @@ export class DayColumnComponent implements OnInit, OnDestroy {
     console.log('eventEndTime',eventEndTime);
     // open dialog to select repeating pattern
     this.matDialog.open(CreateEventDialog, {
-      data: { start: eventStartTime, end: eventEndTime }
+      data: {
+        start: eventStartTime,
+        end: eventEndTime,
+        slotDuration: this.slotDuration,
+        timeFormat: this.timeFormat
+      }
     });
   }
 

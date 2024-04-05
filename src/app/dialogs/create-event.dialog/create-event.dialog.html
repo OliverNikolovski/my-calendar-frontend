@@ -1,25 +1,47 @@
 <!--<h2 mat-dialog-title>Create event</h2>-->
 <form [formGroup]='form'>
-  <mat-dialog-content class="dialog-content">
-    <mat-form-field>
-      <mat-label>Add title</mat-label>
-      <input type='text' matInput>
-    </mat-form-field>
+  <mat-form-field>
+    <mat-label>Add title</mat-label>
+    <input type='text' matInput formControlName='title'>
+  </mat-form-field>
 
+  <div class="event-start">
     <mat-form-field>
       <mat-label>Start date</mat-label>
-      <input matInput [matDatepicker]="start">
+      <input matInput [matDatepicker]="start" formControlName="start">
       <mat-datepicker-toggle matIconSuffix [for]="start"></mat-datepicker-toggle>
       <mat-datepicker #start></mat-datepicker>
     </mat-form-field>
+    <mat-form-field>
+      <mat-label>Time</mat-label>
+      <mat-select>
+        @if (dates$ | async; as dates) {
+          @for (date of dates; track date) {
+            <mat-option [value]="date">{{date | date:timeFormat}}</mat-option>
+          }
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
 
+  <div class="event-end">
     <mat-form-field>
       <mat-label>Until</mat-label>
-      <input matInput [matDatepicker]="until">
+      <input matInput [matDatepicker]="until" formControlName="end">
       <mat-datepicker-toggle matIconSuffix [for]="until"></mat-datepicker-toggle>
       <mat-datepicker #until></mat-datepicker>
     </mat-form-field>
-  </mat-dialog-content>
+    <mat-form-field>
+      <mat-label>Time</mat-label>
+      <mat-select>
+        @if (dates$ | async; as dates) {
+          @for (date of dates; track date) {
+            <mat-option [value]="date">{{date | date:timeFormat}}</mat-option>
+          }
+        }
+      </mat-select>
+    </mat-form-field>
+  </div>
   <button mat-button mat-flat-button color='primary' type='button'>Save</button>
   <mat-icon aria-hidden="false" aria-label="Close" fontIcon="close" class="close-btn" (click)="onClose()"></mat-icon>
 </form>

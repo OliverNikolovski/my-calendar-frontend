@@ -28,7 +28,8 @@
                         [intervals]='times'
                         [intervalHeight]='intervalHeight'
                         [intervalDuration]='intervalDuration'
-                        [slotDuration]='slotDuration'></app-day-column>
+                        [slotDuration]='slotDuration'
+                        [timeFormat]='isAmPm | apply: getTimeFormat'></app-day-column>
       }
     </div>
   </div>
