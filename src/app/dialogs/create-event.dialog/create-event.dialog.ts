@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, computed, Inject, signal, WritableSignal} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
 import {
   AbstractControl,
@@ -17,7 +17,18 @@ import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter} from "@angular/material/core";
 import {MatSelectChange, MatSelectModule} from "@angular/material/select";
-import {addMinutes, endOfMonth, format, getDate, getDay, startOfDay, startOfMonth} from "date-fns";
+import {
+  addMinutes,
+  differenceInMinutes,
+  endOfMonth,
+  format,
+  getDate,
+  getDay,
+  intervalToDuration,
+  set,
+  startOfDay,
+  startOfMonth
+} from "date-fns";
 import {Observable, of} from "rxjs";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
 import {MatCheckbox, MatCheckboxModule} from "@angular/material/checkbox";
@@ -85,14 +96,19 @@ export class CreateEventDialog {
   protected readonly Freq = Freq;
   protected readonly EventEndType = EventEndType;
   protected readonly days: WeekDay[] = [
-    { index: 0, name: 'Monday', label: 'M', selected: false },
-    { index: 1, name: 'Tuesday', label: 'T', selected: false },
-    { index: 2, name: 'Wednesday', label: 'W', selected: false },
-    { index: 3, name: 'Thursday', label: 'T', selected: false },
-    { index: 4, name: 'Friday', label: 'F', selected: false },
-    { index: 5, name: 'Saturday', label: 'S', selected: false },
-    { index: 6, name: 'Sunday', label: 'S', selected: false }
+    {index: 0, name: 'Monday', label: 'M', selected: false},
+    {index: 1, name: 'Tuesday', label: 'T', selected: false},
+    {index: 2, name: 'Wednesday', label: 'W', selected: false},
+    {index: 3, name: 'Thursday', label: 'T', selected: false},
+    {index: 4, name: 'Friday', label: 'F', selected: false},
+    {index: 5, name: 'Saturday', label: 'S', selected: false},
+    {index: 6, name: 'Sunday', label: 'S', selected: false}
   ];
+
+  private readonly eventStartTime = signal(this.data.start, {equal: this.compareByTime});
+  private readonly eventEndTime = signal(this.data.end, {equal: this.compareByTime});
+  private readonly duration = computed(() =>
+    differenceInMinutes(this.eventEndTime(), this.eventStartTime()));
 
   constructor(private readonly dialogRef: MatDialogRef<CreateEventDialog>,
               private readonly formBuilder: FormBuilder,
@@ -133,7 +149,14 @@ export class CreateEventDialog {
   }
 
   onSave() {
-    console.log(this.form.value);
+    console.log(this._eventCreationRequest);
+  }
+
+  private get _eventCreationRequest(): any {
+    return {
+      ...this.form.value,
+      duration: this.duration()
+    }
   }
 
   get timeIntervals(): string[] {
@@ -206,10 +229,22 @@ export class CreateEventDialog {
   }
 
   onEventStartTimeChange(event: MatSelectChange) {
-    this.startDateControl.setValue(event.value);
+    const date = event.value as Date;
+    const startDateWithChangedTime = set(this.startDateControl.value, {
+      hours: date.getHours(),
+      minutes: date.getMinutes(),
+      seconds: date.getSeconds()
+    });
+    this.eventStartTime.set(startDateWithChangedTime);
   }
 
   onEventEndTimeChange(event: MatSelectChange) {
-    this.endDateControl.setValue(event.value);
+    const date = event.value as Date;
+    const endDateWithChangedTime = set(this.data.end, {
+      hours: date.getHours(),
+      minutes: date.getMinutes(),
+      seconds: date.getSeconds()
+    });
+    this.eventEndTime.set(endDateWithChangedTime);
   }
 }
