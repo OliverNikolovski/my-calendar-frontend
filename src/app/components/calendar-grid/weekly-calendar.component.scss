@@ -19,28 +19,6 @@
   flex-grow: 1;
 }
 
-/* This styles the scrollbar track */
-::-webkit-scrollbar-track {
-  background-color: #f0f0f0; /* Light grey background */
-  border-radius: 10px; /* Rounded corners for the track */
-}
-
-/* This styles the scrollbar thumb (the part you drag) */
-::-webkit-scrollbar-thumb {
-  background-color: #c0c0c0; /* Darker grey thumb */
-  border-radius: 10px; /* Rounded corners for the thumb */
-}
-
-/* This styles the scrollbar itself (including the thumb, track, and button) */
-::-webkit-scrollbar {
-  width: 0.7rem; /* Width of the entire scrollbar */
-}
-
-/* Handle on hover */
-::-webkit-scrollbar-thumb:active {
-  background: darken(#c0c0c0, 20%);
-}
-
 .calendar-grid-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);

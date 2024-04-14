@@ -1,5 +1,5 @@
 <!--<h2 mat-dialog-title>Create event</h2>-->
-<form [formGroup]='form'>
+<form [formGroup]='form' (ngSubmit)="onSave()">
   <mat-form-field>
     <mat-label>Add title</mat-label>
     <input type='text' matInput formControlName='title'>
@@ -7,41 +7,108 @@
 
   <div class="event-start">
     <mat-form-field>
-      <mat-label>Start date</mat-label>
-      <input matInput [matDatepicker]="start" formControlName="start">
+      <mat-label>Date</mat-label>
+      <input matInput [matDatepicker]="start" formControlName="startDate">
       <mat-datepicker-toggle matIconSuffix [for]="start"></mat-datepicker-toggle>
       <mat-datepicker #start></mat-datepicker>
     </mat-form-field>
-    <mat-form-field>
-      <mat-label>Time</mat-label>
+  </div>
+
+  <div class="event-time-container">
+    <mat-form-field class='start-time'>
+      <mat-label>From</mat-label>
+      <mat-select (selectionChange)='onEventStartTimeChange($event)'>
+        @if (dates$ | async; as dates) {
+          @for (date of dates; track date) {
+            <mat-option [value]="date">{{ date | date:timeFormat }}</mat-option>
+          } @empty {
+            <p>No times</p>
+          }
+        }
+      </mat-select>
+    </mat-form-field>
+    <div class='event-time-separator'></div>
+    <mat-form-field class='end-time'>
+      <mat-label>To</mat-label>
       <mat-select>
         @if (dates$ | async; as dates) {
           @for (date of dates; track date) {
-            <mat-option [value]="date">{{date | date:timeFormat}}</mat-option>
+            <mat-option [value]="date">{{ date | date:timeFormat }}</mat-option>
+          } @empty {
+            <p>No times</p>
           }
         }
       </mat-select>
     </mat-form-field>
   </div>
 
-  <div class="event-end">
-    <mat-form-field>
-      <mat-label>Until</mat-label>
-      <input matInput [matDatepicker]="until" formControlName="end">
-      <mat-datepicker-toggle matIconSuffix [for]="until"></mat-datepicker-toggle>
-      <mat-datepicker #until></mat-datepicker>
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Time</mat-label>
-      <mat-select>
-        @if (dates$ | async; as dates) {
-          @for (date of dates; track date) {
-            <mat-option [value]="date">{{date | date:timeFormat}}</mat-option>
+  <span class='isRepeating'>
+    <mat-checkbox formControlName='isRepeating' color='primary'>Repeats</mat-checkbox>
+  </span>
+
+  @if (isRepeatingControl.value) {
+    <div formGroupName='recurrenceRule'>
+      <div class="interval-frequency-container">
+        <span class="repeat-every font-size-1rem">Repeat every</span>
+        <mat-form-field class="interval">
+          <input matInput type='number' formControlName='interval' min="1" #interval>
+        </mat-form-field>
+        <mat-form-field class="frequency">
+          <mat-select formControlName='freq'>
+            <mat-option [value]='Freq.DAILY'>day{{ +interval.value > 1 ? 's' : '' }}</mat-option>
+            <mat-option [value]='Freq.WEEKLY'>week{{ +interval.value > 1 ? 's' : '' }}</mat-option>
+            <mat-option [value]='Freq.MONTHLY'>month{{ +interval.value > 1 ? 's' : '' }}</mat-option>
+            <mat-option [value]='Freq.YEARLY'>year{{ +interval.value > 1 ? 's' : '' }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      @if (freqControl.value === Freq.WEEKLY) {
+        <p class='font-size-1rem'>Repeat on</p>
+        <div formArrayName='weekDays' class='weekDays'>
+          @for (weekDay of weekDays.controls; track weekDay; let i = $index) {
+            <span class='weekDay' [ngClass]='{ active: days[i].selected }'
+                  (click)='onWeekDaySelected(days[i])'>{{ days[i].label }}</span>
           }
-        }
-      </mat-select>
-    </mat-form-field>
+        </div>
+      } @else if (freqControl.value === Freq.MONTHLY) {
+        <mat-form-field class='width-5rem'>
+          <mat-select [formControl]='monthlyOptionControl'>
+            <mat-option value='0'>Monthly on day {{ data.start | getDay }}</mat-option>
+            <mat-option value='1'>Monthly on the {{ data.weekdayDetails | weekdayDetailsToString }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      }
+
+    </div>
+  }
+
+  <div class="event-end">
+    <label id='end' class='font-size-1rem margin-bottom-half-rem'>Ends</label>
+    <mat-radio-group aria-labelledby='end'
+                     class='event-end-type-radio-group'
+                     [formControl]='eventEndTypeControl'>
+      <mat-radio-button [value]='EventEndType.NEVER' (change)='onEventEndTypeChange($event)'>Never</mat-radio-button>
+      <div class='event-ends-on'>
+        <mat-radio-button [value]='EventEndType.ON_DATE' (change)='onEventEndTypeChange($event)'>On</mat-radio-button>
+        <mat-form-field class='event-end-date-picker-field'>
+          <input matInput [matDatepicker]="eventEnd" formControlName='endDate'>
+          <mat-datepicker-toggle matIconSuffix [for]="eventEnd"></mat-datepicker-toggle>
+          <mat-datepicker #eventEnd></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class='event-ends-after-occurrences'>
+        <mat-radio-button [value]='EventEndType.AFTER_N_OCCURRENCES' (change)='onEventEndTypeChange($event)'>After</mat-radio-button>
+        <mat-form-field>
+          <input type='number' matInput min='1' formControlName='occurrenceCount' #occurrenceCount/>
+          <span class="occurrences">occurrence{{ +occurrenceCount.value > 1 ? 's' : '' }}</span>
+        </mat-form-field>
+      </div>
+    </mat-radio-group>
   </div>
-  <button mat-button mat-flat-button color='primary' type='button'>Save</button>
+
+  <button mat-button mat-flat-button color='primary' type='submit' [disabled]='form.invalid'
+          class='margin-top-1rem'>Save
+  </button>
   <mat-icon aria-hidden="false" aria-label="Close" fontIcon="close" class="close-btn" (click)="onClose()"></mat-icon>
 </form>

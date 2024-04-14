@@ -20,7 +20,7 @@ export class CalendarComponent {
 
   @Input() intervalHeight: number = 80;
   @Input() intervalDuration: number = 60;
-  @Input() slotDuration: number = 30;
+  @Input() slotDuration: number = 15;
 
   onDateChange(date: Date | null) {
     this.selectedDate = date;

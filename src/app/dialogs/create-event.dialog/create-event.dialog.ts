@@ -1,18 +1,40 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
-import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators
+} from "@angular/forms";
 import {Freq} from "../../rrule/rrule-constants";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatDatepickerModule,} from "@angular/material/datepicker";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
-import {provideNativeDateAdapter} from "@angular/material/core";
-import {MatSelectModule} from "@angular/material/select";
-import {addMinutes, startOfDay} from "date-fns";
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter} from "@angular/material/core";
+import {MatSelectChange, MatSelectModule} from "@angular/material/select";
+import {addMinutes, endOfMonth, format, getDate, getDay, startOfDay, startOfMonth} from "date-fns";
 import {Observable, of} from "rxjs";
-import {AsyncPipe, DatePipe} from "@angular/common";
-import {TimeConfig} from "../../configs/time-config";
+import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
+import {MatCheckbox, MatCheckboxModule} from "@angular/material/checkbox";
+import {MatRadioChange, MatRadioGroup, MatRadioModule} from "@angular/material/radio";
+import {EventEndType} from "../../configs/event-end-type";
+import {DayByIndexPipe} from "../../pipes/day-by-index.pipe";
+import {GetDayPipe} from "../../pipes/get-day.pipe";
+import {WeekdayDetails} from "../../interfaces/weekday-details";
+import {WeekdayDetailsToStringPipe} from "../../pipes/weekday-details-to-string.pipe";
+import {EventType} from "@angular/router";
+
+interface WeekDay {
+  index: number;
+  name: string;
+  label: string;
+  selected: boolean;
+}
 
 @Component({
   standalone: true,
@@ -25,48 +47,93 @@ import {TimeConfig} from "../../configs/time-config";
     MatButtonModule,
     MatSelectModule,
     AsyncPipe,
-    DatePipe
+    DatePipe,
+    MatCheckboxModule,
+    MatRadioModule,
+    DayByIndexPipe,
+    NgClass,
+    GetDayPipe,
+    WeekdayDetailsToStringPipe
   ],
-  providers: [provideNativeDateAdapter()],
+  providers: [
+    provideNativeDateAdapter(),
+    {
+      provide: MAT_DATE_LOCALE,
+      useValue: 'fr'
+    }
+  ],
+  // providers: [
+  //   {
+  //     provide: DateAdapter, useClass: MyAdapter
+  //   },
+  //   {
+  //     provide: MAT_DATE_LOCALE,
+  //     useValue: 'fr'
+  //   }
+  // ],
   templateUrl: './create-event.dialog.html',
   styleUrl: './create-event.dialog.scss'
 })
 export class CreateEventDialog {
   form = this.initForm();
   dates$: Observable<Date[]> = of(this.dates);
-  readonly timeFormat = this.data.timeFormat;
+
+  monthlyOptionControl = new FormControl('0');
+  eventEndTypeControl = new FormControl(EventEndType.NEVER);
+
+  protected readonly timeFormat = this.data.timeFormat;
+  protected readonly Freq = Freq;
+  protected readonly EventEndType = EventEndType;
+  protected readonly days: WeekDay[] = [
+    { index: 0, name: 'Monday', label: 'M', selected: false },
+    { index: 1, name: 'Tuesday', label: 'T', selected: false },
+    { index: 2, name: 'Wednesday', label: 'W', selected: false },
+    { index: 3, name: 'Thursday', label: 'T', selected: false },
+    { index: 4, name: 'Friday', label: 'F', selected: false },
+    { index: 5, name: 'Saturday', label: 'S', selected: false },
+    { index: 6, name: 'Sunday', label: 'S', selected: false }
+  ];
 
   constructor(private readonly dialogRef: MatDialogRef<CreateEventDialog>,
               private readonly formBuilder: FormBuilder,
               @Inject(MAT_DIALOG_DATA)
-              private data: {
+              protected data: {
                 start: Date;
                 end: Date;
                 slotDuration: number;
                 timeFormat: string;
+                weekdayDetails: WeekdayDetails;
               }
   ) {
-    this.dialogRef.updateSize('30rem', '35rem');
+    dialogRef.updateSize('35rem', '35rem');
+    const dayIndex = getDay(data.start) - 1;
+    const transformedDayIndex = dayIndex < 0 ? 6 : dayIndex;
+    this.days[transformedDayIndex].selected = true;
   }
 
   private initForm(): FormGroup {
     return this.formBuilder.group({
-      title: ['', [Validators.required]],
-      start: [this.data.start, [Validators.required]],
-      end: [this.data.end],
+      title: [''],
+      startDate: [this.data.start, [Validators.required]],
+      endDate: [{value: this.data.end, disabled: true}],
+      // startTime: [this.data.start, [Validators.required]],
+      // endTime: [this.data.end],
       isRepeating: [false, [Validators.required]],
+      occurrenceCount: [{value: 1, disabled: true}],
       recurrenceRule: this.formBuilder.group({
         freq: [Freq.DAILY],
         interval: [1],
-        weekDays: [[]],
-        occurrenceCount: [null],
-        ruleText: ['']
+        weekDays: this.formBuilder.array([...Array(7)].map(_ => this.formBuilder.control(false)))
       })
     });
   }
 
   onClose() {
     this.dialogRef.close(false);
+  }
+
+  onSave() {
+    console.log(this.form.value);
   }
 
   get timeIntervals(): string[] {
@@ -93,4 +160,48 @@ export class CreateEventDialog {
     return dates;
   }
 
+  compareByTime(d1: Date, d2: Date): boolean {
+    return d1.getHours() === d2.getHours() && d1.getMinutes() === d2.getMinutes();
+  }
+
+  onEventEndTypeChange(event: MatRadioChange) {
+    if (event.value === EventEndType.NEVER) {
+      this.endDateControl.disable();
+      this.occurrenceCountControl.disable();
+    } else if (event.value === EventEndType.ON_DATE) {
+      this.endDateControl.enable();
+      this.occurrenceCountControl.disable();
+    } else { // EventEndType.AFTER_N_OCCURRENCES
+      this.endDateControl.disable();
+      this.occurrenceCountControl.enable();
+    }
+  }
+
+  get isRepeatingControl(): AbstractControl {
+    return this.form.get('isRepeating')!;
+  }
+
+  get freqControl(): AbstractControl {
+    return this.form.get('recurrenceRule.freq')!;
+  }
+
+  get endDateControl(): AbstractControl {
+    return this.form.get('endDate')!;
+  }
+
+  get occurrenceCountControl(): AbstractControl {
+    return this.form.get('occurrenceCount')!;
+  }
+
+  get weekDays(): FormArray {
+    return this.form.get('recurrenceRule.weekDays')! as FormArray;
+  }
+
+  onWeekDaySelected(day: WeekDay) {
+    day.selected = !day.selected;
+  }
+
+  onEventStartTimeChange(event: MatSelectChange) {
+    console.log('new select value',event.value);
+  }
 }

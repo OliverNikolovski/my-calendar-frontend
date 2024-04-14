@@ -17,11 +17,12 @@ import {WeekDayPipe} from "../../pipes/week-day.pipe";
 import {ComponentStore} from "@ngrx/component-store";
 import {MousePositionState} from "../../states/mouse-position.state";
 import {NgStyle} from "@angular/common";
-import {addMinutes, startOfDay} from "date-fns";
+import {addMinutes, endOfMonth, format, getDate, getDay, startOfDay, startOfMonth} from "date-fns";
 import {startOfToday} from "date-fns/startOfToday";
 import {CreateEventDialog} from "../../dialogs/create-event.dialog/create-event.dialog";
 import {MatDialog} from "@angular/material/dialog";
 import {TimeConfig} from "../../configs/time-config";
+import {WeekdayDetails} from "../../interfaces/weekday-details";
 
 @Component({
   selector: 'app-day-column',
@@ -83,16 +84,16 @@ export class DayColumnComponent implements OnInit, OnDestroy {
     const numberOfSlotsInSelection = numberOfSlotsUntilLastSelectedSlot - firstSelectedSlotNumber;
     const minutesInEvent = numberOfSlotsInSelection * this.slotDuration;
     const minutesFromMidnightToFirstSelectedSlot = firstSelectedSlotNumber * this.slotDuration;
-    const eventStartTime = addMinutes(startOfToday(), minutesFromMidnightToFirstSelectedSlot);
+    const eventStartTime = addMinutes(startOfDay(this.date), minutesFromMidnightToFirstSelectedSlot);
     const eventEndTime = addMinutes(eventStartTime, minutesInEvent);
-    console.log('eventEndTime',eventEndTime);
     // open dialog to select repeating pattern
     this.matDialog.open(CreateEventDialog, {
       data: {
         start: eventStartTime,
         end: eventEndTime,
         slotDuration: this.slotDuration,
-        timeFormat: this.timeFormat
+        timeFormat: this.timeFormat,
+        weekdayDetails: this._getWeekdayDetails
       }
     });
   }
@@ -109,6 +110,37 @@ export class DayColumnComponent implements OnInit, OnDestroy {
     const top = Math.min(slotY, this.startOfClickedSlot!);
     this.renderer.setStyle(this.area.nativeElement, 'top', `${top}px`);
     this.renderer.setStyle(this.area.nativeElement, 'height', `${height}px`);
+  }
+
+  private get _getWeekdayDetails(): WeekdayDetails {
+    // Formatting the date to get the weekday name
+    const weekdayName = format(this.date, 'EEEE'); // e.g., 'Monday'
+
+    // Getting the first day of the month
+    const firstDayOfMonth = startOfMonth(this.date);
+
+    // Getting the day of the week for the first day of the month (0-6, Sun-Sat)
+    const startDayOfWeek = getDay(firstDayOfMonth);
+
+    // Date of the given day
+    const dateDay = getDate(this.date);
+
+    // Calculating the index of the week in the month
+    const weekIndex = Math.ceil((dateDay + startDayOfWeek) / 7);
+
+    // Finding if it's the last occurrence of this weekday in the month
+    // We'll get the total days in the month and check if the next occurrence of this day exceeds the month
+    const lastDayOfMonth = getDate(endOfMonth(this.date));
+    const isLast = dateDay + 7 > lastDayOfMonth;
+
+    // Adjusting the ordinal term (e.g., "first", "second") based on the weekIndex
+    const ordinals = ["first", "second", "third", "fourth", "fifth"];
+    const ordinal = weekIndex <= ordinals.length ? ordinals[weekIndex - 1] : 'last';
+
+    return {
+      weekdayName,
+      occurrence: isLast ? 'last' : ordinal
+    };
   }
 
   private _getStartOfSlotContaining(y: number): number {

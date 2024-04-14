@@ -67,7 +67,6 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   ngDoCheck() {
-    //console.log("Change detection invoked!");
   }
 
   ngOnDestroy() {
