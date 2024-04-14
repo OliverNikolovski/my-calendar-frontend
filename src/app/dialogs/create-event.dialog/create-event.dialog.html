@@ -17,7 +17,7 @@
   <div class="event-time-container">
     <mat-form-field class='start-time'>
       <mat-label>From</mat-label>
-      <mat-select (selectionChange)='onEventStartTimeChange($event)'>
+      <mat-select (selectionChange)='onEventStartTimeChange($event)' [value]='data.start' [compareWith]='compareByTime'>
         @if (dates$ | async; as dates) {
           @for (date of dates; track date) {
             <mat-option [value]="date">{{ date | date:timeFormat }}</mat-option>
@@ -30,7 +30,7 @@
     <div class='event-time-separator'></div>
     <mat-form-field class='end-time'>
       <mat-label>To</mat-label>
-      <mat-select>
+      <mat-select (selectionChange)='onEventEndTimeChange($event)' [value]='data.end' [compareWith]='compareByTime'>
         @if (dates$ | async; as dates) {
           @for (date of dates; track date) {
             <mat-option [value]="date">{{ date | date:timeFormat }}</mat-option>

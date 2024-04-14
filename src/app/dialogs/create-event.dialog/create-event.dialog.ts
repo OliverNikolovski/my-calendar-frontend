@@ -185,6 +185,10 @@ export class CreateEventDialog {
     return this.form.get('recurrenceRule.freq')!;
   }
 
+  get startDateControl(): AbstractControl {
+    return this.form.get('startDate')!;
+  }
+
   get endDateControl(): AbstractControl {
     return this.form.get('endDate')!;
   }
@@ -202,6 +206,10 @@ export class CreateEventDialog {
   }
 
   onEventStartTimeChange(event: MatSelectChange) {
-    console.log('new select value',event.value);
+    this.startDateControl.setValue(event.value);
+  }
+
+  onEventEndTimeChange(event: MatSelectChange) {
+    this.endDateControl.setValue(event.value);
   }
 }
