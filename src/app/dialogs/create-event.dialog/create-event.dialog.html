@@ -43,7 +43,7 @@
   </div>
 
   <span class='isRepeating'>
-    <mat-checkbox formControlName='isRepeating' color='primary'>Repeats</mat-checkbox>
+    <mat-checkbox formControlName='isRepeating' color='primary' (change)='onIsRepeatingChange($event)'>Repeats</mat-checkbox>
   </span>
 
   @if (isRepeatingControl.value) {
@@ -85,10 +85,12 @@
 
   <div class="event-end">
     <label id='end' class='font-size-1rem margin-bottom-half-rem'>Ends</label>
+
     <mat-radio-group aria-labelledby='end'
                      class='event-end-type-radio-group'
                      [formControl]='eventEndTypeControl'>
       <mat-radio-button [value]='EventEndType.NEVER' (change)='onEventEndTypeChange($event)'>Never</mat-radio-button>
+
       <div class='event-ends-on'>
         <mat-radio-button [value]='EventEndType.ON_DATE' (change)='onEventEndTypeChange($event)'>On</mat-radio-button>
         <mat-form-field class='event-end-date-picker-field'>
@@ -97,6 +99,7 @@
           <mat-datepicker #eventEnd></mat-datepicker>
         </mat-form-field>
       </div>
+
       <div class='event-ends-after-occurrences'>
         <mat-radio-button [value]='EventEndType.AFTER_N_OCCURRENCES' (change)='onEventEndTypeChange($event)'>After</mat-radio-button>
         <mat-form-field>

@@ -134,13 +134,12 @@ export class DayColumnComponent implements OnInit, OnDestroy {
     const isLast = dateDay + 7 > lastDayOfMonth;
 
     // Adjusting the ordinal term (e.g., "first", "second") based on the weekIndex
-    const ordinals = ["first", "second", "third", "fourth", "fifth"];
+    const ordinals = ["first", "second", "third"];
     const ordinal = weekIndex <= ordinals.length ? ordinals[weekIndex - 1] : 'last';
+    const occurrence = isLast ? 'last' : ordinal;
+    const position = occurrence === 'first' ? 1 : occurrence === 'second' ? 2 : occurrence === 'third' ? 3 : -1;
 
-    return {
-      weekdayName,
-      occurrence: isLast ? 'last' : ordinal
-    };
+    return { weekdayName, occurrence, position };
   }
 
   private _getStartOfSlotContaining(y: number): number {

@@ -1,4 +1,4 @@
-import {Component, computed, Inject, signal, WritableSignal} from '@angular/core';
+import {Component, computed, Inject, OnInit, signal, WritableSignal} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
 import {
   AbstractControl,
@@ -15,7 +15,13 @@ import {MatInputModule} from "@angular/material/input";
 import {MatDatepickerModule,} from "@angular/material/datepicker";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE, provideNativeDateAdapter} from "@angular/material/core";
+import {
+  DateAdapter,
+  MAT_DATE_FORMATS,
+  MAT_DATE_LOCALE,
+  MatOptionSelectionChange,
+  provideNativeDateAdapter
+} from "@angular/material/core";
 import {MatSelectChange, MatSelectModule} from "@angular/material/select";
 import {
   addMinutes,
@@ -31,7 +37,7 @@ import {
 } from "date-fns";
 import {Observable, of} from "rxjs";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
-import {MatCheckbox, MatCheckboxModule} from "@angular/material/checkbox";
+import {MatCheckbox, MatCheckboxChange, MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioChange, MatRadioGroup, MatRadioModule} from "@angular/material/radio";
 import {EventEndType} from "../../configs/event-end-type";
 import {DayByIndexPipe} from "../../pipes/day-by-index.pipe";
@@ -39,6 +45,7 @@ import {GetDayPipe} from "../../pipes/get-day.pipe";
 import {WeekdayDetails} from "../../interfaces/weekday-details";
 import {WeekdayDetailsToStringPipe} from "../../pipes/weekday-details-to-string.pipe";
 import {EventType} from "@angular/router";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 interface WeekDay {
   index: number;
@@ -85,7 +92,7 @@ interface WeekDay {
   templateUrl: './create-event.dialog.html',
   styleUrl: './create-event.dialog.scss'
 })
-export class CreateEventDialog {
+export class CreateEventDialog implements OnInit {
   form = this.initForm();
   dates$: Observable<Date[]> = of(this.dates);
 
@@ -125,6 +132,39 @@ export class CreateEventDialog {
     const dayIndex = getDay(data.start) - 1;
     const transformedDayIndex = dayIndex < 0 ? 6 : dayIndex;
     this.days[transformedDayIndex].selected = true;
+
+    this.recurrenceRule.disable();
+    this.weekDays.disable();
+
+    this.freqControl.valueChanges.pipe(
+      takeUntilDestroyed()
+    ).subscribe(freq => {
+      if (freq === Freq.WEEKLY) {
+        this.weekDays.enable();
+        this.setPos.disable();
+      } else if (freq === Freq.MONTHLY) {
+        this.weekDays.disable();
+        this.monthlyOptionControl.value === '1' ? this.setPos.enable() : this.setPos.disable();
+      } else {
+        this.weekDays.disable();
+        this.setPos.disable();
+      }
+    });
+
+    this.monthlyOptionControl.valueChanges.pipe(
+      takeUntilDestroyed()
+    ).subscribe(value => {
+      if (value === '1' && this.freqControl.value === Freq.MONTHLY) {
+        this.setPos.setValue(this.data.weekdayDetails.position);
+        this.setPos.enable();
+      } else {
+        this.setPos.disable();
+      }
+    });
+  }
+
+  ngOnInit() {
+
   }
 
   private initForm(): FormGroup {
@@ -132,14 +172,13 @@ export class CreateEventDialog {
       title: [''],
       startDate: [this.data.start, [Validators.required]],
       endDate: [{value: this.data.end, disabled: true}],
-      // startTime: [this.data.start, [Validators.required]],
-      // endTime: [this.data.end],
       isRepeating: [false, [Validators.required]],
       occurrenceCount: [{value: 1, disabled: true}],
       recurrenceRule: this.formBuilder.group({
         freq: [Freq.DAILY],
         interval: [1],
-        weekDays: this.formBuilder.array([...Array(7)].map(_ => this.formBuilder.control(false)))
+        weekDays: this.formBuilder.array([...Array(7)].map(_ => this.formBuilder.control(false))),
+        setPos: [{value: null, disabled: true}]
       })
     });
   }
@@ -193,6 +232,7 @@ export class CreateEventDialog {
       this.occurrenceCountControl.disable();
     } else if (event.value === EventEndType.ON_DATE) {
       this.endDateControl.enable();
+      this.endDateControl.setValue(this.startDateControl.value);
       this.occurrenceCountControl.disable();
     } else { // EventEndType.AFTER_N_OCCURRENCES
       this.endDateControl.disable();
@@ -224,7 +264,16 @@ export class CreateEventDialog {
     return this.form.get('recurrenceRule.weekDays')! as FormArray;
   }
 
+  get recurrenceRule(): FormGroup {
+    return this.form.get('recurrenceRule')! as FormGroup;
+  }
+
+  get setPos(): AbstractControl {
+    return this.form.get('recurrenceRule.setPos')!;
+  }
+
   onWeekDaySelected(day: WeekDay) {
+    console.log('day',day)
     day.selected = !day.selected;
   }
 
@@ -235,6 +284,7 @@ export class CreateEventDialog {
       minutes: date.getMinutes(),
       seconds: date.getSeconds()
     });
+    this.startDateControl.setValue(startDateWithChangedTime);
     this.eventStartTime.set(startDateWithChangedTime);
   }
 
@@ -246,5 +296,16 @@ export class CreateEventDialog {
       seconds: date.getSeconds()
     });
     this.eventEndTime.set(endDateWithChangedTime);
+  }
+
+  onIsRepeatingChange(event: MatCheckboxChange) {
+    if (event.checked) {
+      this.recurrenceRule.enable();
+      this.weekDays.disable();
+      this.setPos.disable();
+    } else {
+      console.log('disabled')
+      this.recurrenceRule.disable();
+    }
   }
 }
