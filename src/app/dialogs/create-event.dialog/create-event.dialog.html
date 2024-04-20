@@ -66,9 +66,9 @@
       @if (freqControl.value === Freq.WEEKLY) {
         <p class='font-size-1rem'>Repeat on</p>
         <div formArrayName='weekDays' class='weekDays'>
-          @for (weekDay of weekDays.controls; track weekDay; let i = $index) {
-            <span class='weekDay' [ngClass]='{ active: days[i].selected }'
-                  (click)='onWeekDaySelected(days[i])'>{{ days[i].label }}</span>
+          @for (day of days; track day) {
+            <span class='weekDay' [ngClass]='{ active: day.selected }'
+                  (click)='onWeekDaySelected(day)'>{{ day.label }}</span>
           }
         </div>
       } @else if (freqControl.value === Freq.MONTHLY) {

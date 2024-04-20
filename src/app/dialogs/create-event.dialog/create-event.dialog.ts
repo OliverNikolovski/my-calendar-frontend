@@ -132,6 +132,7 @@ export class CreateEventDialog implements OnInit {
     const dayIndex = getDay(data.start) - 1;
     const transformedDayIndex = dayIndex < 0 ? 6 : dayIndex;
     this.days[transformedDayIndex].selected = true;
+    this.weekDays.setValue([this.days[transformedDayIndex].name]);
 
     this.recurrenceRule.disable();
     this.weekDays.disable();
@@ -177,7 +178,7 @@ export class CreateEventDialog implements OnInit {
       recurrenceRule: this.formBuilder.group({
         freq: [Freq.DAILY],
         interval: [1],
-        weekDays: this.formBuilder.array([...Array(7)].map(_ => this.formBuilder.control(false))),
+        weekDays: [[]],
         setPos: [{value: null, disabled: true}]
       })
     });
@@ -260,8 +261,8 @@ export class CreateEventDialog implements OnInit {
     return this.form.get('occurrenceCount')!;
   }
 
-  get weekDays(): FormArray {
-    return this.form.get('recurrenceRule.weekDays')! as FormArray;
+  get weekDays(): AbstractControl {
+    return this.form.get('recurrenceRule.weekDays')!;
   }
 
   get recurrenceRule(): FormGroup {
@@ -273,8 +274,12 @@ export class CreateEventDialog implements OnInit {
   }
 
   onWeekDaySelected(day: WeekDay) {
-    console.log('day',day)
     day.selected = !day.selected;
+    if (day.selected) {
+      this.weekDays.setValue([...this.weekDays.value, day.name]);
+    } else {
+      this.weekDays.setValue((this.weekDays.value as string[]).filter(s => s !== day.name));
+    }
   }
 
   onEventStartTimeChange(event: MatSelectChange) {
@@ -304,7 +309,6 @@ export class CreateEventDialog implements OnInit {
       this.weekDays.disable();
       this.setPos.disable();
     } else {
-      console.log('disabled')
       this.recurrenceRule.disable();
     }
   }

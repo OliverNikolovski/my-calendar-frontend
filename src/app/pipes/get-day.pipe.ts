@@ -7,8 +7,8 @@ import {getDate, getDay} from "date-fns";
 })
 export class GetDayPipe implements PipeTransform {
 
-  transform(date: Date): any {
-    return getDate(date)
+  transform(date: Date): number {
+    return getDate(date);
   }
 
 }
