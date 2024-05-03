@@ -3,7 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   DoCheck,
-  ElementRef,
+  ElementRef, inject, input,
   Input,
   NgZone,
   OnChanges,
@@ -17,25 +17,52 @@ import {WeekDayPipe} from "../../pipes/week-day.pipe";
 import {ComponentStore} from "@ngrx/component-store";
 import {MousePositionState} from "../../states/mouse-position.state";
 import {NgStyle} from "@angular/common";
-import {addMinutes, endOfMonth, format, getDate, getDay, startOfDay, startOfMonth} from "date-fns";
+import {
+  addMinutes,
+  differenceInMinutes,
+  endOfMonth,
+  format,
+  getDate,
+  getDay,
+  set,
+  startOfDay,
+  startOfMonth
+} from "date-fns";
 import {startOfToday} from "date-fns/startOfToday";
 import {CreateEventDialog} from "../../dialogs/create-event.dialog/create-event.dialog";
 import {MatDialog} from "@angular/material/dialog";
 import {TimeConfig} from "../../configs/time-config";
 import {WeekdayDetails} from "../../interfaces/weekday-details";
+import {DayEventsComponent} from "../day-events/day-events.component";
+import {CalendarEvent} from "../../interfaces/calendar-event";
+import {filter, switchMap} from "rxjs";
+import {CalendarEventService} from "../../services/calendar-event.service";
 
 @Component({
   selector: 'app-day-column',
   standalone: true,
   imports: [
     WeekDayPipe,
-    NgStyle
+    NgStyle,
+    DayEventsComponent
   ],
   templateUrl: './day-column.component.html',
   styleUrl: './day-column.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DayColumnComponent implements OnInit, OnDestroy {
+  testEvents: CalendarEvent[] = [
+    {
+      id: 1,
+      from: set(new Date(), { hours: 9, minutes: 0, seconds: 0, milliseconds: 0 }),
+      duration: 60,
+      isRepeating: false
+    }
+  ];
+  events = input<CalendarEvent[]>(this.testEvents);
+
+  private readonly _calendarEventService = inject(CalendarEventService);
+
   @Input({required: true}) date!: Date;
   @Input({required: true}) intervals!: Date[];
   @Input({required: true}) intervalHeight!: number;
@@ -86,8 +113,11 @@ export class DayColumnComponent implements OnInit, OnDestroy {
     const minutesFromMidnightToFirstSelectedSlot = firstSelectedSlotNumber * this.slotDuration;
     const eventStartTime = addMinutes(startOfDay(this.date), minutesFromMidnightToFirstSelectedSlot);
     const eventEndTime = addMinutes(eventStartTime, minutesInEvent);
+    if (differenceInMinutes(eventEndTime, eventStartTime) < this.slotDuration) {
+      return;
+    }
     // open dialog to select repeating pattern
-    this.matDialog.open(CreateEventDialog, {
+    const dialogRef = this.matDialog.open(CreateEventDialog, {
       data: {
         start: eventStartTime,
         end: eventEndTime,
@@ -96,6 +126,11 @@ export class DayColumnComponent implements OnInit, OnDestroy {
         weekdayDetails: this._getWeekdayDetails
       }
     });
+    // dialogRef.afterClosed()
+    //   .pipe(
+    //     filter(Boolean),
+    //     switchMap(request => this._calendarEventService.createEvent(request))
+    //   ).subscribe(() => console.log('saved'));
   }
 
   onMouseMove(y: number, isMouseUp: boolean) {

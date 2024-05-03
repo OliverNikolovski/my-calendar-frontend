@@ -45,6 +45,15 @@ form {
   display: none;
 }
 
+:host ::ng-deep .event-end-date-picker-wrapper .event-end-date-picker-field .mat-mdc-form-field-subscript-wrapper {
+  display: none;
+}
+
+.event-end-date-picker-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
 .repeat-every {
   align-self: center;
 }
@@ -71,6 +80,10 @@ form {
 .event-end-type-radio-group {
   display: flex;
   flex-direction: column;
+}
+
+.event-end-option {
+  //min-height: 5rem;
 }
 
 #end {

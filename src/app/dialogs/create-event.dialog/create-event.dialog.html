@@ -80,35 +80,39 @@
         </mat-form-field>
       }
 
+      <div class="event-end">
+        <label id='end' class='font-size-1rem margin-bottom-half-rem'>Ends</label>
+
+        <mat-radio-group aria-labelledby='end'
+                         class='event-end-type-radio-group'
+                         [formControl]='eventEndTypeControl'>
+          <mat-radio-button [value]='EventEndType.NEVER' (change)='onEventEndTypeChange($event)' class='event-end-option'>Never</mat-radio-button>
+
+          <div class='event-end-option event-ends-on'>
+            <mat-radio-button [value]='EventEndType.ON_DATE' (change)='onEventEndTypeChange($event)'>On</mat-radio-button>
+            <div class='event-end-date-picker-wrapper'>
+              <mat-form-field class='event-end-date-picker-field'>
+                <input matInput [matDatepicker]="eventEnd" formControlName='endDate'>
+                <mat-datepicker-toggle matIconSuffix [for]="eventEnd"></mat-datepicker-toggle>
+                <mat-datepicker #eventEnd></mat-datepicker>
+              </mat-form-field>
+              @if (form.errors?.['endDateAfterStartDate']) {
+                <span class='error'>End date cannot be before start date</span>
+              }
+            </div>
+          </div>
+
+          <div class='event-end-option event-ends-after-occurrences'>
+            <mat-radio-button [value]='EventEndType.AFTER_N_OCCURRENCES' (change)='onEventEndTypeChange($event)'>After</mat-radio-button>
+            <mat-form-field>
+              <input type='number' matInput min='1' formControlName='occurrenceCount' #occurrenceCount/>
+              <span class="occurrences">occurrence{{ +occurrenceCount.value > 1 ? 's' : '' }}</span>
+            </mat-form-field>
+          </div>
+        </mat-radio-group>
+      </div>
     </div>
   }
-
-  <div class="event-end">
-    <label id='end' class='font-size-1rem margin-bottom-half-rem'>Ends</label>
-
-    <mat-radio-group aria-labelledby='end'
-                     class='event-end-type-radio-group'
-                     [formControl]='eventEndTypeControl'>
-      <mat-radio-button [value]='EventEndType.NEVER' (change)='onEventEndTypeChange($event)'>Never</mat-radio-button>
-
-      <div class='event-ends-on'>
-        <mat-radio-button [value]='EventEndType.ON_DATE' (change)='onEventEndTypeChange($event)'>On</mat-radio-button>
-        <mat-form-field class='event-end-date-picker-field'>
-          <input matInput [matDatepicker]="eventEnd" formControlName='endDate'>
-          <mat-datepicker-toggle matIconSuffix [for]="eventEnd"></mat-datepicker-toggle>
-          <mat-datepicker #eventEnd></mat-datepicker>
-        </mat-form-field>
-      </div>
-
-      <div class='event-ends-after-occurrences'>
-        <mat-radio-button [value]='EventEndType.AFTER_N_OCCURRENCES' (change)='onEventEndTypeChange($event)'>After</mat-radio-button>
-        <mat-form-field>
-          <input type='number' matInput min='1' formControlName='occurrenceCount' #occurrenceCount/>
-          <span class="occurrences">occurrence{{ +occurrenceCount.value > 1 ? 's' : '' }}</span>
-        </mat-form-field>
-      </div>
-    </mat-radio-group>
-  </div>
 
   <button mat-button mat-flat-button color='primary' type='submit' [disabled]='form.invalid'
           class='margin-top-1rem'>Save

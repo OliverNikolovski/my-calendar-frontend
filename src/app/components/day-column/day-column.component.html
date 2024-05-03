@@ -4,5 +4,11 @@
       <time class='slot' [ngStyle]='{ height: intervalHeight + "px" }'></time>
     }
   </div>
+
+  <day-events [intervalHeight]='intervalHeight'
+              [intervalDuration]='intervalDuration'
+              [minSlotDuration]='slotDuration'
+              [events]='events()'></day-events>
+
   <div class='area' #area></div>
 </div>

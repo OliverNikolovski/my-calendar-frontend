@@ -8,7 +8,6 @@ import {WeekdayDetails} from "../interfaces/weekday-details";
 export class WeekdayDetailsToStringPipe implements PipeTransform {
 
   transform(weekdayDetails: WeekdayDetails): string {
-    console.log('called')
     return `${weekdayDetails.occurrence} ${weekdayDetails.weekdayName}`;
   }
 

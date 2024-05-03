@@ -1,0 +1,3 @@
+@for (event of events(); track event.id) {
+  <div class='event' [ngStyle]='{"top.px": eventOffsetTop(event), "height.px": eventHeight(event)}'></div>
+}

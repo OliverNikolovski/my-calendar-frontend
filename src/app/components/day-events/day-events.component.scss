@@ -1,0 +1,7 @@
+@import 'variables';
+
+.event {
+  position: absolute;
+  background-color: $calendar-event-color;
+  width: 100%;
+}

@@ -21,7 +21,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .margin-bottom-half-rem {
   margin-bottom: 0.5rem;
 }
-
+.error {
+  color: red;
+}
 
 /* This styles the scrollbar track */
 ::-webkit-scrollbar-track {

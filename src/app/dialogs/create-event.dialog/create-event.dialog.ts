@@ -6,7 +6,7 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
-  ReactiveFormsModule,
+  ReactiveFormsModule, ValidationErrors, ValidatorFn,
   Validators
 } from "@angular/forms";
 import {Freq} from "../../rrule/rrule-constants";
@@ -46,6 +46,8 @@ import {WeekdayDetails} from "../../interfaces/weekday-details";
 import {WeekdayDetailsToStringPipe} from "../../pipes/weekday-details-to-string.pipe";
 import {EventType} from "@angular/router";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {endDateAfterStartDateValidator} from "./create-event-validators";
+import {CalendarEventCreateRequest} from "../../interfaces/requests/calendar-event-create.request";
 
 interface WeekDay {
   index: number;
@@ -93,11 +95,15 @@ interface WeekDay {
   styleUrl: './create-event.dialog.scss'
 })
 export class CreateEventDialog implements OnInit {
+  private readonly eventStartTime = signal(this.data.start, {equal: this.compareByTime});
+  private readonly eventEndTime = signal(this.data.end, {equal: this.compareByTime});
+  private readonly duration = computed(() =>
+    differenceInMinutes(this.eventEndTime(), this.eventStartTime()));
   form = this.initForm();
   dates$: Observable<Date[]> = of(this.dates);
 
-  monthlyOptionControl = new FormControl('0');
-  eventEndTypeControl = new FormControl(EventEndType.NEVER);
+  monthlyOptionControl = new FormControl<string>('0');
+  eventEndTypeControl = new FormControl<EventEndType>(EventEndType.NEVER);
 
   protected readonly timeFormat = this.data.timeFormat;
   protected readonly Freq = Freq;
@@ -111,11 +117,6 @@ export class CreateEventDialog implements OnInit {
     {index: 5, name: 'Saturday', label: 'S', selected: false},
     {index: 6, name: 'Sunday', label: 'S', selected: false}
   ];
-
-  private readonly eventStartTime = signal(this.data.start, {equal: this.compareByTime});
-  private readonly eventEndTime = signal(this.data.end, {equal: this.compareByTime});
-  private readonly duration = computed(() =>
-    differenceInMinutes(this.eventEndTime(), this.eventStartTime()));
 
   constructor(private readonly dialogRef: MatDialogRef<CreateEventDialog>,
               private readonly formBuilder: FormBuilder,
@@ -165,34 +166,37 @@ export class CreateEventDialog implements OnInit {
   }
 
   ngOnInit() {
-
   }
 
   private initForm(): FormGroup {
     return this.formBuilder.group({
       title: [''],
       startDate: [this.data.start, [Validators.required]],
-      endDate: [{value: this.data.end, disabled: true}],
       isRepeating: [false, [Validators.required]],
-      occurrenceCount: [{value: 1, disabled: true}],
       recurrenceRule: this.formBuilder.group({
         freq: [Freq.DAILY],
         interval: [1],
         weekDays: [[]],
-        setPos: [{value: null, disabled: true}]
+        setPos: [{value: null, disabled: true}],
+        occurrenceCount: [{value: 1, disabled: true}],
+        endDate: [{value: this.data.end, disabled: true}]
       })
+    }, {
+      validators: [endDateAfterStartDateValidator()]
     });
   }
 
   onClose() {
-    this.dialogRef.close(false);
+    this.dialogRef.close(null);
   }
 
   onSave() {
-    console.log(this._eventCreationRequest);
+    const eventCreatingRequest = this._eventCreationRequest;
+    console.log(eventCreatingRequest);
+    this.dialogRef.close(eventCreatingRequest);
   }
 
-  private get _eventCreationRequest(): any {
+  private get _eventCreationRequest(): CalendarEventCreateRequest {
     return {
       ...this.form.value,
       duration: this.duration()
@@ -254,11 +258,11 @@ export class CreateEventDialog implements OnInit {
   }
 
   get endDateControl(): AbstractControl {
-    return this.form.get('endDate')!;
+    return this.form.get('recurrenceRule.endDate')!;
   }
 
   get occurrenceCountControl(): AbstractControl {
-    return this.form.get('occurrenceCount')!;
+    return this.form.get('recurrenceRule.occurrenceCount')!;
   }
 
   get weekDays(): AbstractControl {
@@ -312,4 +316,16 @@ export class CreateEventDialog implements OnInit {
       this.recurrenceRule.disable();
     }
   }
+
+  // startEndTimesErrorValidator(): ValidatorFn {
+  //   return () => {
+  //     console.log('START TIME', this.eventStartTime(), 'END TIME ',this.eventEndTime());
+  //     return this.eventStartTime() > this.eventEndTime() ? { startEndTimesError: true } : null;
+  //   }
+  // }
+
+  // startEndTimesErrorValidator: () => ValidatorFn =
+  //   () => (control: AbstractControl): ValidationErrors | null => this.eventStartTime() > this.eventEndTime() ? { startEndTimesError: true } : null;
+
+
 }
