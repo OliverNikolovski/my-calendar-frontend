@@ -5,7 +5,7 @@ export interface CalendarEventCreateRequest {
   duration: number;
   endDate?: Date;
   isRepeating: boolean;
-  recurrenceRule?: RepeatingPattern;
+  repeatingPattern?: RepeatingPattern;
   title?: string;
   description?: string;
 }

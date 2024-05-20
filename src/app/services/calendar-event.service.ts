@@ -8,7 +8,7 @@ import {HttpClient} from "@angular/common/http";
 })
 export class CalendarEventService {
 
-  private readonly baseUrl = 'localhost:8080/api';
+  private readonly baseUrl = 'api/calendar-events';
 
   private readonly _http = inject(HttpClient);
 

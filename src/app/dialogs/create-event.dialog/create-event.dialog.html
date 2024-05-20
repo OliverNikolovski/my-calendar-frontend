@@ -47,14 +47,14 @@
   </span>
 
   @if (isRepeatingControl.value) {
-    <div formGroupName='recurrenceRule'>
+    <div formGroupName='repeatingPattern'>
       <div class="interval-frequency-container">
         <span class="repeat-every font-size-1rem">Repeat every</span>
         <mat-form-field class="interval">
           <input matInput type='number' formControlName='interval' min="1" #interval>
         </mat-form-field>
         <mat-form-field class="frequency">
-          <mat-select formControlName='freq'>
+          <mat-select formControlName='frequency'>
             <mat-option [value]='Freq.DAILY'>day{{ +interval.value > 1 ? 's' : '' }}</mat-option>
             <mat-option [value]='Freq.WEEKLY'>week{{ +interval.value > 1 ? 's' : '' }}</mat-option>
             <mat-option [value]='Freq.MONTHLY'>month{{ +interval.value > 1 ? 's' : '' }}</mat-option>
@@ -63,7 +63,7 @@
         </mat-form-field>
       </div>
 
-      @if (freqControl.value === Freq.WEEKLY) {
+      @if (frequencyControl.value === Freq.WEEKLY) {
         <p class='font-size-1rem'>Repeat on</p>
         <div formArrayName='weekDays' class='weekDays'>
           @for (day of days; track day) {
@@ -71,7 +71,7 @@
                   (click)='onWeekDaySelected(day)'>{{ day.label }}</span>
           }
         </div>
-      } @else if (freqControl.value === Freq.MONTHLY) {
+      } @else if (frequencyControl.value === Freq.MONTHLY) {
         <mat-form-field class='width-5rem'>
           <mat-select [formControl]='monthlyOptionControl'>
             <mat-option value='0'>Monthly on day {{ data.start | getDay }}</mat-option>

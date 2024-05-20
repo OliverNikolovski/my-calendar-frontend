@@ -126,11 +126,11 @@ export class DayColumnComponent implements OnInit, OnDestroy {
         weekdayDetails: this._getWeekdayDetails
       }
     });
-    // dialogRef.afterClosed()
-    //   .pipe(
-    //     filter(Boolean),
-    //     switchMap(request => this._calendarEventService.createEvent(request))
-    //   ).subscribe(() => console.log('saved'));
+    dialogRef.afterClosed()
+      .pipe(
+        filter(Boolean),
+        switchMap(request => this._calendarEventService.createEvent(request))
+      ).subscribe(() => console.log('saved'));
   }
 
   onMouseMove(y: number, isMouseUp: boolean) {

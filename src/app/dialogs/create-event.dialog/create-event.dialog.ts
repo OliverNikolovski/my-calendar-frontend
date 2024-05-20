@@ -133,12 +133,12 @@ export class CreateEventDialog implements OnInit {
     const dayIndex = getDay(data.start) - 1;
     const transformedDayIndex = dayIndex < 0 ? 6 : dayIndex;
     this.days[transformedDayIndex].selected = true;
-    this.weekDays.setValue([this.days[transformedDayIndex].name]);
+    this.weekDays.setValue([this.days[transformedDayIndex].index]);
 
-    this.recurrenceRule.disable();
+    this.repeatingPattern.disable();
     this.weekDays.disable();
 
-    this.freqControl.valueChanges.pipe(
+    this.frequencyControl.valueChanges.pipe(
       takeUntilDestroyed()
     ).subscribe(freq => {
       if (freq === Freq.WEEKLY) {
@@ -156,7 +156,7 @@ export class CreateEventDialog implements OnInit {
     this.monthlyOptionControl.valueChanges.pipe(
       takeUntilDestroyed()
     ).subscribe(value => {
-      if (value === '1' && this.freqControl.value === Freq.MONTHLY) {
+      if (value === '1' && this.frequencyControl.value === Freq.MONTHLY) {
         this.setPos.setValue(this.data.weekdayDetails.position);
         this.setPos.enable();
       } else {
@@ -173,13 +173,13 @@ export class CreateEventDialog implements OnInit {
       title: [''],
       startDate: [this.data.start, [Validators.required]],
       isRepeating: [false, [Validators.required]],
-      recurrenceRule: this.formBuilder.group({
-        freq: [Freq.DAILY],
+      repeatingPattern: this.formBuilder.group({
+        frequency: [Freq.DAILY],
         interval: [1],
         weekDays: [[]],
-        setPos: [{value: null, disabled: true}],
-        occurrenceCount: [{value: 1, disabled: true}],
-        endDate: [{value: this.data.end, disabled: true}]
+        setPos: [null],
+        occurrenceCount: [1],
+        endDate: [this.data.end]
       })
     }, {
       validators: [endDateAfterStartDateValidator()]
@@ -249,8 +249,8 @@ export class CreateEventDialog implements OnInit {
     return this.form.get('isRepeating')!;
   }
 
-  get freqControl(): AbstractControl {
-    return this.form.get('recurrenceRule.freq')!;
+  get frequencyControl(): AbstractControl {
+    return this.form.get('repeatingPattern.frequency')!;
   }
 
   get startDateControl(): AbstractControl {
@@ -258,31 +258,31 @@ export class CreateEventDialog implements OnInit {
   }
 
   get endDateControl(): AbstractControl {
-    return this.form.get('recurrenceRule.endDate')!;
+    return this.form.get('repeatingPattern.endDate')!;
   }
 
   get occurrenceCountControl(): AbstractControl {
-    return this.form.get('recurrenceRule.occurrenceCount')!;
+    return this.form.get('repeatingPattern.occurrenceCount')!;
   }
 
   get weekDays(): AbstractControl {
-    return this.form.get('recurrenceRule.weekDays')!;
+    return this.form.get('repeatingPattern.weekDays')!;
   }
 
-  get recurrenceRule(): FormGroup {
-    return this.form.get('recurrenceRule')! as FormGroup;
+  get repeatingPattern(): FormGroup {
+    return this.form.get('repeatingPattern')! as FormGroup;
   }
 
   get setPos(): AbstractControl {
-    return this.form.get('recurrenceRule.setPos')!;
+    return this.form.get('repeatingPattern.setPos')!;
   }
 
   onWeekDaySelected(day: WeekDay) {
     day.selected = !day.selected;
     if (day.selected) {
-      this.weekDays.setValue([...this.weekDays.value, day.name]);
+      this.weekDays.setValue([...this.weekDays.value, day.index]);
     } else {
-      this.weekDays.setValue((this.weekDays.value as string[]).filter(s => s !== day.name));
+      this.weekDays.setValue((this.weekDays.value as number[]).filter(i => i !== day.index));
     }
   }
 
@@ -309,11 +309,13 @@ export class CreateEventDialog implements OnInit {
 
   onIsRepeatingChange(event: MatCheckboxChange) {
     if (event.checked) {
-      this.recurrenceRule.enable();
+      this.repeatingPattern.enable();
       this.weekDays.disable();
       this.setPos.disable();
+      this.occurrenceCountControl.disable();
+      this.endDateControl.disable();
     } else {
-      this.recurrenceRule.disable();
+      this.repeatingPattern.disable();
     }
   }
 
