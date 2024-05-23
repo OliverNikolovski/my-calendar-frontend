@@ -1,7 +1,7 @@
 import {inject, Injectable} from "@angular/core";
 import {Observable} from "rxjs";
 import {CalendarEventCreateRequest} from "../interfaces/requests/calendar-event-create.request";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
   providedIn: 'root'
