@@ -2,6 +2,7 @@ import {inject, Injectable} from "@angular/core";
 import {Observable} from "rxjs";
 import {CalendarEventCreateRequest} from "../interfaces/requests/calendar-event-create.request";
 import { HttpClient } from "@angular/common/http";
+import {CalendarEvent} from "../interfaces/calendar-event";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class CalendarEventService {
 
   createEvent(request: CalendarEventCreateRequest): Observable<Boolean> {
     return this._http.post<Boolean>(`${this.baseUrl}`, request);
+  }
+
+  getEvents(id: number): Observable<CalendarEvent[]> {
+    return this._http.get<CalendarEvent[]>(`${this.baseUrl}/${id}`);
   }
 
 }
