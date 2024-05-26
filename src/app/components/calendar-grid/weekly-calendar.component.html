@@ -1,3 +1,4 @@
+<h1>{{test()}}</h1>
 <!--<button (click)="changeTimeFormat()">CHANGE TIME FORMAT</button>-->
 <div class="calendar-grid">
   <div class="calendar-grid-header">
@@ -29,7 +30,8 @@
                         [intervalHeight]='intervalHeight'
                         [intervalDuration]='intervalDuration'
                         [slotDuration]='slotDuration'
-                        [timeFormat]='isAmPm | apply: getTimeFormat'></app-day-column>
+                        [timeFormat]='isAmPm | apply: getTimeFormat'
+                        [calendarEventInstances]='day | apply:getDayEventInstancesContainer.bind(this)'></app-day-column>
       }
     </div>
   </div>

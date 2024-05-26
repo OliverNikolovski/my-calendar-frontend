@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy, ChangeDetectorRef,
-  Component, DoCheck,
-  ElementRef, EventEmitter,
+  Component, DoCheck, effect,
+  ElementRef, EventEmitter, input,
   Input,
   OnDestroy,
   OnInit,
@@ -16,6 +16,11 @@ import {DatePipe, NgStyle} from "@angular/common";
 import {ApplyPipe} from "../../pipes/apply.pipe";
 import {ComponentStore} from "@ngrx/component-store";
 import {MousePositionState} from "../../states/mouse-position.state";
+import {CalendarEvent} from "../../interfaces/calendar-event";
+import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
+import {DayEventInstancesContainer} from "../../interfaces/day-event-instances-container";
+import {CalendarEventInstance} from "../../interfaces/calendar-event-instance";
+import {areDatesSameDay, notNull} from "../../utils";
 
 const components = [DayColumnComponent];
 const pipes = [WeekDayPipe, IsCurrentDatePipe, DatePipe, ApplyPipe]
@@ -52,14 +57,25 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
     this._changeCurrentDate();
   }
 
+  instanceContainers = input<CalendarEventInstancesContainer[]>([]);
+  test = input<number>();
+
   constructor(private readonly componentStore: ComponentStore<MousePositionState>,
               private readonly renderer: Renderer2) {
     this.mouseMoveUnlisten = this.renderer.listen('document', 'mousemove', this.onMouseMove.bind(this));
     this.mouseUpUnlisten = this.renderer.listen('document', 'mouseup', this.onMouseUp.bind(this));
+
+    effect(() => {
+      console.log('aj tuka',this.instanceContainers());
+    });
+
+    effect(() => {
+      console.log('test', this.test());
+    });
   }
 
   ngOnInit(): void {
-    this.times = Array.from({ length: 24 }, (_, hour) => {
+    this.times = Array.from({length: 24}, (_, hour) => {
       const date = new Date();
       date.setHours(hour, 0, 0, 0);
       return date;
@@ -75,7 +91,7 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
   }
 
   private _changeCurrentDate() {
-    const firstDayOfWeek = startOfWeek(this.selectedDate, { weekStartsOn: 1 });
+    const firstDayOfWeek = startOfWeek(this.selectedDate, {weekStartsOn: 1});
     const dates: Date[] = [];
     for (let i = 0; i < 7; i++) {
       dates.push(addDays(firstDayOfWeek, i));
@@ -104,5 +120,23 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
       this.componentStore.setState({y: event.y, mouseUp: true});
       this.draggable = false;
     }
+  }
+
+  getDayEventInstancesContainer(day: Date): CalendarEventInstance[] {
+    console.log('this.instanceContainers()', this.instanceContainers());
+    const result =  this.instanceContainers().map(container => {
+      const date = container.calendarEventInstances.find(instanceDate => areDatesSameDay(day, instanceDate))
+      if (date) {
+        return ({
+          eventId: container.eventId,
+          duration: container.duration,
+          startDate: date
+        } as CalendarEventInstance);
+      } else {
+        return null
+      }
+    }).filter(notNull) as CalendarEventInstance[];
+    console.log('result', result);
+    return result;
   }
 }

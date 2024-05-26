@@ -1,7 +1,9 @@
 <div class="wrapper">
   <app-sidebar (dateChange)="onDateChange($event)"></app-sidebar>
   <app-weekly-calendar [date]="selectedDate"
-                     [intervalHeight]='intervalHeight'
-                     [intervalDuration]='intervalDuration'
-                     [slotDuration]='slotDuration'></app-weekly-calendar>
+                       [intervalHeight]='intervalHeight'
+                       [intervalDuration]='intervalDuration'
+                       [slotDuration]='slotDuration'
+                       [instanceContainers]='instanceContainers'
+  [test]="test"></app-weekly-calendar>
 </div>

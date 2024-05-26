@@ -37,6 +37,8 @@ import {DayEventsComponent} from "../day-events/day-events.component";
 import {CalendarEvent} from "../../interfaces/calendar-event";
 import {filter, switchMap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
+import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
+import {CalendarEventInstance} from "../../interfaces/calendar-event-instance";
 
 @Component({
   selector: 'app-day-column',
@@ -51,15 +53,15 @@ import {CalendarEventService} from "../../services/calendar-event.service";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DayColumnComponent implements OnInit, OnDestroy {
-  testEvents: CalendarEvent[] = [
-    {
-      id: 1,
-      from: set(new Date(), { hours: 9, minutes: 0, seconds: 0, milliseconds: 0 }),
-      duration: 60,
-      isRepeating: false
-    }
-  ];
-  events = input<CalendarEvent[]>(this.testEvents);
+  // testEvents: CalendarEvent[] = [
+  //   {
+  //     id: 1,
+  //     from: set(new Date(), { hours: 9, minutes: 0, seconds: 0, milliseconds: 0 }),
+  //     duration: 60,
+  //     isRepeating: false
+  //   }
+  // ];
+  calendarEventInstances = input<CalendarEventInstance[]>([]);
 
   private readonly _calendarEventService = inject(CalendarEventService);
 

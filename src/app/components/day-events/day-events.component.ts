@@ -3,6 +3,8 @@ import {CalendarEvent} from "../../interfaces/calendar-event";
 import {CommonModule} from "@angular/common";
 import {ComponentStore} from "@ngrx/component-store";
 import {MousePositionState} from "../../states/mouse-position.state";
+import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
+import {CalendarEventInstance} from "../../interfaces/calendar-event-instance";
 
 @Component({
   selector: 'day-events',
@@ -15,7 +17,7 @@ import {MousePositionState} from "../../states/mouse-position.state";
   styleUrl: 'day-events.component.scss'
 })
 export class DayEventsComponent implements OnInit {
-  events = input.required<CalendarEvent[]>();
+  calendarEventInstances = input.required<CalendarEventInstance[]>();
 
   @Input({required: true}) intervalHeight!: number;
   @Input({required: true}) intervalDuration!: number;
@@ -27,8 +29,8 @@ export class DayEventsComponent implements OnInit {
   ngOnInit() {
   }
 
-  eventOffsetTop(event: CalendarEvent): number {
-    const eventStartOffsetInMinutes = event.from.getHours() * 60 + event.from.getMinutes();
+  eventOffsetTop(instance: CalendarEventInstance): number {
+    const eventStartOffsetInMinutes = instance.startDate.getHours() * 60 + instance.startDate.getMinutes();
     const eventStartInterval = Math.floor(eventStartOffsetInMinutes / this.intervalDuration);
     const eventStartIntervalRemainder = eventStartOffsetInMinutes % this.intervalDuration;
     const intervalStartPx = eventStartInterval * this.intervalHeight;
@@ -38,9 +40,9 @@ export class DayEventsComponent implements OnInit {
     return eventStartOffset; // TODO
   }
 
-  eventHeight(event: CalendarEvent): number {
-    const numberOfIntervalsInEvent = Math.floor(event.duration / this.intervalDuration);
-    const remainder = event.duration % this.intervalDuration;
+  eventHeight(instance: CalendarEventInstance): number {
+    const numberOfIntervalsInEvent = Math.floor(instance.duration / this.intervalDuration);
+    const remainder = instance.duration % this.intervalDuration;
     const eventHeightInIntervals = numberOfIntervalsInEvent + remainder;
     const eventHeightPx = eventHeightInIntervals * this.intervalHeight;
 

@@ -1,3 +1,4 @@
-@for (event of events(); track event.id) {
-  <div class='event' [ngStyle]='{"top.px": eventOffsetTop(event), "height.px": eventHeight(event)}'></div>
+@for (instance of calendarEventInstances(); track instance.eventId) {
+  <h1>test</h1>
+  <div class='event' [ngStyle]='{"top.px": eventOffsetTop(instance), "height.px": eventHeight(instance)}'></div>
 }
