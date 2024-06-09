@@ -1,10 +1,6 @@
-import {ChangeDetectionStrategy, Component, effect, inject, input, Input, OnInit} from "@angular/core";
-import {CalendarEvent} from "../../interfaces/calendar-event";
+import {ChangeDetectionStrategy, Component, computed, input} from "@angular/core";
 import {CommonModule} from "@angular/common";
-import {ComponentStore} from "@ngrx/component-store";
-import {MousePositionState} from "../../states/mouse-position.state";
-import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
-import {CalendarEventInstance} from "../../interfaces/calendar-event-instance";
+import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instance-info";
 
 @Component({
   selector: 'day-events',
@@ -16,36 +12,20 @@ import {CalendarEventInstance} from "../../interfaces/calendar-event-instance";
   ],
   styleUrl: 'day-events.component.scss'
 })
-export class DayEventsComponent implements OnInit {
-  calendarEventInstances = input.required<CalendarEventInstance[]>();
+export class DayEventsComponent {
+  calendarEventInstances = input.required<CalendarEventInstanceInfo[]>();
+  intervalHeight = input.required<number>();
+  intervalDuration = input.required<number>();
+  minSlotDuration = input.required<number>();
+  pixelsPerMinute = computed(() => this.intervalHeight() / this.intervalDuration());
 
-  @Input({required: true}) intervalHeight!: number;
-  @Input({required: true}) intervalDuration!: number;
-  @Input({required: true}) minSlotDuration!: number;
-
-  constructor() {
+  eventOffsetTop(instance: CalendarEventInstanceInfo): number {
+    const instanceDate = new Date(instance.date);
+    const eventStartOffsetInMinutes = instanceDate.getHours() * 60 + instanceDate.getMinutes();
+    return eventStartOffsetInMinutes * this.pixelsPerMinute();
   }
 
-  ngOnInit() {
-  }
-
-  eventOffsetTop(instance: CalendarEventInstance): number {
-    const eventStartOffsetInMinutes = instance.startDate.getHours() * 60 + instance.startDate.getMinutes();
-    const eventStartInterval = Math.floor(eventStartOffsetInMinutes / this.intervalDuration);
-    const eventStartIntervalRemainder = eventStartOffsetInMinutes % this.intervalDuration;
-    const intervalStartPx = eventStartInterval * this.intervalHeight;
-    const remainderPx = eventStartIntervalRemainder * this.intervalHeight;
-    const eventStartOffset = intervalStartPx + remainderPx;
-
-    return eventStartOffset; // TODO
-  }
-
-  eventHeight(instance: CalendarEventInstance): number {
-    const numberOfIntervalsInEvent = Math.floor(instance.duration / this.intervalDuration);
-    const remainder = instance.duration % this.intervalDuration;
-    const eventHeightInIntervals = numberOfIntervalsInEvent + remainder;
-    const eventHeightPx = eventHeightInIntervals * this.intervalHeight;
-
-    return eventHeightPx; // TODO
+  eventHeight(instance: CalendarEventInstanceInfo): number {
+    return instance.duration * this.pixelsPerMinute();
   }
 }

@@ -1,5 +1,5 @@
+import {CalendarEventInstanceInfo} from "./calendar-event-instance-info";
+
 export interface CalendarEventInstancesContainer {
-  eventId: number;
-  duration: number;
-  calendarEventInstances: Date[];
+  [key: string]: CalendarEventInstanceInfo[];
 }

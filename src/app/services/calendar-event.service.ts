@@ -4,6 +4,7 @@ import {CalendarEventCreateRequest} from "../interfaces/requests/calendar-event-
 import { HttpClient } from "@angular/common/http";
 import {CalendarEvent} from "../interfaces/calendar-event";
 import {CalendarEventInstancesContainer} from "../interfaces/calendar-event-instances-container";
+import {CalendarEventInstanceInfo} from "../interfaces/calendar-event-instance-info";
 
 @Injectable({
   providedIn: 'root'
@@ -28,8 +29,8 @@ export class CalendarEventService {
     return this._http.get<CalendarEventInstancesContainer>(`${this.baseUrl}/generate-event-instances/${eventId}`);
   }
 
-  getInstancesForEvents(from: Date): Observable<CalendarEventInstancesContainer[]> {
-    return this._http.get<CalendarEventInstancesContainer[]>(`${this.baseUrl}/generate-instances-for-events?from=${from.toISOString()}`);
+  getInstancesForEvents(from: Date): Observable<CalendarEventInstancesContainer> {
+    return this._http.get<CalendarEventInstancesContainer>(`${this.baseUrl}/generate-instances-for-events?from=${from.toISOString()}`);
   }
 
 }

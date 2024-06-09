@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input, OnInit, signal} from '@angular/core';
 import {WeeklyCalendarComponent} from "../calendar-grid/weekly-calendar.component";
 import {SidebarComponent} from "../sidebar/sidebar.component";
 import {DayColumnComponent} from "../day-column/day-column.component";
@@ -7,11 +7,12 @@ import {CalendarEvent} from "../../interfaces/calendar-event";
 import { set } from 'date-fns';
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
+import {NG_VALUE_ACCESSOR} from "@angular/forms";
 
 @Component({
   selector: 'app-calendar',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
   imports: [
     WeeklyCalendarComponent,
     SidebarComponent,
@@ -22,8 +23,7 @@ import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-i
 })
 export class CalendarComponent implements OnInit {
   selectedDate: Date | null = new Date();
-  instanceContainers: CalendarEventInstancesContainer[] = [];
-  test = 10;
+  calendarEventInstancesContainer = signal<CalendarEventInstancesContainer | null>(null);
 
   private readonly _calendarEventService = inject(CalendarEventService)
 
@@ -32,14 +32,11 @@ export class CalendarComponent implements OnInit {
   @Input() slotDuration: number = 15;
 
   ngOnInit() {
-    this.test = 70;
     this._calendarEventService.getInstancesForEvents(new Date(2024, 4, 1, 0, 0, 0, 0))
-      .subscribe(containers => {
-        this.instanceContainers = containers;
-        this.test = 69;
-        console.log('A VO PARENT:',this.instanceContainers);
+      .subscribe(container => {
+        console.log('container', container);
+        this.calendarEventInstancesContainer.set(container);
       });
-    setInterval(() => this.test = 1234, 1000);
   }
 
   onDateChange(date: Date | null) {

@@ -1,11 +1,11 @@
-import {Component, computed, Inject, OnInit, signal, WritableSignal} from '@angular/core';
+import {Component, computed, inject, Inject, OnInit, signal, WritableSignal} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
 import {
-  AbstractControl,
+  AbstractControl, DefaultValueAccessor,
   FormArray,
   FormBuilder,
   FormControl,
-  FormGroup,
+  FormGroup, NG_VALUE_ACCESSOR,
   ReactiveFormsModule, ValidationErrors, ValidatorFn,
   Validators
 } from "@angular/forms";
@@ -37,17 +37,19 @@ import {
 } from "date-fns";
 import {Observable, of} from "rxjs";
 import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
-import {MatCheckbox, MatCheckboxChange, MatCheckboxModule} from "@angular/material/checkbox";
-import {MatRadioChange, MatRadioGroup, MatRadioModule} from "@angular/material/radio";
+import {MatCheckboxChange, MatCheckboxModule} from "@angular/material/checkbox";
+import {MatRadioChange, MatRadioModule} from "@angular/material/radio";
 import {EventEndType} from "../../configs/event-end-type";
 import {DayByIndexPipe} from "../../pipes/day-by-index.pipe";
 import {GetDayPipe} from "../../pipes/get-day.pipe";
 import {WeekdayDetails} from "../../interfaces/weekday-details";
 import {WeekdayDetailsToStringPipe} from "../../pipes/weekday-details-to-string.pipe";
-import {EventType} from "@angular/router";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 import {endDateAfterStartDateValidator} from "./create-event-validators";
 import {CalendarEventCreateRequest} from "../../interfaces/requests/calendar-event-create.request";
+import {
+  RepeatingPatternControl
+} from "../../custom-form-controls/repeating-pattern-form-control/repeating-pattern.control";
 
 interface WeekDay {
   index: number;
@@ -73,24 +75,12 @@ interface WeekDay {
     DayByIndexPipe,
     NgClass,
     GetDayPipe,
-    WeekdayDetailsToStringPipe
+    WeekdayDetailsToStringPipe,
+    RepeatingPatternControl
   ],
   providers: [
-    provideNativeDateAdapter(),
-    {
-      provide: MAT_DATE_LOCALE,
-      useValue: 'fr'
-    }
+    provideNativeDateAdapter()
   ],
-  // providers: [
-  //   {
-  //     provide: DateAdapter, useClass: MyAdapter
-  //   },
-  //   {
-  //     provide: MAT_DATE_LOCALE,
-  //     useValue: 'fr'
-  //   }
-  // ],
   templateUrl: './create-event.dialog.html',
   styleUrl: './create-event.dialog.scss'
 })
@@ -173,14 +163,14 @@ export class CreateEventDialog implements OnInit {
       title: [''],
       startDate: [this.data.start, [Validators.required]],
       isRepeating: [false, [Validators.required]],
-      repeatingPattern: this.formBuilder.group({
-        frequency: [Freq.DAILY],
-        interval: [1],
-        weekDays: [[]],
-        setPos: [null],
-        occurrenceCount: [1],
-        endDate: [this.data.end]
-      })
+      // repeatingPattern: this.formBuilder.group({
+      //   frequency: [Freq.DAILY],
+      //   interval: [1],
+      //   weekDays: [[]],
+      //   setPos: [null],
+      //   occurrenceCount: [1],
+      //   endDate: [this.data.end]
+      // })
     }, {
       validators: [endDateAfterStartDateValidator()]
     });

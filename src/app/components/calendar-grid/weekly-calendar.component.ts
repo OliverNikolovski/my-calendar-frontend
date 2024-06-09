@@ -1,26 +1,24 @@
 import {
-  ChangeDetectionStrategy, ChangeDetectorRef,
-  Component, DoCheck, effect,
-  ElementRef, EventEmitter, input,
+  ChangeDetectionStrategy,
+  Component,
+  DoCheck,
+  effect,
+  input,
   Input,
   OnDestroy,
   OnInit,
-  Renderer2,
-  ViewChild
+  Renderer2
 } from '@angular/core';
 import {DayColumnComponent} from "../day-column/day-column.component";
-import {addDays, startOfWeek} from "date-fns";
+import {addDays, format, startOfWeek} from "date-fns";
 import {WeekDayPipe} from "../../pipes/week-day.pipe";
 import {IsCurrentDatePipe} from "../../pipes/is-current-date.pipe";
 import {DatePipe, NgStyle} from "@angular/common";
 import {ApplyPipe} from "../../pipes/apply.pipe";
 import {ComponentStore} from "@ngrx/component-store";
 import {MousePositionState} from "../../states/mouse-position.state";
-import {CalendarEvent} from "../../interfaces/calendar-event";
 import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
-import {DayEventInstancesContainer} from "../../interfaces/day-event-instances-container";
-import {CalendarEventInstance} from "../../interfaces/calendar-event-instance";
-import {areDatesSameDay, notNull} from "../../utils";
+import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instance-info";
 
 const components = [DayColumnComponent];
 const pipes = [WeekDayPipe, IsCurrentDatePipe, DatePipe, ApplyPipe]
@@ -28,7 +26,7 @@ const pipes = [WeekDayPipe, IsCurrentDatePipe, DatePipe, ApplyPipe]
 @Component({
   selector: 'app-weekly-calendar',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
   imports: [...components, ...pipes, NgStyle],
   templateUrl: './weekly-calendar.component.html',
   styleUrl: './weekly-calendar.component.scss',
@@ -57,8 +55,7 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
     this._changeCurrentDate();
   }
 
-  instanceContainers = input<CalendarEventInstancesContainer[]>([]);
-  test = input<number>();
+  calendarEventInstanceContainer = input<CalendarEventInstancesContainer | null>(null);
 
   constructor(private readonly componentStore: ComponentStore<MousePositionState>,
               private readonly renderer: Renderer2) {
@@ -66,12 +63,12 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
     this.mouseUpUnlisten = this.renderer.listen('document', 'mouseup', this.onMouseUp.bind(this));
 
     effect(() => {
-      console.log('aj tuka',this.instanceContainers());
+      console.log('aj tuka', this.calendarEventInstanceContainer());
     });
-
-    effect(() => {
-      console.log('test', this.test());
-    });
+    //
+    // effect(() => {
+    //   console.log('test', this.test());
+    // });
   }
 
   ngOnInit(): void {
@@ -122,21 +119,11 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
     }
   }
 
-  getDayEventInstancesContainer(day: Date): CalendarEventInstance[] {
-    console.log('this.instanceContainers()', this.instanceContainers());
-    const result =  this.instanceContainers().map(container => {
-      const date = container.calendarEventInstances.find(instanceDate => areDatesSameDay(day, instanceDate))
-      if (date) {
-        return ({
-          eventId: container.eventId,
-          duration: container.duration,
-          startDate: date
-        } as CalendarEventInstance);
-      } else {
-        return null
-      }
-    }).filter(notNull) as CalendarEventInstance[];
-    console.log('result', result);
-    return result;
+  getCalendarEventInstancesForDay(day: Date, container: CalendarEventInstancesContainer | null): CalendarEventInstanceInfo[] {
+    if (!container) {
+      return [];
+    }
+    const dayStr = format(day, 'yyyy-MM-dd');
+    return container[dayStr];
   }
 }

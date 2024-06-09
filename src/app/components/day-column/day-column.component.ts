@@ -28,17 +28,14 @@ import {
   startOfDay,
   startOfMonth
 } from "date-fns";
-import {startOfToday} from "date-fns/startOfToday";
 import {CreateEventDialog} from "../../dialogs/create-event.dialog/create-event.dialog";
 import {MatDialog} from "@angular/material/dialog";
-import {TimeConfig} from "../../configs/time-config";
 import {WeekdayDetails} from "../../interfaces/weekday-details";
 import {DayEventsComponent} from "../day-events/day-events.component";
-import {CalendarEvent} from "../../interfaces/calendar-event";
-import {filter, switchMap} from "rxjs";
+import {filter, of, switchMap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
-import {CalendarEventInstance} from "../../interfaces/calendar-event-instance";
+import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instance-info";
 
 @Component({
   selector: 'app-day-column',
@@ -50,7 +47,7 @@ import {CalendarEventInstance} from "../../interfaces/calendar-event-instance";
   ],
   templateUrl: './day-column.component.html',
   styleUrl: './day-column.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DayColumnComponent implements OnInit, OnDestroy {
   // testEvents: CalendarEvent[] = [
@@ -61,7 +58,7 @@ export class DayColumnComponent implements OnInit, OnDestroy {
   //     isRepeating: false
   //   }
   // ];
-  calendarEventInstances = input<CalendarEventInstance[]>([]);
+  calendarEventInstances = input<CalendarEventInstanceInfo[]>([]);
 
   private readonly _calendarEventService = inject(CalendarEventService);
 
@@ -131,7 +128,11 @@ export class DayColumnComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed()
       .pipe(
         filter(Boolean),
-        switchMap(request => this._calendarEventService.createEvent(request))
+        switchMap(request => {
+          console.log('request', request)
+          return of(null);
+          //this._calendarEventService.createEvent(request);
+        })
       ).subscribe(() => console.log('saved'));
   }
 

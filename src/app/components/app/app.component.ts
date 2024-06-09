@@ -5,7 +5,7 @@ import {CalendarComponent} from "../calendar/calendar.component";
 @Component({
   selector: 'app-root',
   standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
   imports: [RouterOutlet, CalendarComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

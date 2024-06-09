@@ -9,7 +9,7 @@ import {MatCard} from "@angular/material/card";
   selector: 'app-sidebar',
   standalone: true,
   providers: [provideNativeDateAdapter()],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.Default,
   imports: [MatDatepickerModule, MatCard],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
