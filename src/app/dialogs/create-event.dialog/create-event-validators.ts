@@ -5,9 +5,9 @@ export function endDateAfterStartDateValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
     const form = control as FormGroup;
     const startDateControl = form.get('startDate')!;
-    const endDateControl = form.get('repeatingPattern.endDate')!;
+    const endDateControl = form.get('repeatingPattern.endDate');
     const startDate = startOfDay(startDateControl.value);
-    const endDate = startOfDay(endDateControl.value);
+    const endDate = endDateControl && startOfDay(endDateControl.value);
     if (endDate && endDate < startDate) {
       return { endDateAfterStartDate: true };
     }

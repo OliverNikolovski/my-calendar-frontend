@@ -1,4 +1,4 @@
-import {Component, inject, input, OnDestroy, OnInit} from "@angular/core";
+import {Component, DestroyRef, inject, input, OnDestroy, OnInit} from "@angular/core";
 import {
   AbstractControl,
   ControlContainer,
@@ -19,6 +19,9 @@ import {MatSelect} from "@angular/material/select";
 import {WeekdayDetailsToStringPipe} from "../../pipes/weekday-details-to-string.pipe";
 import {WeekdayDetails} from "../../interfaces/weekday-details";
 import {CommonModule} from "@angular/common";
+import {endDateAfterStartDateValidator} from "../../dialogs/create-event.dialog/create-event-validators";
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {getDay} from "date-fns";
 
 interface WeekDay {
   index: number;
@@ -58,6 +61,7 @@ interface WeekDay {
 export class RepeatingPatternControl implements OnInit, OnDestroy {
   readonly #controlContainer = inject(ControlContainer);
   readonly formBuilder = inject(FormBuilder);
+  readonly #destroyRef = inject(DestroyRef);
 
   readonly formGroup = this.initForm()
   protected readonly Freq = Freq;
@@ -78,7 +82,47 @@ export class RepeatingPatternControl implements OnInit, OnDestroy {
   endDate = input<Date>();
   weekdayDetails = input.required<WeekdayDetails>();
 
+  constructor() {
+
+  }
+
   ngOnInit() {
+    const dayIndex = getDay(this.startDate()) - 1;
+    const transformedDayIndex = dayIndex < 0 ? 6 : dayIndex;
+    this.days[transformedDayIndex].selected = true;
+    this.weekDays.setValue([this.days[transformedDayIndex].index]);
+
+    this.monthlyOptionControl.valueChanges.pipe(
+      takeUntilDestroyed(this.#destroyRef)
+    ).subscribe(value => {
+      if (value === '1' && this.frequencyControl.value === Freq.MONTHLY) {
+        this.setPos.setValue(this.weekdayDetails().position);
+        this.setPos.enable();
+      } else {
+        this.setPos.disable();
+      }
+    });
+
+    this.frequencyControl.valueChanges.pipe(
+      takeUntilDestroyed(this.#destroyRef)
+    ).subscribe(freq => {
+      if (freq === Freq.WEEKLY) {
+        this.weekDays.enable();
+        this.setPos.disable();
+      } else if (freq === Freq.MONTHLY) {
+        this.weekDays.disable();
+        this.monthlyOptionControl.value === '1' ? this.setPos.enable() : this.setPos.disable();
+      } else {
+        this.weekDays.disable();
+        this.setPos.disable();
+      }
+    });
+
+    this.weekDays.disable();
+    this.setPos.disable();
+    this.occurrenceCountControl.disable();
+    this.endDateControl.disable();
+
     this.parentFormGroup.addControl('repeatingPattern', this.formGroup);
   }
 
@@ -138,5 +182,9 @@ export class RepeatingPatternControl implements OnInit, OnDestroy {
 
   get weekDays(): AbstractControl {
     return this.formGroup.get('weekDays')!;
+  }
+
+  get setPos(): AbstractControl {
+    return this.formGroup.get('setPos')!;
   }
 }

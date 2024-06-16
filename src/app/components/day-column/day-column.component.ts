@@ -130,8 +130,8 @@ export class DayColumnComponent implements OnInit, OnDestroy {
         filter(Boolean),
         switchMap(request => {
           console.log('request', request)
-          return of(null);
-          //this._calendarEventService.createEvent(request);
+          //return of(null);
+          return this._calendarEventService.createEvent(request);
         })
       ).subscribe(() => console.log('saved'));
   }
