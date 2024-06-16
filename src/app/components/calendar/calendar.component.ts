@@ -8,6 +8,8 @@ import { set } from 'date-fns';
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
 import {NG_VALUE_ACCESSOR} from "@angular/forms";
+import {CalendarHeaderComponent} from "../calendar-header/calendar-header.component";
+import {CalendarView} from "../../configs/calendar-view";
 
 @Component({
   selector: 'app-calendar',
@@ -16,7 +18,8 @@ import {NG_VALUE_ACCESSOR} from "@angular/forms";
   imports: [
     WeeklyCalendarComponent,
     SidebarComponent,
-    DayColumnComponent
+    DayColumnComponent,
+    CalendarHeaderComponent
   ],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
@@ -24,8 +27,9 @@ import {NG_VALUE_ACCESSOR} from "@angular/forms";
 export class CalendarComponent implements OnInit {
   selectedDate: Date | null = new Date();
   calendarEventInstancesContainer = signal<CalendarEventInstancesContainer | null>(null);
+  protected readonly CalendarView = CalendarView;
 
-  private readonly _calendarEventService = inject(CalendarEventService)
+  private readonly _calendarEventService = inject(CalendarEventService);
 
   @Input() intervalHeight: number = 80;
   @Input() intervalDuration: number = 60;

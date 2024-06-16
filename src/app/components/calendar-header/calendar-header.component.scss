@@ -1,0 +1,17 @@
+@import 'variables';
+
+.wrapper {
+  display: flex;
+  height: 100%;
+  align-items: center;
+}
+
+.header-right-side {
+  width: $sidebar-width;
+}
+
+.calendar-nav-container {
+  width: 15vw;
+  display: flex;
+  justify-content: space-between;
+}

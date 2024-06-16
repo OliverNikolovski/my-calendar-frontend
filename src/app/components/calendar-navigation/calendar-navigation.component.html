@@ -1,0 +1,12 @@
+<div class='wrapper'>
+  <button mat-stroked-button>Today</button>
+  <div class='navigation-arrows'>
+    <div class='arrow' (click)='onNavigateBefore()'>
+      <mat-icon>navigate_before</mat-icon>
+    </div>
+    <div class='arrow' (click)='onNavigateNext()'>
+      <mat-icon>navigate_next</mat-icon>
+    </div>
+  </div>
+  <h3>{{ dateInput() | date:format() }}</h3>
+</div>
