@@ -3,5 +3,14 @@
 .event {
   position: absolute;
   background-color: $calendar-event-color;
-  width: 100%;
+  width: 95%;
+  border-radius: 5px;
+  cursor: pointer;
 }
+
+.title, .range {
+  color: #fff;
+  margin-left: 0.5rem;
+  margin-top: 0.3rem;
+}
+

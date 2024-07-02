@@ -77,4 +77,8 @@ export class CalendarNavigationComponent {
     const mondayDate = startOfWeek(newDate, { weekStartsOn: 1 });
     return mondayDate;
   }
+
+  setDateToToday() {
+    this.dateInput.set(new Date());
+  }
 }

@@ -1,3 +1,3 @@
 <mat-card class='calendar-card'>
-  <mat-calendar [(selected)]="selected" (selectedChange)="onDateChange($event)"></mat-calendar>
+  <mat-calendar #calendar [selected]="selected()" (selectedChange)="onDateChange($any($event))" ></mat-calendar>
 </mat-card>

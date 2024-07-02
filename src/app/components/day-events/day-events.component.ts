@@ -1,6 +1,9 @@
-import {ChangeDetectionStrategy, Component, computed, input} from "@angular/core";
+import {ChangeDetectionStrategy, Component, computed, inject, input} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instance-info";
+import {InstanceRangeString} from "../../pipes/instance-range-string";
+import {MatDialog} from "@angular/material/dialog";
+import {ViewEventDetailsDialog} from "../../dialogs/view-event-details/view-event-details.dialog";
 
 @Component({
   selector: 'day-events',
@@ -8,11 +11,14 @@ import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instanc
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: 'day-events.component.html',
   imports: [
-    CommonModule
+    CommonModule,
+    InstanceRangeString
   ],
   styleUrl: 'day-events.component.scss'
 })
 export class DayEventsComponent {
+  #matDialog = inject(MatDialog);
+
   calendarEventInstances = input.required<CalendarEventInstanceInfo[]>();
   intervalHeight = input.required<number>();
   intervalDuration = input.required<number>();
@@ -26,6 +32,14 @@ export class DayEventsComponent {
   }
 
   eventHeight(instance: CalendarEventInstanceInfo): number {
-    return instance.duration * this.pixelsPerMinute();
+    return instance.duration * this.pixelsPerMinute() - 5;
+  }
+
+  onEventInstanceClicked(instance: CalendarEventInstanceInfo) {
+    this.#matDialog.open(ViewEventDetailsDialog, {
+      data: {
+        event: instance.event
+      }
+    });
   }
 }

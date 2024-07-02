@@ -2,11 +2,11 @@ import {RepeatingPattern} from "./repeating-pattern";
 
 export interface CalendarEvent {
   id: number;
-  from: Date;
+  startDate: Date;
   duration: number;
-  until?: Date;
   isRepeating: boolean;
-  repeatingPattern?: RepeatingPattern;
-  title?: string;
-  description?: string;
+  repeatingPattern: RepeatingPattern | null;
+  title: string | null;
+  description: string | null;
+  parentId: number | null;
 }

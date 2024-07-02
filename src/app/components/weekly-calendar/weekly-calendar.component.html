@@ -1,7 +1,7 @@
 <!--<button (click)="changeTimeFormat()">CHANGE TIME FORMAT</button>-->
 <div class="calendar-grid">
   <div class="calendar-grid-header">
-    @for (day of days; track day) {
+    @for (day of days; track day.getTime()) {
       <div class="header-content">
         <div class='date' [class.active-day]='day | isCurrentDate'>
           <span class="day-of-week">{{ day.getDay() | weekDay }} </span>
@@ -15,14 +15,14 @@
   </div>
   <div class="calendar-grid-content" #calendarGrid>
     <div class="content intervals">
-      @for (time of times; track time) {
+      @for (time of times; track $index) {
         <div class='interval' [ngStyle]='{ height: intervalHeight + "px" }'>
           <span>{{ time | date: (isAmPm | apply: getTimeFormat) }}</span>
         </div>
       }
     </div>
     <div class='content calendar-columns'>
-      @for (day of days; track day) {
+      @for (day of days; track day.getTime()) {
         <app-day-column [date]='day'
                         [calendarGridScrollTop]='calendarGrid.scrollTop'
                         [intervals]='times'

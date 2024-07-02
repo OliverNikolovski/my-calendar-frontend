@@ -1,6 +1,10 @@
 <div class="wrapper">
-  <app-calendar-header [calendarView]='CalendarView.WEEKLY' class='calendar-header'></app-calendar-header>
-  <app-sidebar (dateChange)="onDateChange($event)"></app-sidebar>
+  <app-calendar-header [calendarView]='CalendarView.WEEKLY'
+                       [date]='selectedDate'
+                       (dateChange)='onDateChange($event)'
+                       class='calendar-header'></app-calendar-header>
+<!--  <app-sidebar (dateChange)="onDateChange($event)"></app-sidebar>-->
+  <app-sidebar [(selected)]='selectedDate'></app-sidebar>
   <app-weekly-calendar [date]="selectedDate"
                        [intervalHeight]='intervalHeight'
                        [intervalDuration]='intervalDuration'

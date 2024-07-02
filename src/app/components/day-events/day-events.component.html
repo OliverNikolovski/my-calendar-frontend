@@ -1,3 +1,7 @@
 @for (instance of calendarEventInstances(); track instance.eventId) {
-  <div class='event' [ngStyle]='{"top.px": eventOffsetTop(instance), "height.px": eventHeight(instance)}'></div>
+  <div class='event' [ngStyle]='{"top.px": eventOffsetTop(instance), "height.px": eventHeight(instance)}'
+       (click)='onEventInstanceClicked(instance)'>
+    <div class='title'>{{ instance.event.title ? instance.event.title : '(No title)' }}</div>
+    <div class='range'>{{ instance.event.startDate | instanceRangeString : instance.event.duration }}</div>
+  </div>
 }

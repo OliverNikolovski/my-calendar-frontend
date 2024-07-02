@@ -1,6 +1,8 @@
 <div class='wrapper'>
   <div class='header-right-side'></div>
   <div class='calendar-nav-container'>
-    <app-calendar-navigation [calendarView]='calendarView()' [dateInput]='date()' (dateInputChange)='onDateInputChanged($any($event))'></app-calendar-navigation>
+    <app-calendar-navigation [calendarView]='calendarView()'
+                             [dateInput]='date()'
+                             (dateInputChange)='onDateInputChanged($any($event))'></app-calendar-navigation>
   </div>
 </div>

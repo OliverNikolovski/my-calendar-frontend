@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, input} from "@angular/core";
+import {ChangeDetectionStrategy, Component, computed, effect, input, output} from "@angular/core";
 import {MatIconModule} from "@angular/material/icon";
 import {DatePipe} from "@angular/common";
 import {CalendarView} from "../../configs/calendar-view";
@@ -20,11 +20,12 @@ import {subYears} from "date-fns";
 })
 export class CalendarHeaderComponent {
 
-  date = input(subYears(new Date(), 5));
+  date = input<Date>(new Date());
+  dateChange = output<Date>();
   calendarView = input.required<CalendarView>();
 
-  onDateInputChanged(date: Event) {
-    console.log('CHANGED');
+  onDateInputChanged(date: Date) {
+    this.dateChange.emit(date);
   }
 
 }

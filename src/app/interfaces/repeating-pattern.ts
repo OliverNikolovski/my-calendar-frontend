@@ -1,9 +1,14 @@
 import {Freq, WeekDay} from "../rrule/rrule-constants";
 
 export interface RepeatingPattern {
+  id: number,
   frequency: Freq;
-  weekDays?: WeekDay[];
-  setPos?: -1 | 1 | 2 | 3;
+  weekDays: WeekDay[] | null;
+  setPos: -1 | 1 | 2 | 3 | null;
   interval: number;
-  occurrenceCount?: number;
+  occurrenceCount: number | null;
+  rruleText: string | null;
+  rruleString: string | null;
+  start: string | null;
+  until: string | null;
 }

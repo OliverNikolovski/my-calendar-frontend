@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject, Input, OnInit, signal} from '@angular/core';
-import {WeeklyCalendarComponent} from "../calendar-grid/weekly-calendar.component";
+import {WeeklyCalendarComponent} from "../weekly-calendar/weekly-calendar.component";
 import {SidebarComponent} from "../sidebar/sidebar.component";
 import {DayColumnComponent} from "../day-column/day-column.component";
 import {ComponentStore} from "@ngrx/component-store";
@@ -25,7 +25,7 @@ import {CalendarView} from "../../configs/calendar-view";
   styleUrl: './calendar.component.scss'
 })
 export class CalendarComponent implements OnInit {
-  selectedDate: Date | null = new Date();
+  selectedDate = new Date();
   calendarEventInstancesContainer = signal<CalendarEventInstancesContainer | null>(null);
   protected readonly CalendarView = CalendarView;
 
@@ -43,7 +43,7 @@ export class CalendarComponent implements OnInit {
       });
   }
 
-  onDateChange(date: Date | null) {
+  onDateChange(date: Date) {
     this.selectedDate = date;
   }
 }
