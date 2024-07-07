@@ -16,8 +16,6 @@ export class CalendarEventService {
   private readonly _http = inject(HttpClient);
 
   createEvent(request: CalendarEventCreateRequest): Observable<Boolean> {
-    console.log('request',request)
-    //return of(true);
     return this._http.post<Boolean>(`${this.baseUrl}`, request);
   }
 

@@ -9,6 +9,5 @@ export interface RepeatingPattern {
   occurrenceCount: number | null;
   rruleText: string | null;
   rruleString: string | null;
-  start: string | null;
-  until: string | null;
+  endDate: string | null;
 }

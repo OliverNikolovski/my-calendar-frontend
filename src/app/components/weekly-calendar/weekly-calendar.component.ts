@@ -61,14 +61,6 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
               private readonly renderer: Renderer2) {
     this.mouseMoveUnlisten = this.renderer.listen('document', 'mousemove', this.onMouseMove.bind(this));
     this.mouseUpUnlisten = this.renderer.listen('document', 'mouseup', this.onMouseUp.bind(this));
-
-    effect(() => {
-      console.log('aj tuka', this.calendarEventInstanceContainer());
-    });
-    //
-    // effect(() => {
-    //   console.log('test', this.test());
-    // });
   }
 
   ngOnInit(): void {

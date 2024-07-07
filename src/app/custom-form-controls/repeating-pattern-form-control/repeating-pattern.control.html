@@ -43,7 +43,7 @@
         <mat-radio-button [value]='EventEndType.ON_DATE' (change)='onEventEndTypeChange($event)'>On</mat-radio-button>
         <div class='event-end-date-picker-wrapper'>
           <mat-form-field class='event-end-date-picker-field'>
-            <input matInput [matDatepicker]="eventEnd" formControlName='endDate'>
+            <input matInput [matDatepicker]="eventEnd" formControlName='endDate' (dateChange)='onDateChange($event)'>
             <mat-datepicker-toggle matIconSuffix [for]="eventEnd"></mat-datepicker-toggle>
             <mat-datepicker #eventEnd></mat-datepicker>
           </mat-form-field>

@@ -1,0 +1,5 @@
+export enum DeletionType {
+  THIS_EVENT,
+  THIS_AND_ALL_FOLLOWING_EVENTS,
+  ALL_EVENTS
+}

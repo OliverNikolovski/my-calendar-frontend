@@ -4,6 +4,15 @@
     <input type='text' matInput formControlName='title'>
   </mat-form-field>
 
+  <mat-form-field>
+    <mat-label>Add description</mat-label>
+    <textarea matInput
+              cdkTextareaAutosize
+              cdkAutosizeMinRows="1"
+              cdkAutosizeMaxRows="5"
+              formControlName='description'></textarea>
+  </mat-form-field>
+
   <div class="event-start">
     <mat-form-field>
       <mat-label>Date</mat-label>
@@ -42,13 +51,15 @@
   </div>
 
   <span class='isRepeating'>
-    <mat-checkbox formControlName='isRepeating' color='primary' (change)='onIsRepeatingChange($event)'>Repeats</mat-checkbox>
+    <mat-checkbox formControlName='isRepeating' color='primary'
+                  (change)='onIsRepeatingChange($event)'>Repeats</mat-checkbox>
   </span>
 
   @if (isRepeatingControl.value) {
     <repeating-pattern [startDate]='data.start'
                        [endDate]='data.end'
-                       [weekdayDetails]='data.weekdayDetails'></repeating-pattern>
+                       [weekdayDetails]='data.weekdayDetails'
+                       #repeatingPattern></repeating-pattern>
   }
 
   <button mat-button mat-flat-button color='primary' type='submit' [disabled]='form.invalid'

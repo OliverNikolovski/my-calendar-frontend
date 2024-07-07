@@ -1,4 +1,4 @@
-import {Component, computed, Inject, OnInit, signal} from '@angular/core';
+import {Component, computed, Inject, OnInit, signal, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
 import {
   AbstractControl,
@@ -38,6 +38,7 @@ import {CalendarEventCreateRequest} from "../../interfaces/requests/calendar-eve
 import {
   RepeatingPatternControl
 } from "../../custom-form-controls/repeating-pattern-form-control/repeating-pattern.control";
+import {RepeatingPattern} from "../../interfaces/repeating-pattern";
 
 interface WeekDay {
   index: number;
@@ -81,17 +82,6 @@ export class CreateEventDialog {
   dates$: Observable<Date[]> = of(this.dates);
 
   protected readonly timeFormat = this.data.timeFormat;
-  protected readonly Freq = Freq;
-  protected readonly EventEndType = EventEndType;
-  protected readonly days: WeekDay[] = [
-    {index: 0, name: 'Monday', label: 'M', selected: false},
-    {index: 1, name: 'Tuesday', label: 'T', selected: false},
-    {index: 2, name: 'Wednesday', label: 'W', selected: false},
-    {index: 3, name: 'Thursday', label: 'T', selected: false},
-    {index: 4, name: 'Friday', label: 'F', selected: false},
-    {index: 5, name: 'Saturday', label: 'S', selected: false},
-    {index: 6, name: 'Sunday', label: 'S', selected: false}
-  ];
 
   constructor(private readonly dialogRef: MatDialogRef<CreateEventDialog>,
               private readonly formBuilder: FormBuilder,
@@ -110,6 +100,7 @@ export class CreateEventDialog {
   private initForm(): FormGroup {
     return this.formBuilder.group({
       title: [''],
+      description: [''],
       startDate: [this.data.start, [Validators.required]],
       isRepeating: [false, [Validators.required]],
     }, {
@@ -123,7 +114,6 @@ export class CreateEventDialog {
 
   onSave() {
     const eventCreatingRequest = this._eventCreationRequest;
-    console.log(eventCreatingRequest);
     this.dialogRef.close(eventCreatingRequest);
   }
 
@@ -170,10 +160,9 @@ export class CreateEventDialog {
     return this.form.get('startDate')!;
   }
 
-  get repeatingPattern(): FormGroup {
-    return this.form.get('repeatingPattern')! as FormGroup;
+  get repeatingPattern(): FormGroup | null {
+    return this.form.get('repeatingPattern') as FormGroup;
   }
-
 
   onEventStartTimeChange(event: MatSelectChange) {
     const date = event.value as Date;
@@ -199,10 +188,8 @@ export class CreateEventDialog {
   onIsRepeatingChange(event: MatCheckboxChange) {
     if (event.checked) {
       this.isRepeatingControl.setValue(true);
-      console.log('checked')
     } else {
       this.isRepeatingControl.setValue(false);
-      console.log('unchecked')
     }
   }
 

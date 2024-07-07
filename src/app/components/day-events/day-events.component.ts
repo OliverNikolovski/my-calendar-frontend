@@ -39,7 +39,8 @@ export class DayEventsComponent {
     this.#matDialog.open(ViewEventDetailsDialog, {
       data: {
         event: instance.event
-      }
+      },
+      width: '600px'
     });
   }
 }

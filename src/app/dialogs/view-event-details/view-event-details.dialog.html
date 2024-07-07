@@ -1,3 +1,22 @@
-<h1>Event details</h1>
-<h3>{{data.event.startDate}}</h3>
-<h3>{{data.event.title}}</h3>
+<div class='container'>
+  <div class='actions'>
+    <mat-icon aria-hidden="false" aria-label="Edit" fontIcon="edit" class="edit-btn" matTooltip='Edit' (click)="onEdit()"></mat-icon>
+    <mat-icon aria-hidden="false" aria-label="Delete" fontIcon="delete" class="delete-btn" matTooltip='Delete' (click)="onDelete()"></mat-icon>
+    <mat-icon aria-hidden="false" aria-label="Close" fontIcon="close" class="close-btn" matTooltip='Close' (click)="onClose()"></mat-icon>
+  </div>
+  <h1>{{data.event.title | title}}</h1>
+  @if (data.event.description) {
+    <p>{{data.event.description}}</p>
+  }
+  <p><b>Start date:</b> {{data.event.startDate | date : 'MMMM d, yyyy'}}</p>
+  <p><b>Start time:</b> {{data.event.startDate | date : 'shortTime'}}</p>
+  @if (data.event.isRepeating) {
+    <p><b>End date:</b> {{data.event.repeatingPattern!.endDate | date : 'MMMM d, yyyy'}}</p>
+  }
+  <p><b>Duration:</b> {{data.event.duration | minutesToHoursAndMinutes}}</p>
+  @if (data.event.isRepeating) {
+    <p><b>Repeats:</b> {{data.event.repeatingPattern!.rruleText}}</p>
+  } @else {
+    <p><b>Does not repeat</b></p>
+  }
+</div>
