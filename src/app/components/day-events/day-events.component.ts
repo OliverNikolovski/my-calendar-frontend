@@ -38,7 +38,8 @@ export class DayEventsComponent {
   onEventInstanceClicked(instance: CalendarEventInstanceInfo) {
     this.#matDialog.open(ViewEventDetailsDialog, {
       data: {
-        event: instance.event
+        event: instance.event,
+        date: instance.date
       },
       width: '600px'
     });

@@ -7,7 +7,8 @@ import {MinutesToHoursAndMinutesPipe} from "../../pipes/minutes-to-hours-and-min
 import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
 import {DeleteEventDialog} from "../delete-event/delete-event.dialog";
-import {filter} from "rxjs";
+import {filter, switchMap} from "rxjs";
+import {CalendarEventService} from "../../services/calendar-event.service";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
@@ -18,8 +19,10 @@ import {filter} from "rxjs";
 })
 export class ViewEventDetailsDialog {
 
+  readonly #calendarEventService = inject(CalendarEventService);
   protected readonly data: {
-    event: CalendarEvent
+    event: CalendarEvent;
+    date: string;
   } = inject(MAT_DIALOG_DATA);
   readonly #matDialogRef = inject(MatDialogRef);
   readonly #matDialog = inject(MatDialog);
@@ -34,11 +37,19 @@ export class ViewEventDetailsDialog {
 
   onDelete() {
     this.#matDialog.open(DeleteEventDialog, {
+      data: {
+
+      },
       width: '25rem',
       height: '15.5rem'
     }).afterClosed()
-      .pipe(filter(deletionType => deletionType != null))
-      .subscribe(deletionType => this.#matDialogRef.close())
+      .pipe(
+        filter(deletionType => deletionType != null),
+        switchMap(deletionType => this.#calendarEventService.deleteEvent(this.data.event.id, new Date(this.data.date), deletionType))
+      )
+      .subscribe(deletionType => {
+
+      });
   }
 
 }
