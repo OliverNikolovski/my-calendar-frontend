@@ -32,14 +32,14 @@ export class CalendarEventService {
     return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/generate-instances-for-events?from=${from.toISOString()}`);
   }
 
-  deleteEvent(eventId: number, fromDate: Date, deletionType: DeletionType): Observable<boolean> {
+  deleteEvent(eventId: number, fromDate: Date, deletionType: DeletionType): Observable<void> {
     const params = new HttpParams({
       fromObject: {
         fromDate: fromDate.toISOString(),
         deletionType: deletionType
       }
     });
-    return this.#http.delete<boolean>(`${this.#baseUrl}/${eventId}`, { params });
+    return this.#http.delete<void>(`${this.#baseUrl}/${eventId}`, { params });
   }
 
 }

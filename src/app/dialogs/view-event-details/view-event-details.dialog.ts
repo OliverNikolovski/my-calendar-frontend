@@ -7,7 +7,7 @@ import {MinutesToHoursAndMinutesPipe} from "../../pipes/minutes-to-hours-and-min
 import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
 import {DeleteEventDialog} from "../delete-event/delete-event.dialog";
-import {filter, switchMap} from "rxjs";
+import {filter, switchMap, tap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 
 @Component({
@@ -37,18 +37,17 @@ export class ViewEventDetailsDialog {
 
   onDelete() {
     this.#matDialog.open(DeleteEventDialog, {
-      data: {
-
-      },
       width: '25rem',
       height: '15.5rem'
     }).afterClosed()
       .pipe(
         filter(deletionType => deletionType != null),
+        tap(deletionType => console.log(deletionType, typeof deletionType)),
         switchMap(deletionType => this.#calendarEventService.deleteEvent(this.data.event.id, new Date(this.data.date), deletionType))
       )
-      .subscribe(deletionType => {
-
+      .subscribe({
+        next: () => console.log('DELETED'),
+        error: err => console.log(err)
       });
   }
 
