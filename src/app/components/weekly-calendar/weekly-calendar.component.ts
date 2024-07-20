@@ -6,11 +6,11 @@ import {
   input,
   Input,
   OnDestroy,
-  OnInit,
+  OnInit, output,
   Renderer2
 } from '@angular/core';
 import {DayColumnComponent} from "../day-column/day-column.component";
-import {addDays, format, startOfWeek} from "date-fns";
+import {addDays, format, isFirstDayOfMonth, startOfWeek} from "date-fns";
 import {WeekDayPipe} from "../../pipes/week-day.pipe";
 import {IsCurrentDatePipe} from "../../pipes/is-current-date.pipe";
 import {DatePipe, NgStyle} from "@angular/common";
@@ -57,6 +57,8 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
 
   calendarEventInstanceContainer = input<CalendarEventInstancesContainer | null>(null);
 
+  firstDayOfMonthAdded = output<boolean>();
+
   constructor(private readonly componentStore: ComponentStore<MousePositionState>,
               private readonly renderer: Renderer2) {
     this.mouseMoveUnlisten = this.renderer.listen('document', 'mousemove', this.onMouseMove.bind(this));
@@ -82,10 +84,16 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
   private _changeCurrentDate() {
     const firstDayOfWeek = startOfWeek(this.selectedDate, {weekStartsOn: 1});
     const dates: Date[] = [];
+    let isFirstDayOfMonthAdded = false;
     for (let i = 0; i < 7; i++) {
-      dates.push(addDays(firstDayOfWeek, i));
+      const date = addDays(firstDayOfWeek, i);
+      if (i > 0 && isFirstDayOfMonth(date)) {
+        isFirstDayOfMonthAdded = true;
+      }
+      dates.push(date);
     }
     this.days = dates;
+    isFirstDayOfMonthAdded ? this.firstDayOfMonthAdded.emit(true) : this.firstDayOfMonthAdded.emit(false);
   }
 
   changeTimeFormat() {

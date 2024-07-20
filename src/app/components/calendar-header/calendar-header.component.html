@@ -3,6 +3,7 @@
   <div class='calendar-nav-container'>
     <app-calendar-navigation [calendarView]='calendarView()'
                              [dateInput]='date()'
-                             (dateInputChange)='onDateInputChanged($any($event))'></app-calendar-navigation>
+                             (dateInputChange)='onDateInputChanged($any($event))'
+                             [showNextMonth]='firstDayOfMonthAdded()'></app-calendar-navigation>
   </div>
 </div>

@@ -28,6 +28,7 @@ export class CalendarComponent implements OnInit {
   selectedDate = new Date();
   calendarEventInstancesContainer = signal<CalendarEventInstancesContainer | null>(null);
   protected readonly CalendarView = CalendarView;
+  protected firstDayOfMonthAdded = false;
 
   private readonly _calendarEventService = inject(CalendarEventService);
 
@@ -44,5 +45,9 @@ export class CalendarComponent implements OnInit {
 
   onDateChange(date: Date) {
     this.selectedDate = date;
+  }
+
+  onFirstDayOfMonthAdded(value: boolean) {
+    this.firstDayOfMonthAdded = value;
   }
 }

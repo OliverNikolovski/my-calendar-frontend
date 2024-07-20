@@ -16,16 +16,8 @@ export class CalendarEventService {
 
   readonly #http = inject(HttpClient);
 
-  createEvent(request: CalendarEventCreateRequest): Observable<Boolean> {
-    return this.#http.post<Boolean>(`${this.#baseUrl}`, request);
-  }
-
-  getEvents(id: number): Observable<CalendarEvent[]> {
-    return this.#http.get<CalendarEvent[]>(`${this.#baseUrl}/${id}`);
-  }
-
-  getCalendarEventInstances(eventId: number): Observable<CalendarEventInstancesContainer> {
-    return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/generate-event-instances/${eventId}`);
+  createEvent(request: CalendarEventCreateRequest): Observable<number> {
+    return this.#http.post<number>(`${this.#baseUrl}`, request);
   }
 
   getInstancesForEvents(from: Date): Observable<CalendarEventInstancesContainer> {

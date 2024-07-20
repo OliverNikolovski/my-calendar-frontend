@@ -21,6 +21,7 @@ import {subYears} from "date-fns";
 export class CalendarHeaderComponent {
 
   date = input<Date>(new Date());
+  firstDayOfMonthAdded = input<boolean>(false);
   dateChange = output<Date>();
   calendarView = input.required<CalendarView>();
 

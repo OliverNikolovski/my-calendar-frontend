@@ -50,14 +50,6 @@ import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instanc
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DayColumnComponent implements OnInit, OnDestroy {
-  // testEvents: CalendarEvent[] = [
-  //   {
-  //     id: 1,
-  //     from: set(new Date(), { hours: 9, minutes: 0, seconds: 0, milliseconds: 0 }),
-  //     duration: 60,
-  //     isRepeating: false
-  //   }
-  // ];
   calendarEventInstances = input<CalendarEventInstanceInfo[]>([]);
 
   private readonly _calendarEventService = inject(CalendarEventService);

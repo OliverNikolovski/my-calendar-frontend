@@ -3,7 +3,7 @@ import {CalendarView} from "../../configs/calendar-view";
 import {DatePipe} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatButton} from "@angular/material/button";
-import {addWeeks, startOfWeek, subWeeks} from "date-fns";
+import {addDays, addMonths, addWeeks, format, isSameMonth, lastDayOfMonth, startOfWeek, subWeeks} from "date-fns";
 
 @Component({
   standalone: true,
@@ -21,12 +21,18 @@ export class CalendarNavigationComponent {
 
   dateInput = model(new Date());
   calendarView = input.required<CalendarView>();
-  format = computed(() => {
+  showNextMonth = input(false);
+  formattedDate = computed(() => {
     switch (this.calendarView()) {
       case CalendarView.DAILY:
         return '';
       case CalendarView.WEEKLY:
-        return 'MMMM y';
+        if (this.showNextMonth()) {
+          const nextMonth = addMonths(this.dateInput(), 1);
+          return `${format(this.dateInput(), 'MMMM')} - ${format(nextMonth, 'MMMM')} ${this.dateInput().getFullYear()}`;
+        } else {
+          return format(this.dateInput(), 'MMMM y');
+        }
       case CalendarView.MONTHLY:
         return '';
       default:
@@ -80,5 +86,28 @@ export class CalendarNavigationComponent {
 
   setDateToToday() {
     this.dateInput.set(new Date());
+  }
+
+  private formatMonthRange(date: Date) {
+    // Get the last day of the month for the given date
+    const lastDay = lastDayOfMonth(date);
+
+    // Check if any of the last 7 days of the month are in the next month
+    let nextMonthIncluded = false;
+    for (let i = 0; i < 7; i++) {
+      const dayToCheck = addDays(lastDay, -i);
+      if (!isSameMonth(dayToCheck, lastDay)) {
+        nextMonthIncluded = true;
+        break;
+      }
+    }
+
+    // Format the date as needed
+    if (nextMonthIncluded) {
+      const nextMonth = addDays(lastDay, 1);
+      return `${format(date, 'MMMM')} - ${format(nextMonth, 'MMMM yyyy')}`;
+    } else {
+      return format(date, 'MMMM yyyy');
+    }
   }
 }
