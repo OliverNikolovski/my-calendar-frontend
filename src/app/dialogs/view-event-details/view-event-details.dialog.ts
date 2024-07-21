@@ -9,6 +9,7 @@ import {MatTooltip} from "@angular/material/tooltip";
 import {DeleteEventDialog} from "../delete-event/delete-event.dialog";
 import {filter, switchMap, tap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
+import {CalendarStore} from "../../states/calendar.state";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
@@ -20,15 +21,18 @@ import {CalendarEventService} from "../../services/calendar-event.service";
 export class ViewEventDetailsDialog {
 
   readonly #calendarEventService = inject(CalendarEventService);
+  readonly #calendarStore = inject(CalendarStore);
+
   protected readonly data: {
     event: CalendarEvent;
     date: string;
+    order: number;
   } = inject(MAT_DIALOG_DATA);
   readonly #matDialogRef = inject(MatDialogRef);
   readonly #matDialog = inject(MatDialog);
 
   onClose() {
-    this.#matDialogRef.close(null);
+    this.#matDialogRef.close();
   }
 
   onEdit() {
@@ -43,10 +47,16 @@ export class ViewEventDetailsDialog {
       .pipe(
         filter(deletionType => deletionType != null),
         tap(deletionType => console.log(deletionType, typeof deletionType)),
-        switchMap(deletionType => this.#calendarEventService.deleteEvent(this.data.event.id, new Date(this.data.date), deletionType))
+        switchMap(deletionType =>
+          this.#calendarEventService.deleteEvent(this.data.event.id, new Date(this.data.date), deletionType, this.data.order)),
+        switchMap(() => this.#calendarEventService.getEventInstances(this.data.event.id))
       )
       .subscribe({
-        next: () => console.log('DELETED'),
+        next: container => {
+          console.log('DELETED');
+          this.#calendarStore.updateEventInstances(container);
+          this.#matDialogRef.close();
+        },
         error: err => console.log(err)
       });
   }

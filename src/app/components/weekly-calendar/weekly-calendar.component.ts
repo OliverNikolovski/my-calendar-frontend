@@ -2,12 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   DoCheck,
-  effect,
-  input,
+  inject,
   Input,
   OnDestroy,
   OnInit, output,
-  Renderer2
+  Renderer2, Signal
 } from '@angular/core';
 import {DayColumnComponent} from "../day-column/day-column.component";
 import {addDays, format, isFirstDayOfMonth, startOfWeek} from "date-fns";
@@ -17,6 +16,7 @@ import {DatePipe, NgStyle} from "@angular/common";
 import {ApplyPipe} from "../../pipes/apply.pipe";
 import {ComponentStore} from "@ngrx/component-store";
 import {MousePositionState} from "../../states/mouse-position.state";
+import {CalendarStore} from "../../states/calendar.state";
 import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
 import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instance-info";
 
@@ -35,7 +35,7 @@ const pipes = [WeekDayPipe, IsCurrentDatePipe, DatePipe, ApplyPipe]
     '(mousedown)': 'onMouseDown($event)'
   }
 })
-export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
+export class WeeklyCalendarComponent implements OnInit, OnDestroy {
 
   private readonly mouseMoveUnlisten: () => void;
   private readonly mouseUpUnlisten: () => void;
@@ -55,8 +55,6 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
     this._changeCurrentDate();
   }
 
-  calendarEventInstanceContainer = input<CalendarEventInstancesContainer | null>(null);
-
   firstDayOfMonthAdded = output<boolean>();
 
   constructor(private readonly componentStore: ComponentStore<MousePositionState>,
@@ -71,9 +69,6 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
       date.setHours(hour, 0, 0, 0);
       return date;
     });
-  }
-
-  ngDoCheck() {
   }
 
   ngOnDestroy() {
@@ -117,13 +112,5 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy, DoCheck {
       this.componentStore.setState({y: event.y, mouseUp: true});
       this.draggable = false;
     }
-  }
-
-  getCalendarEventInstancesForDay(day: Date, container: CalendarEventInstancesContainer | null): CalendarEventInstanceInfo[] {
-    if (!container) {
-      return [];
-    }
-    const dayStr = format(day, 'yyyy-MM-dd');
-    return container[dayStr];
   }
 }

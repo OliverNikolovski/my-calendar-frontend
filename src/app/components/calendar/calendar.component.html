@@ -4,12 +4,10 @@
                        [firstDayOfMonthAdded]='firstDayOfMonthAdded'
                        (dateChange)='onDateChange($event)'
                        class='calendar-header'></app-calendar-header>
-  <!--  <app-sidebar (dateChange)="onDateChange($event)"></app-sidebar>-->
   <app-sidebar [(selected)]='selectedDate'></app-sidebar>
   <app-weekly-calendar [date]="selectedDate"
                        [intervalHeight]='intervalHeight'
                        [intervalDuration]='intervalDuration'
                        [slotDuration]='slotDuration'
-                       [calendarEventInstanceContainer]='calendarEventInstancesContainer()'
                        (firstDayOfMonthAdded)='onFirstDayOfMonthAdded($event)'></app-weekly-calendar>
 </div>

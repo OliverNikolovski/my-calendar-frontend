@@ -4,6 +4,7 @@ import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instanc
 import {InstanceRangeString} from "../../pipes/instance-range-string";
 import {MatDialog} from "@angular/material/dialog";
 import {ViewEventDetailsDialog} from "../../dialogs/view-event-details/view-event-details.dialog";
+import {CalendarStore} from "../../states/calendar.state";
 
 @Component({
   selector: 'day-events',
@@ -39,7 +40,8 @@ export class DayEventsComponent {
     this.#matDialog.open(ViewEventDetailsDialog, {
       data: {
         event: instance.event,
-        date: instance.date
+        date: instance.date,
+        order: instance.order
       },
       width: '600px'
     });

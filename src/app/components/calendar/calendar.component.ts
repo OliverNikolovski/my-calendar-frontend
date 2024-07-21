@@ -2,14 +2,11 @@ import {ChangeDetectionStrategy, Component, inject, Input, OnInit, signal} from 
 import {WeeklyCalendarComponent} from "../weekly-calendar/weekly-calendar.component";
 import {SidebarComponent} from "../sidebar/sidebar.component";
 import {DayColumnComponent} from "../day-column/day-column.component";
-import {ComponentStore} from "@ngrx/component-store";
-import {CalendarEvent} from "../../interfaces/calendar-event";
-import { set } from 'date-fns';
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
-import {NG_VALUE_ACCESSOR} from "@angular/forms";
 import {CalendarHeaderComponent} from "../calendar-header/calendar-header.component";
 import {CalendarView} from "../../configs/calendar-view";
+import {CalendarStore} from "../../states/calendar.state";
 
 @Component({
   selector: 'app-calendar',
@@ -25,8 +22,9 @@ import {CalendarView} from "../../configs/calendar-view";
   styleUrl: './calendar.component.scss'
 })
 export class CalendarComponent implements OnInit {
+  readonly #calendarStore = inject(CalendarStore);
+
   selectedDate = new Date();
-  calendarEventInstancesContainer = signal<CalendarEventInstancesContainer | null>(null);
   protected readonly CalendarView = CalendarView;
   protected firstDayOfMonthAdded = false;
 
@@ -38,9 +36,7 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit() {
     this._calendarEventService.getInstancesForEvents(new Date(2024, 4, 1, 0, 0, 0, 0))
-      .subscribe(container => {
-        this.calendarEventInstancesContainer.set(container);
-      });
+      .subscribe(container => this.#calendarStore.updateEventInstances(container));
   }
 
   onDateChange(date: Date) {

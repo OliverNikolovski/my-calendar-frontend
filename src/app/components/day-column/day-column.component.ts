@@ -1,7 +1,7 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  Component,
+  Component, computed,
   DoCheck,
   ElementRef, inject, input,
   Input,
@@ -9,7 +9,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  Renderer2,
+  Renderer2, signal,
   SimpleChanges,
   ViewChild
 } from '@angular/core';
@@ -32,10 +32,11 @@ import {CreateEventDialog} from "../../dialogs/create-event.dialog/create-event.
 import {MatDialog} from "@angular/material/dialog";
 import {WeekdayDetails} from "../../interfaces/weekday-details";
 import {DayEventsComponent} from "../day-events/day-events.component";
-import {filter, of, switchMap} from "rxjs";
+import {filter, of, pipe, switchMap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
-import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
 import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instance-info";
+import {CalendarStore} from "../../states/calendar.state";
+import {rxMethod} from "@ngrx/signals/rxjs-interop";
 
 @Component({
   selector: 'app-day-column',
@@ -50,9 +51,8 @@ import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instanc
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DayColumnComponent implements OnInit, OnDestroy {
-  calendarEventInstances = input<CalendarEventInstanceInfo[]>([]);
-
-  private readonly _calendarEventService = inject(CalendarEventService);
+  readonly #calendarEventService = inject(CalendarEventService);
+  readonly #calendarStore = inject(CalendarStore);
 
   @Input({required: true}) date!: Date;
   @Input({required: true}) intervals!: Date[];
@@ -61,6 +61,11 @@ export class DayColumnComponent implements OnInit, OnDestroy {
   @Input({required: true}) slotDuration!: number;
   @Input() calendarGridScrollTop = 0;
   @Input() timeFormat?: string;
+
+  calendarEventInstances = computed(() => {
+    const container = this.#calendarStore.calendarEventInstancesContainer();
+    return this.#calendarStore.getCalendarEventInstances(this.date, container);
+  });
 
   isDraggingArea: boolean = false;
   startOfClickedSlot: number | null = null;
@@ -120,8 +125,15 @@ export class DayColumnComponent implements OnInit, OnDestroy {
     dialogRef.afterClosed()
       .pipe(
         filter(Boolean),
-        switchMap(request => this._calendarEventService.createEvent(request))
-      ).subscribe(() => console.log('saved'));
+        switchMap(request => this.#calendarEventService.createEvent(request)),
+        switchMap(eventId => this.#calendarEventService.getEventInstances(eventId))
+      )
+      .subscribe({
+        next: container => {
+          this.#calendarStore.updateEventInstances(container);
+        },
+        error: err => console.log(err)
+      });
   }
 
   onMouseMove(y: number, isMouseUp: boolean) {
@@ -165,7 +177,7 @@ export class DayColumnComponent implements OnInit, OnDestroy {
     const occurrence = isLast ? 'last' : ordinal;
     const position = occurrence === 'first' ? 1 : occurrence === 'second' ? 2 : occurrence === 'third' ? 3 : -1;
 
-    return { weekdayName, occurrence, position };
+    return {weekdayName, occurrence, position};
   }
 
   private _getStartOfSlotContaining(y: number): number {
