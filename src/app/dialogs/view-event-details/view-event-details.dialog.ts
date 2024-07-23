@@ -10,6 +10,7 @@ import {DeleteEventDialog} from "../delete-event/delete-event.dialog";
 import {filter, switchMap, tap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarStore} from "../../states/calendar.state";
+import {DeletionType} from "../../configs/deletion-type.enum";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
@@ -40,22 +41,23 @@ export class ViewEventDetailsDialog {
   }
 
   onDelete() {
+    let type: DeletionType;
     this.#matDialog.open(DeleteEventDialog, {
       width: '25rem',
       height: '15.5rem'
     }).afterClosed()
       .pipe(
         filter(deletionType => deletionType != null),
-        tap(deletionType => console.log(deletionType, typeof deletionType)),
+        tap(deletionType => type = deletionType),
         switchMap(deletionType =>
-          this.#calendarEventService.deleteEvent(this.data.event.id, new Date(this.data.date), deletionType, this.data.order)),
-        switchMap(() => this.#calendarEventService.getEventInstances(this.data.event.id))
+          this.#calendarEventService.deleteEvent(this.data.event.id, new Date(this.data.date), deletionType, this.data.order))
       )
       .subscribe({
-        next: container => {
-          console.log('DELETED');
-          this.#calendarStore.updateEventInstances(container);
-          this.#matDialogRef.close();
+        next: () => {
+          if (type === DeletionType.THIS_EVENT) {
+            this.#calendarStore.removeSingleInstance(new Date(this.data.date), this.data.event.id)
+            this.#matDialogRef.close();
+          }
         },
         error: err => console.log(err)
       });

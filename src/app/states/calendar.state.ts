@@ -40,12 +40,25 @@ export const CalendarStore = signalStore(
       });
     },
     getCalendarEventInstances(date: Date, container: CalendarEventInstancesContainer | null): CalendarEventInstanceInfo[] {
-      //console.log('container', container)
       if (!container) {
         return [];
       }
       const dayStr = format(date, 'yyyy-MM-dd');
       return container[dayStr];
+    },
+    removeSingleInstance(date: Date, eventId: number) {
+      const container = store.calendarEventInstancesContainer();
+      if (!container) {
+        return;
+      }
+      const day = format(date, 'yyyy-MM-dd');
+      const instances = container[day];
+      // const eventInstance = instances.find(instance => instance.eventId === eventId)
+      const newContainer = { ...container, [day]: instances.filter(i => i.eventId !== eventId) };
+      console.log('NEW CONTAINER', newContainer);
+      patchState(store, (state) => ({
+        calendarEventInstancesContainer: { ...newContainer }
+      }));
     }
   }))
 );
