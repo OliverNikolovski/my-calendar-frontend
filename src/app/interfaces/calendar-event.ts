@@ -8,5 +8,5 @@ export interface CalendarEvent {
   repeatingPattern: RepeatingPattern | null;
   title: string | null;
   description: string | null;
-  parentId: number | null;
+  sequenceId: string;
 }

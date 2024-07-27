@@ -57,6 +57,12 @@ export class ViewEventDetailsDialog {
           if (type === DeletionType.THIS_EVENT) {
             this.#calendarStore.removeSingleInstance(new Date(this.data.date), this.data.event.id)
             this.#matDialogRef.close();
+          } else if (type === DeletionType.THIS_AND_ALL_FOLLOWING_EVENTS) {
+            this.#calendarStore.removeThisAndAllFollowingInstances(new Date(this.data.date), this.data.event.sequenceId);
+            this.#matDialogRef.close();
+          } else if (type === DeletionType.ALL_EVENTS) {
+            this.#calendarStore.removeAllEventsInSequence(this.data.event.sequenceId);
+            this.#matDialogRef.close();
           }
         },
         error: err => console.log(err)

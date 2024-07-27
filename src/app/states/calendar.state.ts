@@ -1,8 +1,7 @@
 import {CalendarEventInstancesContainer} from "../interfaces/calendar-event-instances-container";
 import {patchState, signalStore, withComputed, withMethods, withState} from "@ngrx/signals";
 import {CalendarEventInstanceInfo} from "../interfaces/calendar-event-instance-info";
-import {format} from "date-fns";
-import {inject, runInInjectionContext} from "@angular/core";
+import {format, set} from "date-fns";
 
 type CalendarState = {
   calendarEventInstancesContainer: CalendarEventInstancesContainer | null;
@@ -53,9 +52,51 @@ export const CalendarStore = signalStore(
       }
       const day = format(date, 'yyyy-MM-dd');
       const instances = container[day];
-      // const eventInstance = instances.find(instance => instance.eventId === eventId)
       const newContainer = { ...container, [day]: instances.filter(i => i.eventId !== eventId) };
-      console.log('NEW CONTAINER', newContainer);
+      patchState(store, (state) => ({
+        calendarEventInstancesContainer: { ...newContainer }
+      }));
+    },
+    removeThisAndAllFollowingInstances(fromDate: Date, sequenceId: string) {
+      const container = store.calendarEventInstancesContainer();
+      if (!container) {
+        return;
+      }
+      const fromDateAtStartOfDay = set(fromDate, {
+        hours: 0,
+        minutes: 0,
+        seconds: 0,
+        milliseconds: 0
+      });
+      const newContainer = { ...container };
+      const keys = Object.keys(container);
+      for (let key of keys) {
+        const date = new Date(key);
+        if (date < fromDateAtStartOfDay) {
+          continue;
+        }
+        const instancesInDay = container[key];
+        const instanceInDayExceptForSequence =
+          instancesInDay.filter(instance => instance.event.sequenceId !== sequenceId)
+        newContainer[key] = instanceInDayExceptForSequence;
+      }
+      patchState(store, (state) => ({
+        calendarEventInstancesContainer: { ...newContainer }
+      }));
+    },
+    removeAllEventsInSequence(sequenceId: string) {
+      const container = store.calendarEventInstancesContainer();
+      if (!container) {
+        return;
+      }
+      const newContainer = { ...container };
+      const keys = Object.keys(container);
+      for (let key of keys) {
+        const instances = container[key];
+        const instancesExceptForSequence =
+          instances.filter(instance => instance.event.sequenceId !== sequenceId)
+        newContainer[key] = instancesExceptForSequence;
+      }
       patchState(store, (state) => ({
         calendarEventInstancesContainer: { ...newContainer }
       }));
