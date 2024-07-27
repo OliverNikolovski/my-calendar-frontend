@@ -5,7 +5,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {CalendarEvent} from "../interfaces/calendar-event";
 import {CalendarEventInstancesContainer} from "../interfaces/calendar-event-instances-container";
 import {CalendarEventInstanceInfo} from "../interfaces/calendar-event-instance-info";
-import {DeletionType} from "../configs/deletion-type.enum";
+import {ActionType} from "../configs/deletion-type.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class CalendarEventService {
     return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/generate-instances-for-event-id?eventId=${eventId}`);
   }
 
-  deleteEvent(eventId: number, fromDate: Date, deletionType: DeletionType, order: number): Observable<void> {
+  deleteEvent(eventId: number, fromDate: Date, deletionType: ActionType, order: number): Observable<void> {
     const params = new HttpParams({
       fromObject: {
         fromDate: fromDate.toISOString(),

@@ -10,7 +10,7 @@ import {DeleteEventDialog} from "../delete-event/delete-event.dialog";
 import {filter, switchMap, tap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarStore} from "../../states/calendar.state";
-import {DeletionType} from "../../configs/deletion-type.enum";
+import {ActionType} from "../../configs/deletion-type.enum";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
@@ -41,7 +41,7 @@ export class ViewEventDetailsDialog {
   }
 
   onDelete() {
-    let type: DeletionType;
+    let type: ActionType;
     this.#matDialog.open(DeleteEventDialog, {
       width: '25rem',
       height: '15.5rem'
@@ -54,13 +54,13 @@ export class ViewEventDetailsDialog {
       )
       .subscribe({
         next: () => {
-          if (type === DeletionType.THIS_EVENT) {
+          if (type === ActionType.THIS_EVENT) {
             this.#calendarStore.removeSingleInstance(new Date(this.data.date), this.data.event.id)
             this.#matDialogRef.close();
-          } else if (type === DeletionType.THIS_AND_ALL_FOLLOWING_EVENTS) {
+          } else if (type === ActionType.THIS_AND_ALL_FOLLOWING_EVENTS) {
             this.#calendarStore.removeThisAndAllFollowingInstances(new Date(this.data.date), this.data.event.sequenceId);
             this.#matDialogRef.close();
-          } else if (type === DeletionType.ALL_EVENTS) {
+          } else if (type === ActionType.ALL_EVENTS) {
             this.#calendarStore.removeAllEventsInSequence(this.data.event.sequenceId);
             this.#matDialogRef.close();
           }

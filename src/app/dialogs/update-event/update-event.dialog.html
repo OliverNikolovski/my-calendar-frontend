@@ -1,0 +1,15 @@
+<div class='wrapper'>
+  <h1>Update recurring event</h1>
+  <div class='update-data-container'>
+
+  </div>
+  <mat-radio-group aria-label="Select a delete option" class='options' [(ngModel)]='selectedActionType'>
+    <mat-radio-button [value]='ActionType.THIS_EVENT'>This event</mat-radio-button>
+    <mat-radio-button [value]='ActionType.THIS_AND_ALL_FOLLOWING_EVENTS'>This and following events</mat-radio-button>
+    <mat-radio-button [value]='ActionType.ALL_EVENTS'>All events</mat-radio-button>
+  </mat-radio-group>
+  <div class='actions'>
+    <button mat-stroked-button (click)='onCancel()' class='action'>Cancel</button>
+    <button mat-flat-button color='primary' (click)='onConfirm()' class='action'>OK</button>
+  </div>
+</div>

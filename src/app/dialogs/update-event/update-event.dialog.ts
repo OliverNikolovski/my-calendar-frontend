@@ -7,22 +7,22 @@ import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   standalone: true,
-  templateUrl: 'delete-event.dialog.html',
-  styleUrl: 'delete-event.dialog.scss',
+  templateUrl: 'update-event.dialog.html',
+  styleUrl: 'update-event.dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MatRadioModule, MatButtonModule, FormsModule]
 })
-export class DeleteEventDialog {
+export class UpdateEventDialog {
   readonly #matDialogRef = inject(MatDialogRef);
 
-  protected selectedDeletionType = ActionType.THIS_EVENT;
-  protected readonly DeletionType = ActionType;
+  protected selectedActionType = ActionType.THIS_EVENT;
+  protected readonly ActionType = ActionType;
 
   onCancel() {
     this.#matDialogRef.close(null);
   }
 
   onConfirm() {
-    this.#matDialogRef.close(this.selectedDeletionType);
+    this.#matDialogRef.close(this.selectedActionType);
   }
 }

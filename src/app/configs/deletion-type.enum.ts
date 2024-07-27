@@ -1,4 +1,4 @@
-export enum DeletionType {
+export enum ActionType {
   THIS_EVENT,
   THIS_AND_ALL_FOLLOWING_EVENTS,
   ALL_EVENTS
