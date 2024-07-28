@@ -11,6 +11,8 @@ import {filter, switchMap, tap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarStore} from "../../states/calendar.state";
 import {ActionType} from "../../configs/deletion-type.enum";
+import {UpdateEventDialog} from "../update-event/update-event.dialog";
+import { format } from "date-fns";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
@@ -26,7 +28,7 @@ export class ViewEventDetailsDialog {
 
   protected readonly data: {
     event: CalendarEvent;
-    date: string;
+    instanceDate: string;
     order: number;
   } = inject(MAT_DIALOG_DATA);
   readonly #matDialogRef = inject(MatDialogRef);
@@ -37,7 +39,15 @@ export class ViewEventDetailsDialog {
   }
 
   onEdit() {
-    // TODO
+    this.#matDialog.open(UpdateEventDialog, {
+      width: '25rem',
+      height: '15.5rem',
+      data: {
+        startTime: format(this.data.instanceDate /** or data.event.startDate **/, 'h:mm a'),
+        duration: this.data.event.duration
+      }
+    }).afterClosed()
+      .subscribe(console.log);
   }
 
   onDelete() {
@@ -50,15 +60,15 @@ export class ViewEventDetailsDialog {
         filter(deletionType => deletionType != null),
         tap(deletionType => type = deletionType),
         switchMap(deletionType =>
-          this.#calendarEventService.deleteEvent(this.data.event.id, new Date(this.data.date), deletionType, this.data.order))
+          this.#calendarEventService.deleteEvent(this.data.event.id, new Date(this.data.instanceDate), deletionType, this.data.order))
       )
       .subscribe({
         next: () => {
           if (type === ActionType.THIS_EVENT) {
-            this.#calendarStore.removeSingleInstance(new Date(this.data.date), this.data.event.id)
+            this.#calendarStore.removeSingleInstance(new Date(this.data.instanceDate), this.data.event.id)
             this.#matDialogRef.close();
           } else if (type === ActionType.THIS_AND_ALL_FOLLOWING_EVENTS) {
-            this.#calendarStore.removeThisAndAllFollowingInstances(new Date(this.data.date), this.data.event.sequenceId);
+            this.#calendarStore.removeThisAndAllFollowingInstances(new Date(this.data.instanceDate), this.data.event.sequenceId);
             this.#matDialogRef.close();
           } else if (type === ActionType.ALL_EVENTS) {
             this.#calendarStore.removeAllEventsInSequence(this.data.event.sequenceId);

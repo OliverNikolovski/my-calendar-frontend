@@ -40,7 +40,7 @@ export class DayEventsComponent {
     this.#matDialog.open(ViewEventDetailsDialog, {
       data: {
         event: instance.event,
-        date: instance.date,
+        instanceDate: instance.date,
         order: instance.order
       },
       width: '600px'

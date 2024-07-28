@@ -2,7 +2,7 @@ import {RepeatingPattern} from "./repeating-pattern";
 
 export interface CalendarEvent {
   id: number;
-  startDate: Date;
+  startDate: string;
   duration: number;
   isRepeating: boolean;
   repeatingPattern: RepeatingPattern | null;

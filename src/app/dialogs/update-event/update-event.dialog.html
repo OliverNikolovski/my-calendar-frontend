@@ -1,7 +1,20 @@
 <div class='wrapper'>
   <h1>Update recurring event</h1>
   <div class='update-data-container'>
-
+    <div class='start-time'>
+      <label>Start time</label>
+      <input [ngxMatTimepicker]='startTime' placeholder='Click to select time' readonly [value]='newStartTime'>
+      <ngx-mat-timepicker #startTime (timeChanged)='onStartTimeChange($event)' [defaultTime]='data.startTime'></ngx-mat-timepicker>
+    </div>
+    <div class='end-time'>
+      <label>End time</label>
+      <input [ngxMatTimepicker]='endTime' placeholder='Click to select time' readonly [value]='newEndTime'>
+      <ngx-mat-timepicker #endTime (timeChanged)='onEndTimeChange($event)' [defaultTime]='newEndTime'></ngx-mat-timepicker>
+    </div>
+  </div>
+  <div class='duration'>
+    <label>Duration</label>
+    <input matInput type='number' min='15' [value]='newDuration' (input)='onDurationChange($event)'>
   </div>
   <mat-radio-group aria-label="Select a delete option" class='options' [(ngModel)]='selectedActionType'>
     <mat-radio-button [value]='ActionType.THIS_EVENT'>This event</mat-radio-button>
@@ -10,6 +23,6 @@
   </mat-radio-group>
   <div class='actions'>
     <button mat-stroked-button (click)='onCancel()' class='action'>Cancel</button>
-    <button mat-flat-button color='primary' (click)='onConfirm()' class='action'>OK</button>
+    <button mat-flat-button color='primary' (click)='onConfirm()' class='action' [disabled]='disabled'>OK</button>
   </div>
 </div>
