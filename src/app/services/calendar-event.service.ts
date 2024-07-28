@@ -6,6 +6,7 @@ import {CalendarEvent} from "../interfaces/calendar-event";
 import {CalendarEventInstancesContainer} from "../interfaces/calendar-event-instances-container";
 import {CalendarEventInstanceInfo} from "../interfaces/calendar-event-instance-info";
 import {ActionType} from "../configs/deletion-type.enum";
+import {CalendarEventUpdateRequest} from "../interfaces/requests/calendar-event-update.request";
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,10 @@ export class CalendarEventService {
       }
     });
     return this.#http.delete<void>(`${this.#baseUrl}/${eventId}`, { params });
+  }
+
+  updateEvent(updateRequest: CalendarEventUpdateRequest): Observable<void> {
+    return this.#http.patch<void>(`${this.#baseUrl}`, updateRequest);
   }
 
 }

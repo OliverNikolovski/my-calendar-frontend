@@ -36,8 +36,8 @@ export class UpdateEventDialog {
   onConfirm() {
     this.#matDialogRef.close({
       selectedActionType: this.selectedActionType,
-      startTime: this.newStartTime,
-      duration: this.newDuration
+      newStartTime: this.newStartTime,
+      newDuration: this.newDuration
     });
   }
 

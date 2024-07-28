@@ -7,12 +7,14 @@ import {MinutesToHoursAndMinutesPipe} from "../../pipes/minutes-to-hours-and-min
 import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
 import {DeleteEventDialog} from "../delete-event/delete-event.dialog";
-import {filter, switchMap, tap} from "rxjs";
+import {filter, map, switchMap, tap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarStore} from "../../states/calendar.state";
 import {ActionType} from "../../configs/deletion-type.enum";
 import {UpdateEventDialog} from "../update-event/update-event.dialog";
 import { format } from "date-fns";
+import {CalendarEventUpdateRequest} from "../../interfaces/requests/calendar-event-update.request";
+import {isNotNullOrUndefined} from "../../util/common-utils";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
@@ -47,7 +49,18 @@ export class ViewEventDetailsDialog {
         duration: this.data.event.duration
       }
     }).afterClosed()
-      .subscribe(console.log);
+      .pipe(
+        filter(isNotNullOrUndefined),
+        map(value => this.mapToUpdateRequest(value)),
+        switchMap(request => this.#calendarEventService.updateEvent(request))
+      )
+      .subscribe({
+        next: () => {
+          console.log('UPDATED');
+          this.#matDialogRef.close();
+        },
+        error: err => console.log(err)
+      });
   }
 
   onDelete() {
@@ -57,7 +70,7 @@ export class ViewEventDetailsDialog {
       height: '15.5rem'
     }).afterClosed()
       .pipe(
-        filter(deletionType => deletionType != null),
+        filter(isNotNullOrUndefined),
         tap(deletionType => type = deletionType),
         switchMap(deletionType =>
           this.#calendarEventService.deleteEvent(this.data.event.id, new Date(this.data.instanceDate), deletionType, this.data.order))
@@ -77,6 +90,16 @@ export class ViewEventDetailsDialog {
         },
         error: err => console.log(err)
       });
+  }
+
+  mapToUpdateRequest(partial: Partial<CalendarEventUpdateRequest>): CalendarEventUpdateRequest {
+    return {
+      eventId: this.data.event.id,
+      fromDate: this.data.instanceDate,
+      actionType: partial.actionType!,
+      newStartTime: partial.newStartTime!,
+      newDuration: partial.newDuration!
+    }
   }
 
 }
