@@ -45,7 +45,7 @@ export class ViewEventDetailsDialog {
       width: '25rem',
       height: '15.5rem',
       data: {
-        startTime: format(this.data.instanceDate /** or data.event.startDate **/, 'h:mm a'),
+        instanceDate: this.data.instanceDate,
         duration: this.data.event.duration
       }
     }).afterClosed()
@@ -97,7 +97,7 @@ export class ViewEventDetailsDialog {
       eventId: this.data.event.id,
       fromDate: this.data.instanceDate,
       actionType: partial.actionType!,
-      newStartTime: partial.newStartTime!,
+      newStartDate: partial.newStartDate!,
       newDuration: partial.newDuration!
     }
   }

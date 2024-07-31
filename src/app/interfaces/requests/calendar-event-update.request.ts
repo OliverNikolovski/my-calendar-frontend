@@ -4,6 +4,6 @@ export interface CalendarEventUpdateRequest {
   eventId: number;
   fromDate: string;
   actionType: ActionType;
-  newStartTime: string;
+  newStartDate: Date;
   newDuration: number;
 }

@@ -4,7 +4,7 @@
     <div class='start-time'>
       <label>Start time</label>
       <input [ngxMatTimepicker]='startTime' placeholder='Click to select time' readonly [value]='newStartTime'>
-      <ngx-mat-timepicker #startTime (timeChanged)='onStartTimeChange($event)' [defaultTime]='data.startTime'></ngx-mat-timepicker>
+      <ngx-mat-timepicker #startTime (timeChanged)='onStartTimeChange($event)' [defaultTime]='newStartTime'></ngx-mat-timepicker>
     </div>
     <div class='end-time'>
       <label>End time</label>

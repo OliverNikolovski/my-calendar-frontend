@@ -7,6 +7,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {NgxMatTimepickerModule} from "ngx-mat-timepicker";
 import {MatInput} from "@angular/material/input";
 import {calculateDurationInMinutes, calculateNewTime} from "../../util/date-utils";
+import { format, parse } from "date-fns";
 
 @Component({
   standalone: true,
@@ -18,12 +19,12 @@ import {calculateDurationInMinutes, calculateNewTime} from "../../util/date-util
 export class UpdateEventDialog {
   readonly #matDialogRef = inject(MatDialogRef);
   protected readonly data: {
-    startTime: string; // ex. "9:30 AM"
+    instanceDate: Date;
     duration: number;
   } = inject(MAT_DIALOG_DATA);
 
   protected selectedActionType = ActionType.THIS_EVENT;
-  protected newStartTime = this.data.startTime;
+  protected newStartTime = format(this.data.instanceDate, 'h:mm a');
   protected newDuration = this.data.duration;
   protected newEndTime = calculateNewTime(this.newStartTime, this.newDuration);
   protected readonly ActionType = ActionType;
@@ -36,7 +37,7 @@ export class UpdateEventDialog {
   onConfirm() {
     this.#matDialogRef.close({
       actionType: this.selectedActionType,
-      newStartTime: this.newStartTime,
+      newStartDate: this.newStartDate,
       newDuration: this.newDuration
     });
   }
@@ -58,6 +59,10 @@ export class UpdateEventDialog {
     this.newDuration = +inputElement.value;
     this.newEndTime = calculateNewTime(this.newStartTime, this.newDuration);
     this.#pristine = false;
+  }
+
+  get newStartDate(): Date {
+    return parse(this.newStartTime, 'h:mm a', this.data.instanceDate);
   }
 
   get disabled(): boolean {
