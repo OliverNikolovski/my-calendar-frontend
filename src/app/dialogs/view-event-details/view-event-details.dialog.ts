@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, inject} from "@angular/core";
+import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from "@angular/core";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {CalendarEvent} from "../../interfaces/calendar-event";
 import {TitlePipe} from "../../pipes/title.pipe";
@@ -7,7 +7,7 @@ import {MinutesToHoursAndMinutesPipe} from "../../pipes/minutes-to-hours-and-min
 import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
 import {DeleteEventDialog} from "../delete-event/delete-event.dialog";
-import {filter, map, switchMap, tap} from "rxjs";
+import {filter, map, Observable, pipe, switchMap, tap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarStore} from "../../states/calendar.state";
 import {ActionType} from "../../configs/deletion-type.enum";
@@ -15,6 +15,9 @@ import {UpdateEventDialog} from "../update-event/update-event.dialog";
 import { format } from "date-fns";
 import {CalendarEventUpdateRequest} from "../../interfaces/requests/calendar-event-update.request";
 import {isNotNullOrUndefined} from "../../util/common-utils";
+import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
+import {rxMethod} from "@ngrx/signals/rxjs-interop";
+import {tapResponse} from "@ngrx/component-store";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
@@ -23,7 +26,7 @@ import {isNotNullOrUndefined} from "../../util/common-utils";
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TitlePipe, DatePipe, MinutesToHoursAndMinutesPipe, MatIcon, MatTooltip]
 })
-export class ViewEventDetailsDialog {
+export class ViewEventDetailsDialog implements OnInit {
 
   readonly #calendarEventService = inject(CalendarEventService);
   readonly #calendarStore = inject(CalendarStore);
@@ -35,6 +38,21 @@ export class ViewEventDetailsDialog {
   } = inject(MAT_DIALOG_DATA);
   readonly #matDialogRef = inject(MatDialogRef);
   readonly #matDialog = inject(MatDialog);
+  shouldLoadEventContainerForSequence = signal<boolean>(false);
+  loadEventContainer = rxMethod<boolean>(
+    pipe(
+      filter(Boolean),
+      switchMap(sequenceId => this.#calendarEventService.getInstancesForSequence(this.data.event.sequenceId)),
+      tapResponse({
+        next: container => this.#calendarStore.updateContainer(container),
+        error: console.log
+      })
+    )
+  );
+
+  ngOnInit() {
+    this.loadEventContainer(this.shouldLoadEventContainerForSequence);
+  }
 
   onClose() {
     this.#matDialogRef.close();
@@ -57,6 +75,7 @@ export class ViewEventDetailsDialog {
       .subscribe({
         next: () => {
           console.log('UPDATED');
+          this.shouldLoadEventContainerForSequence.set(true);
           this.#matDialogRef.close();
         },
         error: err => console.log(err)

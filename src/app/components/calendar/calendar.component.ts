@@ -36,7 +36,7 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit() {
     this._calendarEventService.getInstancesForEvents(new Date(2024, 4, 1, 0, 0, 0, 0))
-      .subscribe(container => this.#calendarStore.updateEventInstances(container));
+      .subscribe(container => this.#calendarStore.initEventInstances(container));
   }
 
   onDateChange(date: Date) {

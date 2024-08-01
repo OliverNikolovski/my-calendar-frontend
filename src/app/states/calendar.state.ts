@@ -17,7 +17,7 @@ export const CalendarStore = signalStore(
   withState(initialState),
 
   withMethods((store) => ({
-    updateEventInstances(newContainer: CalendarEventInstancesContainer): void {
+    initEventInstances(newContainer: CalendarEventInstancesContainer): void {
       patchState(store, (state) => {
         const container = state.calendarEventInstancesContainer;
         if (!container) {
@@ -97,6 +97,37 @@ export const CalendarStore = signalStore(
           instances.filter(instance => instance.event.sequenceId !== sequenceId)
         newContainer[key] = instancesExceptForSequence;
       }
+      patchState(store, (state) => ({
+        calendarEventInstancesContainer: { ...newContainer }
+      }));
+    },
+    updateContainer(updatedEventContainer: CalendarEventInstancesContainer) {
+      const container = store.calendarEventInstancesContainer();
+      if (!container) {
+        return;
+      }
+      const updatedEventContainerKeys = Object.keys(updatedEventContainer);
+      if (!updatedEventContainerKeys.length) {
+        return;
+      }
+      const updatedEventSequenceId = updatedEventContainer[updatedEventContainerKeys[0]][0].event.sequenceId;
+      const oldContainerKeys = Object.keys(container);
+      const newContainer: CalendarEventInstancesContainer = {};
+      oldContainerKeys.forEach(key => {
+        const updatedEventInstanceForDay = updatedEventContainer[key][0];
+        if (updatedEventInstanceForDay) {
+          const instances = container[key].map(instance => {
+            if (instance.event.sequenceId === updatedEventSequenceId) {
+              return updatedEventInstanceForDay;
+            } else {
+              return instance;
+            }
+          });
+          newContainer[key] = instances;
+        } else {
+          newContainer[key] = { ...container[key] }
+        }
+      });
       patchState(store, (state) => ({
         calendarEventInstancesContainer: { ...newContainer }
       }));

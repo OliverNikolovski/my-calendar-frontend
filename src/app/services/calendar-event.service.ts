@@ -25,6 +25,10 @@ export class CalendarEventService {
     return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/generate-instances-for-events?from=${from.toISOString()}`);
   }
 
+  getInstancesForSequence(sequenceId: String): Observable<CalendarEventInstancesContainer> {
+    return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/event-instances-for-sequence/${sequenceId}`);
+  }
+
   getEventInstances(eventId: number): Observable<CalendarEventInstancesContainer> {
     return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/generate-instances-for-event-id?eventId=${eventId}`);
   }

@@ -130,7 +130,7 @@ export class DayColumnComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: container => {
-          this.#calendarStore.updateEventInstances(container);
+          this.#calendarStore.initEventInstances(container);
         },
         error: err => console.log(err)
       });
