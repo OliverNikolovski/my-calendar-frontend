@@ -101,6 +101,28 @@ export const CalendarStore = signalStore(
         calendarEventInstancesContainer: { ...newContainer }
       }));
     },
+    updateContainer2(sequenceId: string, other: CalendarEventInstancesContainer) {
+      const container = store.calendarEventInstancesContainer();
+      if (!container) {
+        return;
+      }
+      const keys = Object.keys(container);
+      // first delete the old events from the modified sequence from the container
+      const newContainer = keys.reduce((acc, key) => ({
+        [key]: container[key].filter(instance => instance.event.sequenceId !== sequenceId)
+      }), {} as CalendarEventInstancesContainer);
+      const otherKeys = Object.keys(other);
+      // add the new updated events into the container
+      otherKeys.forEach(key => {
+        newContainer[key] ? newContainer[key] = [...newContainer[key], ...other[key]] :
+          newContainer[key] = [...other[key]];
+      });
+      console.log('newContainer', newContainer)
+      console.log('other', other)
+      patchState(store, () => ({
+        calendarEventInstancesContainer: {...newContainer}
+      }));
+    },
     updateContainer(updatedEventContainer: CalendarEventInstancesContainer) {
       const container = store.calendarEventInstancesContainer();
       if (!container) {
@@ -114,7 +136,7 @@ export const CalendarStore = signalStore(
       const oldContainerKeys = Object.keys(container);
       const newContainer: CalendarEventInstancesContainer = {};
       oldContainerKeys.forEach(key => {
-        const updatedEventInstanceForDay = updatedEventContainer[key][0];
+        const updatedEventInstanceForDay = updatedEventContainer[key]?.[0];
         if (updatedEventInstanceForDay) {
           const instances = container[key].map(instance => {
             if (instance.event.sequenceId === updatedEventSequenceId) {

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, computed, inject, input} from "@angular/core";
+import {ChangeDetectionStrategy, Component, computed, effect, inject, input} from "@angular/core";
 import {CommonModule} from "@angular/common";
 import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instance-info";
 import {InstanceRangeString} from "../../pipes/instance-range-string";
@@ -25,6 +25,12 @@ export class DayEventsComponent {
   intervalDuration = input.required<number>();
   minSlotDuration = input.required<number>();
   pixelsPerMinute = computed(() => this.intervalHeight() / this.intervalDuration());
+
+  constructor() {
+    effect(() => {
+      console.log('calendarEventInstances', this.calendarEventInstances());
+    });
+  }
 
   eventOffsetTop(instance: CalendarEventInstanceInfo): number {
     const instanceDate = new Date(instance.date);

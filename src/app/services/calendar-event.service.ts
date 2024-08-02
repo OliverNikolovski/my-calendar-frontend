@@ -37,8 +37,8 @@ export class CalendarEventService {
     const params = new HttpParams({
       fromObject: {
         fromDate: fromDate.toISOString(),
-        deletionType,
-        order
+        actionType: deletionType,
+        order: order
       }
     });
     return this.#http.delete<void>(`${this.#baseUrl}/${eventId}`, { params });

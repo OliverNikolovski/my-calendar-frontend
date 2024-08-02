@@ -44,7 +44,7 @@ export class ViewEventDetailsDialog implements OnInit {
       filter(Boolean),
       switchMap(sequenceId => this.#calendarEventService.getInstancesForSequence(this.data.event.sequenceId)),
       tapResponse({
-        next: container => this.#calendarStore.updateContainer(container),
+        next: container => this.#calendarStore.updateContainer2(this.data.event.sequenceId, container),
         error: console.log
       })
     )
@@ -96,16 +96,18 @@ export class ViewEventDetailsDialog implements OnInit {
       )
       .subscribe({
         next: () => {
-          if (type === ActionType.THIS_EVENT) {
-            this.#calendarStore.removeSingleInstance(new Date(this.data.instanceDate), this.data.event.id)
-            this.#matDialogRef.close();
-          } else if (type === ActionType.THIS_AND_ALL_FOLLOWING_EVENTS) {
-            this.#calendarStore.removeThisAndAllFollowingInstances(new Date(this.data.instanceDate), this.data.event.sequenceId);
-            this.#matDialogRef.close();
-          } else if (type === ActionType.ALL_EVENTS) {
-            this.#calendarStore.removeAllEventsInSequence(this.data.event.sequenceId);
-            this.#matDialogRef.close();
-          }
+          this.shouldLoadEventContainerForSequence.set(true);
+          this.#matDialogRef.close();
+          // if (type === ActionType.THIS_EVENT) {
+          //   this.#calendarStore.removeSingleInstance(new Date(this.data.instanceDate), this.data.event.id)
+          //   this.#matDialogRef.close();
+          // } else if (type === ActionType.THIS_AND_ALL_FOLLOWING_EVENTS) {
+          //   this.#calendarStore.removeThisAndAllFollowingInstances(new Date(this.data.instanceDate), this.data.event.sequenceId);
+          //   this.#matDialogRef.close();
+          // } else if (type === ActionType.ALL_EVENTS) {
+          //   this.#calendarStore.removeAllEventsInSequence(this.data.event.sequenceId);
+          //   this.#matDialogRef.close();
+          // }
         },
         error: err => console.log(err)
       });
