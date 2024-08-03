@@ -15,5 +15,6 @@
   position: absolute;
   width: 0;
   height: 0;
-  background-color: teal;
+  background-color: $calendar-event-color;
+  border-radius: 5px;
 }
