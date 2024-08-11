@@ -1,0 +1,54 @@
+<div class="wrapper">
+  <div class="container">
+    <div class="calendar">
+      <div id="js-month" class="calendar__month">{{month}}</div>
+      <div id="js-day" class="calendar__day">{{day}}</div>
+    </div>
+  </div>
+
+  <div class="login-content">
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()"  class="login-container">
+      @if (errorMessage()) {
+        <div class="error-container">
+          <p>{{ errorMessage() }}</p>
+        </div>
+      }
+      <div class="login-title">
+        <span>Log in</span>
+      </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Enter your email</mat-label>
+        <input
+          formControlName="email"
+          name="email"
+          matInput
+        />
+      </mat-form-field>
+
+      <div class="password-container">
+        <mat-form-field appearance="outline" style=" margin-bottom: -15px">
+          <mat-label>Enter your password</mat-label>
+          <input matInput [type]="hide() ? 'password' : 'text'"
+                 formControlName="password"
+                 name="password" />
+          <button
+            type="button"
+            mat-icon-button
+            matSuffix
+            (click)="showPassword($event)"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="hide()"
+          >
+            <mat-icon>{{hide() ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+        </mat-form-field>
+        <p class="forgot-password">Forgot password</p>
+      </div>
+
+      <button type="submit"mat-button mat-flat-button color='primary' [disabled]="loginForm.invalid" class="confirm-btn">Confirm</button>
+    </form>
+
+    <div class="create-acc">Don't have an account? Create one <a routerLink="/register" class="link-highlight">here</a>.</div>
+
+  </div>
+</div>

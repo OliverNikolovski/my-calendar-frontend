@@ -7,6 +7,7 @@ import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-i
 import {CalendarHeaderComponent} from "../calendar-header/calendar-header.component";
 import {CalendarView} from "../../configs/calendar-view";
 import {CalendarStore} from "../../states/calendar.state";
+import {MatButtonModule} from "@angular/material/button";
 
 @Component({
   selector: 'app-calendar',
@@ -16,7 +17,8 @@ import {CalendarStore} from "../../states/calendar.state";
     WeeklyCalendarComponent,
     SidebarComponent,
     DayColumnComponent,
-    CalendarHeaderComponent
+    CalendarHeaderComponent,
+    MatButtonModule
   ],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss'
