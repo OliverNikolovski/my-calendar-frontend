@@ -27,9 +27,9 @@ export class DayEventsComponent {
   pixelsPerMinute = computed(() => this.intervalHeight() / this.intervalDuration());
 
   constructor() {
-    effect(() => {
-      console.log('calendarEventInstances', this.calendarEventInstances());
-    });
+    // effect(() => {
+    //   console.log('calendarEventInstances', this.calendarEventInstances());
+    // });
   }
 
   eventOffsetTop(instance: CalendarEventInstanceInfo): number {

@@ -51,6 +51,11 @@ import {rxMethod} from "@ngrx/signals/rxjs-interop";
   changeDetection: ChangeDetectionStrategy.Default,
 })
 export class DayColumnComponent implements OnInit, OnDestroy {
+  private readonly renderer = inject(Renderer2);
+  private readonly hostElement = inject(ElementRef);
+  private readonly componentStore = inject<ComponentStore<MousePositionState>>(ComponentStore);
+  private readonly matDialog = inject(MatDialog);
+
   readonly #calendarEventService = inject(CalendarEventService);
   readonly #calendarStore = inject(CalendarStore);
 
@@ -73,12 +78,6 @@ export class DayColumnComponent implements OnInit, OnDestroy {
   @ViewChild('area') area!: ElementRef;
 
   private mouseDownUnlisten?: () => void;
-
-  constructor(private readonly renderer: Renderer2,
-              private readonly hostElement: ElementRef,
-              private readonly componentStore: ComponentStore<MousePositionState>,
-              private readonly matDialog: MatDialog) {
-  }
 
   ngOnInit() {
     this.componentStore.select(state => state)

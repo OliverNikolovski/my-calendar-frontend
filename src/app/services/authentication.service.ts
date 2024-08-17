@@ -17,4 +17,8 @@ export class AuthenticationService {
     return this.#http.post<AuthenticationResponse>(`${this.#url}/login`, request);
   }
 
+  refreshToken(): Observable<AuthenticationResponse> {
+    return this.#http.post<AuthenticationResponse>(`${this.#url}/refresh-token`, {});
+  }
+
 }

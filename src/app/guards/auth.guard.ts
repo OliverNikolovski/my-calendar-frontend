@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -6,17 +6,15 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
+  private router = inject(Router);
 
-  constructor(private router: Router) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot
   ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-
     const token = localStorage.getItem('accessToken');
-
-    console.log('route url',route.url);
+    const refreshToken = localStorage.getItem('refreshToken');
 
     // Check if the user is accessing the login page
     if (route.url[0]?.path === 'login') {
@@ -31,12 +29,11 @@ export class AuthGuard implements CanActivate {
     }
 
     // If not logged in, redirect to login page
-    if (!token) {
+    if (!token && !refreshToken) {
       this.router.navigate(['/login']);
       return false;
     }
 
-    console.log('ALLOW ACCESS')
     // If logged in, allow access to the requested route
     return true;
   }

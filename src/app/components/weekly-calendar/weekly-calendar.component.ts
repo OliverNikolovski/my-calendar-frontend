@@ -36,6 +36,9 @@ const pipes = [WeekDayPipe, IsCurrentDatePipe, DatePipe, ApplyPipe]
   }
 })
 export class WeeklyCalendarComponent implements OnInit, OnDestroy {
+  private readonly componentStore = inject<ComponentStore<MousePositionState>>(ComponentStore);
+  private readonly renderer = inject(Renderer2);
+
 
   private readonly mouseMoveUnlisten: () => void;
   private readonly mouseUpUnlisten: () => void;
@@ -57,8 +60,7 @@ export class WeeklyCalendarComponent implements OnInit, OnDestroy {
 
   firstDayOfMonthAdded = output<boolean>();
 
-  constructor(private readonly componentStore: ComponentStore<MousePositionState>,
-              private readonly renderer: Renderer2) {
+  constructor() {
     this.mouseMoveUnlisten = this.renderer.listen('document', 'mousemove', this.onMouseMove.bind(this));
     this.mouseUpUnlisten = this.renderer.listen('document', 'mouseup', this.onMouseUp.bind(this));
   }

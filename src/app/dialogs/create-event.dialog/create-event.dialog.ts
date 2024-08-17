@@ -1,4 +1,4 @@
-import {Component, computed, Inject, OnInit, signal, ViewChild} from '@angular/core';
+import { Component, computed, OnInit, signal, ViewChild, inject } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
 import {
   AbstractControl,
@@ -74,6 +74,10 @@ interface WeekDay {
   styleUrl: './create-event.dialog.scss'
 })
 export class CreateEventDialog {
+  private readonly dialogRef = inject<MatDialogRef<CreateEventDialog>>(MatDialogRef);
+  private readonly formBuilder = inject(FormBuilder);
+  protected data = inject(MAT_DIALOG_DATA);
+
   private readonly eventStartTime = signal(this.data.start, {equal: this.compareByTime});
   private readonly eventEndTime = signal(this.data.end, {equal: this.compareByTime});
   private readonly duration = computed(() =>
@@ -83,17 +87,9 @@ export class CreateEventDialog {
 
   protected readonly timeFormat = this.data.timeFormat;
 
-  constructor(private readonly dialogRef: MatDialogRef<CreateEventDialog>,
-              private readonly formBuilder: FormBuilder,
-              @Inject(MAT_DIALOG_DATA)
-              protected data: {
-                start: Date;
-                end: Date;
-                slotDuration: number;
-                timeFormat: string;
-                weekdayDetails: WeekdayDetails;
-              }
-  ) {
+  constructor() {
+    const dialogRef = this.dialogRef;
+
     dialogRef.updateSize('35rem', '35rem');
   }
 

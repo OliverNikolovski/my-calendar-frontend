@@ -37,7 +37,10 @@ export class CalendarComponent implements OnInit {
   @Input() slotDuration: number = 15;
 
   ngOnInit() {
-    this._calendarEventService.getInstancesForEvents(new Date(2024, 4, 1, 0, 0, 0, 0))
+    // this._calendarEventService.getInstancesForEvents(new Date(2024, 4, 1, 0, 0, 0, 0))
+    //   .subscribe(container => this.#calendarStore.initEventInstances(container));
+
+    this._calendarEventService.getCalendarEventInstancesForAuthenticatedUser()
       .subscribe(container => this.#calendarStore.initEventInstances(container));
   }
 
