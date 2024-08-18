@@ -1,0 +1,23 @@
+<div class='wrapper'>
+  <h1>Share the event with others</h1>
+  <form class="form" (ngSubmit)='onSubmit()'>
+    <mat-form-field class="full-width">
+      <mat-label>Search for a user</mat-label>
+      <input type="text"
+             placeholder="Email / First name / Last name"
+             aria-label="Search for a user"
+             matInput
+             [formControl]="myControl"
+             [matAutocomplete]="auto">
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]='displayUserOption'>
+        @for (option of filteredOptions(); track option.value) {
+          <mat-option [value]="option">{{option.name}}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
+    <div class='actions'>
+      <button mat-stroked-button (click)='onCancel()' class='action' type='button'>Cancel</button>
+      <button mat-flat-button color='primary' class='action'>OK</button>
+    </div>
+  </form>
+</div>

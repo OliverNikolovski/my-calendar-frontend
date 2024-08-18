@@ -7,6 +7,7 @@ import {CalendarEventInstancesContainer} from "../interfaces/calendar-event-inst
 import {CalendarEventInstanceInfo} from "../interfaces/calendar-event-instance-info";
 import {ActionType} from "../configs/deletion-type.enum";
 import {CalendarEventUpdateRequest} from "../interfaces/requests/calendar-event-update.request";
+import {ShareEventSequenceRequest} from "../interfaces/requests/share-event-sequence.request";
 
 @Injectable({
   providedIn: 'root'
@@ -52,4 +53,7 @@ export class CalendarEventService {
     return this.#http.patch<void>(`${this.#baseUrl}`, updateRequest);
   }
 
+  shareEventSequence(request: ShareEventSequenceRequest): Observable<void> {
+    return this.#http.post<void>(`${this.#baseUrl}/share`, request);
+  }
 }

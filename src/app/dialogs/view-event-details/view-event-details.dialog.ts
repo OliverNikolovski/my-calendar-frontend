@@ -18,6 +18,8 @@ import {isNotNullOrUndefined} from "../../util/common-utils";
 import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
 import {rxMethod} from "@ngrx/signals/rxjs-interop";
 import {tapResponse} from "@ngrx/component-store";
+import {ShareEventDialog} from "../share-event/share-event.dialog";
+import {ShareEventSequenceRequest} from "../../interfaces/requests/share-event-sequence.request";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
@@ -58,6 +60,22 @@ export class ViewEventDetailsDialog implements OnInit {
     this.#matDialogRef.close();
   }
 
+  onShare() {
+    this.#matDialog.open(ShareEventDialog, {
+      width: '25rem',
+      height: '15.5rem',
+    }).afterClosed()
+      .pipe(
+        filter(isNotNullOrUndefined),
+        map(option => ({ userId: option.value, sequenceId: this.data.event.sequenceId }) as ShareEventSequenceRequest),
+        switchMap(request => this.#calendarEventService.shareEventSequence(request))
+      )
+      .subscribe({
+        next: () => console.log('Successfully shared'),
+        error: err => console.log(err)
+      });
+  }
+
   onEdit() {
     this.#matDialog.open(UpdateEventDialog, {
       width: '25rem',
@@ -74,7 +92,6 @@ export class ViewEventDetailsDialog implements OnInit {
       )
       .subscribe({
         next: () => {
-          console.log('UPDATED');
           this.shouldLoadEventContainerForSequence.set(true);
           this.#matDialogRef.close();
         },
