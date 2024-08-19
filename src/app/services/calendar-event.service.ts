@@ -56,4 +56,8 @@ export class CalendarEventService {
   shareEventSequence(request: ShareEventSequenceRequest): Observable<void> {
     return this.#http.post<void>(`${this.#baseUrl}/share`, request);
   }
+
+  downloadCalendar(): any {
+    return this.#http.get(`${this.#baseUrl}/export`, { responseType: 'blob' });
+  }
 }

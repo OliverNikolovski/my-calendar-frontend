@@ -1,4 +1,5 @@
 <div class="wrapper">
+  <button mat-button class='logout' (click)='logout()'>Logout</button>
   <app-calendar-header [calendarView]='CalendarView.WEEKLY'
                        [date]='selectedDate'
                        [firstDayOfMonthAdded]='firstDayOfMonthAdded'

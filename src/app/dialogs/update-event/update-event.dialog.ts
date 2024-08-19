@@ -5,7 +5,7 @@ import {MatButtonModule} from "@angular/material/button";
 import {FormsModule} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {NgxMatTimepickerModule} from "ngx-mat-timepicker";
-import {MatInput} from "@angular/material/input";
+import {MatFormField, MatInput} from "@angular/material/input";
 import {calculateDurationInMinutes, calculateNewTime} from "../../util/date-utils";
 import { format, parse } from "date-fns";
 
@@ -14,7 +14,7 @@ import { format, parse } from "date-fns";
   templateUrl: 'update-event.dialog.html',
   styleUrl: 'update-event.dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatRadioModule, MatButtonModule, FormsModule, NgxMatTimepickerModule, MatInput]
+  imports: [MatRadioModule, MatButtonModule, FormsModule, NgxMatTimepickerModule, MatInput, MatFormField]
 })
 export class UpdateEventDialog {
   readonly #matDialogRef = inject(MatDialogRef);

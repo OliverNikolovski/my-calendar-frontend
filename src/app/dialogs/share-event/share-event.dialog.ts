@@ -28,7 +28,7 @@ export class ShareEventDialog {
   readonly #userService = inject(UserService);
   readonly #matDialogRef = inject(MatDialogRef);
 
-  readonly N = 1;
+  readonly N = 4;
   myControl = new FormControl('');
   filteredOptions: Signal<SelectOption[] | undefined>;
 
@@ -37,7 +37,7 @@ export class ShareEventDialog {
       this.myControl.valueChanges.pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        filter(searchTerm => searchTerm != null && searchTerm.length > 3),
+        filter(searchTerm => searchTerm != null && searchTerm.length > 1),
         switchMap(searchTerm => this.#userService.findFirstNMatches(this.N, searchTerm!!))
       )
     )

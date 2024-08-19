@@ -1,13 +1,13 @@
-import {ChangeDetectionStrategy, Component, inject, Input, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input, OnInit} from '@angular/core';
 import {WeeklyCalendarComponent} from "../weekly-calendar/weekly-calendar.component";
 import {SidebarComponent} from "../sidebar/sidebar.component";
 import {DayColumnComponent} from "../day-column/day-column.component";
 import {CalendarEventService} from "../../services/calendar-event.service";
-import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
 import {CalendarHeaderComponent} from "../calendar-header/calendar-header.component";
 import {CalendarView} from "../../configs/calendar-view";
 import {CalendarStore} from "../../states/calendar.state";
 import {MatButtonModule} from "@angular/material/button";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-calendar',
@@ -25,6 +25,7 @@ import {MatButtonModule} from "@angular/material/button";
 })
 export class CalendarComponent implements OnInit {
   readonly #calendarStore = inject(CalendarStore);
+  readonly #router = inject(Router);
 
   selectedDate = new Date();
   protected readonly CalendarView = CalendarView;
@@ -37,9 +38,6 @@ export class CalendarComponent implements OnInit {
   @Input() slotDuration: number = 15;
 
   ngOnInit() {
-    // this._calendarEventService.getInstancesForEvents(new Date(2024, 4, 1, 0, 0, 0, 0))
-    //   .subscribe(container => this.#calendarStore.initEventInstances(container));
-
     this._calendarEventService.getCalendarEventInstancesForAuthenticatedUser()
       .subscribe(container => this.#calendarStore.initEventInstances(container));
   }
@@ -50,5 +48,11 @@ export class CalendarComponent implements OnInit {
 
   onFirstDayOfMonthAdded(value: boolean) {
     this.firstDayOfMonthAdded = value;
+  }
+
+  logout() {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+    this.#router.navigate(['/login']);
   }
 }

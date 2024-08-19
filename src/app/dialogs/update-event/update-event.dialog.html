@@ -2,19 +2,25 @@
   <h1>Update recurring event</h1>
   <div class='update-data-container'>
     <div class='start-time'>
-      <label>Start time</label>
-      <input [ngxMatTimepicker]='startTime' placeholder='Click to select time' readonly [value]='newStartTime'>
-      <ngx-mat-timepicker #startTime (timeChanged)='onStartTimeChange($event)' [defaultTime]='newStartTime'></ngx-mat-timepicker>
+      <mat-form-field class='form-field'>
+        <label>Start time</label>
+        <input [ngxMatTimepicker]='startTime' placeholder='Click to select time' readonly [value]='newStartTime' matInput>
+        <ngx-mat-timepicker #startTime (timeChanged)='onStartTimeChange($event)' [defaultTime]='newStartTime'></ngx-mat-timepicker>
+      </mat-form-field>
     </div>
     <div class='end-time'>
-      <label>End time</label>
-      <input [ngxMatTimepicker]='endTime' placeholder='Click to select time' readonly [value]='newEndTime'>
-      <ngx-mat-timepicker #endTime (timeChanged)='onEndTimeChange($event)' [defaultTime]='newEndTime'></ngx-mat-timepicker>
+      <mat-form-field class='form-field'>
+        <label>End time</label>
+        <input [ngxMatTimepicker]='endTime' placeholder='Click to select time' readonly [value]='newEndTime' matInput>
+        <ngx-mat-timepicker #endTime (timeChanged)='onEndTimeChange($event)' [defaultTime]='newEndTime'></ngx-mat-timepicker>
+      </mat-form-field>
     </div>
   </div>
   <div class='duration'>
-    <label>Duration</label>
-    <input matInput type='number' min='15' [value]='newDuration' (input)='onDurationChange($event)'>
+    <mat-form-field class='form-field'>
+      <label>Duration</label>
+      <input matInput type='number' min='15' [value]='newDuration' (input)='onDurationChange($event)'>
+    </mat-form-field>
   </div>
   <mat-radio-group aria-label="Select a delete option" class='options' [(ngModel)]='selectedActionType'>
     <mat-radio-button [value]='ActionType.THIS_EVENT'>This event</mat-radio-button>
