@@ -9,4 +9,5 @@ export interface CalendarEvent {
   title: string | null;
   description: string | null;
   sequenceId: string;
+  isPublic: boolean;
 }

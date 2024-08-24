@@ -1,5 +1,10 @@
 <div class='container'>
   <div class='actions'>
+    @if (data.event.isPublic) {
+      <mat-icon aria-hidden="false" aria-label="Make event private" fontIcon="visibility_off" class="visibility-private-btn" matTooltip='Make event private' (click)="onUpdateVisibility()"></mat-icon>
+    } @else {
+      <mat-icon aria-hidden="false" aria-label="make event public" fontIcon="visibility" class="visibility-public-btn" matTooltip='Make event public' (click)="onUpdateVisibility()"></mat-icon>
+    }
     <mat-icon aria-hidden="false" aria-label="Export" fontIcon="import_export" class="export-btn" matTooltip='Export' (click)="onExport()"></mat-icon>
     <mat-icon aria-hidden="false" aria-label="Share" fontIcon="share" class="share-btn" matTooltip='Share' (click)="onShare()"></mat-icon>
     <mat-icon aria-hidden="false" aria-label="Edit" fontIcon="edit" class="edit-btn" matTooltip='Edit' (click)="onEdit()"></mat-icon>

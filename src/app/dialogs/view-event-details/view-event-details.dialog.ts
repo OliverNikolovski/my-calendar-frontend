@@ -18,6 +18,7 @@ import {tapResponse} from "@ngrx/component-store";
 import {ShareEventDialog} from "../share-event/share-event.dialog";
 import {ShareEventSequenceRequest} from "../../interfaces/requests/share-event-sequence.request";
 import {ToastrService} from "ngx-toastr";
+import {ConfirmDialog} from "../confirm/confirm.dialog";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
@@ -149,5 +150,25 @@ export class ViewEventDetailsDialog implements OnInit {
       a.click();
       URL.revokeObjectURL(objectUrl);
     });
+  }
+
+  onUpdateVisibility() {
+    const newVisibility = this.data.event.isPublic ? 'private' : 'public';
+    this.#matDialog.open(ConfirmDialog, {
+      data: {
+        confirmationMessage: `Are you sure you want to make the event ${newVisibility}`
+      },
+      width: '25rem',
+      height: '15.5rem',
+    }).afterClosed()
+      .pipe(
+        filter(Boolean),
+        switchMap(() => this.#calendarEventService.updateEventSequenceVisibility(this.data.event.sequenceId, !this.data.event.isPublic))
+      )
+      .subscribe({
+          next: () => this.#toastrService.success(`Event updated as ${newVisibility}`),
+          error: err => this.#toastrService.error(err.error)
+        }
+      );
   }
 }

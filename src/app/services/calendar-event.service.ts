@@ -60,4 +60,8 @@ export class CalendarEventService {
   downloadCalendar(): any {
     return this.#http.get(`${this.#baseUrl}/export`, { responseType: 'blob' });
   }
+
+  updateEventSequenceVisibility(sequenceId: string, isPublic: boolean): Observable<void> {
+    return this.#http.patch<void>(`${this.#baseUrl}/update-event-visibility`, {sequenceId, isPublic});
+  }
 }
