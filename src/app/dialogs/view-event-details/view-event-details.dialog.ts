@@ -32,7 +32,6 @@ export class ViewEventDetailsDialog implements OnInit {
   readonly #calendarEventService = inject(CalendarEventService);
   readonly #calendarStore = inject(CalendarStore);
   readonly #toastrService = inject(ToastrService);
-
   protected readonly data: {
     event: CalendarEvent;
     instanceDate: string;
@@ -40,6 +39,7 @@ export class ViewEventDetailsDialog implements OnInit {
   } = inject(MAT_DIALOG_DATA);
   readonly #matDialogRef = inject(MatDialogRef);
   readonly #matDialog = inject(MatDialog);
+
   shouldLoadEventContainerForSequence = signal<boolean>(false);
   loadEventContainer = rxMethod<boolean>(
     pipe(
@@ -156,17 +156,21 @@ export class ViewEventDetailsDialog implements OnInit {
     const newVisibility = this.data.event.isPublic ? 'private' : 'public';
     this.#matDialog.open(ConfirmDialog, {
       data: {
-        confirmationMessage: `Are you sure you want to make the event ${newVisibility}`
+        confirmationMessage: `Are you sure you want to make the event ${newVisibility}?`
       },
-      width: '25rem',
-      height: '15.5rem',
+      width: '30rem',
+      height: '10rem',
     }).afterClosed()
       .pipe(
         filter(Boolean),
         switchMap(() => this.#calendarEventService.updateEventSequenceVisibility(this.data.event.sequenceId, !this.data.event.isPublic))
       )
       .subscribe({
-          next: () => this.#toastrService.success(`Event updated as ${newVisibility}`),
+          next: () => {
+            this.#calendarStore.updateSequenceVisibility(this.data.event.sequenceId, !this.data.event.isPublic);
+            this.#matDialogRef.close();
+            this.#toastrService.success(`Event updated as ${newVisibility}`);
+          },
           error: err => this.#toastrService.error(err.error)
         }
       );

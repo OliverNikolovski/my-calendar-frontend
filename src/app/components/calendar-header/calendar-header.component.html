@@ -6,4 +6,11 @@
                              (dateInputChange)='onDateInputChanged($any($event))'
                              [showNextMonth]='firstDayOfMonthAdded()'></app-calendar-navigation>
   </div>
+  <div class='calendar-visibility-setting'>
+    @if (isCalendarPublic()) {
+      <mat-icon aria-hidden="false" aria-label="Make calendar private" fontIcon="visibility_off" class="visibility-private-btn" matTooltip='Make calendar private' (click)="onUpdateVisibility()"></mat-icon>
+    } @else {
+      <mat-icon aria-hidden="false" aria-label="make calendar public" fontIcon="visibility" class="visibility-public-btn" matTooltip='Make event public' (click)="onUpdateVisibility()"></mat-icon>
+    }
+  </div>
 </div>

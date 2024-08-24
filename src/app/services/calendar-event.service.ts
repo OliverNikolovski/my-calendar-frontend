@@ -64,4 +64,8 @@ export class CalendarEventService {
   updateEventSequenceVisibility(sequenceId: string, isPublic: boolean): Observable<void> {
     return this.#http.patch<void>(`${this.#baseUrl}/update-event-visibility`, {sequenceId, isPublic});
   }
+
+  updateCalendarVisibility(isPublic: boolean): Observable<void> {
+    return this.#http.patch<void>(`${this.#baseUrl}/update-calendar-visibility?isPublic=${isPublic}`, {});
+  }
 }

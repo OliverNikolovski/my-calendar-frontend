@@ -11,7 +11,13 @@
 }
 
 .calendar-nav-container {
-  width: 15vw;
+  //width: 15vw;
   display: flex;
   justify-content: space-between;
+}
+
+.calendar-visibility-setting {
+  &:hover {
+    cursor: pointer;
+  }
 }

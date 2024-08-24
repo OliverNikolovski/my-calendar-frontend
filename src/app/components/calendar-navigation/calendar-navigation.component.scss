@@ -4,13 +4,12 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  width: 25rem;
+  width: 30rem;
   gap: 2rem;
 }
 
 h3 {
   display: inline-block;
-  //align-content: center;
   margin: 0;
   font-size: 1.2rem;
 }
@@ -33,3 +32,4 @@ h3 {
     cursor: pointer;
   }
 }
+

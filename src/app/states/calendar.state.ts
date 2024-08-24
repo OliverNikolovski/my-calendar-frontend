@@ -12,7 +12,7 @@ const initialState: CalendarState = {
 }
 
 export const CalendarStore = signalStore(
-  { providedIn: 'root' },
+  {providedIn: 'root'},
 
   withState(initialState),
 
@@ -64,5 +64,57 @@ export const CalendarStore = signalStore(
         calendarEventInstancesContainer: {...newContainer}
       }));
     },
+    updateSequenceVisibility(sequenceId: string, isPublic: boolean) {
+      const container = store.calendarEventInstancesContainer();
+      if (!container) {
+        return;
+      }
+      const keys = Object.keys(container);
+      const newContainer = {} as CalendarEventInstancesContainer;
+      keys.forEach(date => {
+        const instances = container[date];
+        const transformedInstances = instances.map(instance => {
+          if (instance.event.sequenceId === sequenceId) {
+            return {
+              ...instance,
+              event: {
+                ...instance.event,
+                isPublic
+              }
+            };
+          } else {
+            return instance;
+          }
+        });
+        newContainer[date] = transformedInstances;
+      });
+      patchState(store, () => ({
+        calendarEventInstancesContainer: {...newContainer}
+      }));
+    },
+    updateCalendarVisibility(isPublic: boolean) {
+      const container = store.calendarEventInstancesContainer();
+      if (!container) {
+        return;
+      }
+      const keys = Object.keys(container);
+      const newContainer = {} as CalendarEventInstancesContainer;
+      keys.forEach(date => {
+        const instances = container[date];
+        const transformedInstances = instances.map(instance => {
+          return {
+            ...instance,
+            event: {
+              ...instance.event,
+              isPublic
+            }
+          };
+        });
+        newContainer[date] = transformedInstances;
+      });
+      patchState(store, () => ({
+        calendarEventInstancesContainer: {...newContainer}
+      }));
+    }
   }))
 );

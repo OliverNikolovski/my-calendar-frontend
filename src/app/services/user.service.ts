@@ -11,8 +11,11 @@ export class UserService {
   readonly #http = inject(HttpClient);
 
   findFirstNMatches(n: number, q: string): Observable<SelectOption[]> {
-    console.log('findFirstNMatches')
     return this.#http.get<SelectOption[]>(`${this.#url}/search?n=${n}&q=${q}`);
+  }
+
+  isAuthenticatedUserCalendarPublic(): Observable<boolean> {
+    return this.#http.get<boolean>(`${this.#url}/is-calendar-public`);
   }
 
 }
