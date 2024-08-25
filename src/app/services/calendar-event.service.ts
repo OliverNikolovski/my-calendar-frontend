@@ -26,9 +26,12 @@ export class CalendarEventService {
     return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/generate-instances-for-events?from=${from.toISOString()}`);
   }
 
-  getCalendarEventInstancesForUser(userId?: number): Observable<CalendarEventInstancesContainer> {
-    const queryString = userId ? `?userId=${userId}` : '';
-    return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/generate-calendar-event-instances-for-user${queryString}`);
+  getCalendarEventInstancesForAuthenticatedUser(): Observable<CalendarEventInstancesContainer> {
+    return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/generate-calendar-event-instances-for-authenticated-user`);
+  }
+
+  getCalendarEventInstancesForUser(userId: number): Observable<CalendarEventInstancesContainer> {;
+    return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/generate-calendar-event-instances-for-user/${userId}`);
   }
 
   getInstancesForSequence(sequenceId: String): Observable<CalendarEventInstancesContainer> {

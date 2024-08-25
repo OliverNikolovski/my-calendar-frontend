@@ -48,7 +48,7 @@ export class CalendarComponent implements OnInit {
       .pipe(
         switchMap(paramMap => paramMap.has('userId') ?
           this._calendarEventService.getCalendarEventInstancesForUser(+paramMap.get('userId')!) :
-          this._calendarEventService.getCalendarEventInstancesForUser()
+          this._calendarEventService.getCalendarEventInstancesForAuthenticatedUser()
         ),
         takeUntilDestroyed(this.#destroyRef)
       )
