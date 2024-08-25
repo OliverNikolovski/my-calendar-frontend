@@ -17,7 +17,12 @@ export const CalendarStore = signalStore(
   withState(initialState),
 
   withMethods((store) => ({
-    initEventInstances(newContainer: CalendarEventInstancesContainer): void {
+    initEventContainer(container: CalendarEventInstancesContainer) {
+      patchState(store, () => ({
+        calendarEventInstancesContainer: {...container}
+      }));
+    },
+    mergeCurrentContainerWith(newContainer: CalendarEventInstancesContainer): void {
       patchState(store, (state) => {
         const container = state.calendarEventInstancesContainer;
         if (!container) {

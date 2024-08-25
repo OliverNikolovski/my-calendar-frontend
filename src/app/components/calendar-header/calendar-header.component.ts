@@ -4,8 +4,8 @@ import {
   inject,
   input,
   OnInit,
-  output,
-  signal
+  output, Signal,
+  signal, WritableSignal
 } from "@angular/core";
 import {MatIconModule} from "@angular/material/icon";
 import {DatePipe} from "@angular/common";
@@ -14,11 +14,19 @@ import {CalendarNavigationComponent} from "../calendar-navigation/calendar-navig
 import {UserService} from "../../services/user.service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {ConfirmDialog} from "../../dialogs/confirm/confirm.dialog";
-import {filter, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, filter, switchMap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarStore} from "../../states/calendar.state";
 import {ToastrService} from "ngx-toastr";
 import {MatDialog} from "@angular/material/dialog";
+import {FormControl, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {MatAutocomplete, MatAutocompleteTrigger, MatOption} from "@angular/material/autocomplete";
+import {MatFormField, MatLabel} from "@angular/material/form-field";
+import {MatInput} from "@angular/material/input";
+import {SelectOption} from "../../interfaces/select-option";
+import {toSignal} from "@angular/core/rxjs-interop";
+import {MatOptionSelectionChange} from "@angular/material/core";
+import {Router} from "@angular/router";
 
 @Component({
   standalone: true,
@@ -29,7 +37,15 @@ import {MatDialog} from "@angular/material/dialog";
     MatIconModule,
     DatePipe,
     CalendarNavigationComponent,
-    MatTooltip
+    MatTooltip,
+    FormsModule,
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatOption,
+    ReactiveFormsModule
   ],
   styleUrl: 'calendar-header.component.scss'
 })
@@ -39,12 +55,27 @@ export class CalendarHeaderComponent implements OnInit {
   readonly #calendarStore = inject(CalendarStore);
   readonly #toastrService = inject(ToastrService);
   readonly #matDialog = inject(MatDialog);
+  readonly #router = inject(Router);
+  readonly N = 5;
 
   date = input<Date>(new Date());
   firstDayOfMonthAdded = input<boolean>(false);
   dateChange = output<Date>();
   calendarView = input.required<CalendarView>();
   isCalendarPublic = signal(false);
+  filteredOptions: Signal<SelectOption[] | undefined>;
+  searchTermControl = new FormControl('');
+
+  constructor() {
+    this.filteredOptions = toSignal(
+      this.searchTermControl.valueChanges.pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        filter(searchTerm => searchTerm != null && searchTerm.length > 1),
+        switchMap(searchTerm => this.#userService.findFirstNMatches(this.N, searchTerm!!))
+      )
+    )
+  }
 
   ngOnInit() {
     this.#userService.isAuthenticatedUserCalendarPublic()
@@ -77,5 +108,14 @@ export class CalendarHeaderComponent implements OnInit {
           error: err => this.#toastrService.error(err.error)
         }
       );
+  }
+
+  displayUserOption(option: SelectOption): string {
+    return option && option.name ? option.name.toString() : '';
+  }
+
+  onSelectionChange(event: MatOptionSelectionChange<SelectOption>) {
+    const userId = event.source.value.value as number;
+    this.#router.navigate(['/calendar', userId]);
   }
 }

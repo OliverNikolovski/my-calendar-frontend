@@ -8,9 +8,28 @@
   </div>
   <div class='calendar-visibility-setting'>
     @if (isCalendarPublic()) {
-      <mat-icon aria-hidden="false" aria-label="Make calendar private" fontIcon="visibility_off" class="visibility-private-btn" matTooltip='Make calendar private' (click)="onUpdateVisibility()"></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="Make calendar private" fontIcon="visibility_off"
+                class="visibility-private-btn" matTooltip='Make calendar private'
+                (click)="onUpdateVisibility()"></mat-icon>
     } @else {
-      <mat-icon aria-hidden="false" aria-label="make calendar public" fontIcon="visibility" class="visibility-public-btn" matTooltip='Make event public' (click)="onUpdateVisibility()"></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="make calendar public" fontIcon="visibility"
+                class="visibility-public-btn" matTooltip='Make event public' (click)="onUpdateVisibility()"></mat-icon>
     }
+  </div>
+  <div class='user-search'>
+    <mat-form-field class="full-width">
+      <mat-label>Search for a user</mat-label>
+      <input type="text"
+             placeholder="Email / First name / Last name"
+             aria-label="Search for a user"
+             matInput
+             [matAutocomplete]="auto"
+             [formControl]='searchTermControl'>
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete" [displayWith]='displayUserOption'>
+        @for (option of filteredOptions(); track option.value) {
+          <mat-option [value]="option" (onSelectionChange)='onSelectionChange($event)'>{{ option.name }}</mat-option>
+        }
+      </mat-autocomplete>
+    </mat-form-field>
   </div>
 </div>

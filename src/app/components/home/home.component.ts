@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, effect, input, Input} from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import {CalendarComponent} from "../calendar/calendar.component";
 

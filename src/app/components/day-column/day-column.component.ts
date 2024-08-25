@@ -129,7 +129,7 @@ export class DayColumnComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: container => {
-          this.#calendarStore.initEventInstances(container);
+          this.#calendarStore.mergeCurrentContainerWith(container);
         },
         error: err => console.log(err)
       });
