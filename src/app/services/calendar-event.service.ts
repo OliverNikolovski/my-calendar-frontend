@@ -72,4 +72,8 @@ export class CalendarEventService {
   updateCalendarVisibility(isPublic: boolean): Observable<void> {
     return this.#http.patch<void>(`${this.#baseUrl}/update-calendar-visibility?isPublic=${isPublic}`, {});
   }
+
+  addOrUpdateEmailNotificationForEvent(eventId: number, minutes: number): Observable<void> {
+    return this.#http.patch<void>(`${this.#baseUrl}/add-or-update-email-notification-config?eventId=${eventId}&minutes=${minutes}`, {});
+  }
 }

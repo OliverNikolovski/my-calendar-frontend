@@ -1,0 +1,10 @@
+<div class='container'>
+  <p>
+    Send email notification
+    <input type='number' matInput [(ngModel)]='minutes'/> minutes before the start of the event.
+  </p>
+  <div class='actions'>
+    <button mat-stroked-button (click)='onCancel()' class='action' type='button'>Cancel</button>
+    <button mat-flat-button color='primary' (click)='onSave()' class='action' [disabled]='!minutes'>Save</button>
+  </div>
+</div>

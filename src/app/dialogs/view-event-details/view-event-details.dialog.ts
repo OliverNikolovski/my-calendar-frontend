@@ -19,6 +19,7 @@ import {ShareEventDialog} from "../share-event/share-event.dialog";
 import {ShareEventSequenceRequest} from "../../interfaces/requests/share-event-sequence.request";
 import {ToastrService} from "ngx-toastr";
 import {ConfirmDialog} from "../confirm/confirm.dialog";
+import {AddEmailNotificationDialog} from "../add-email-notification/add-email-notification.dialog";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
@@ -67,7 +68,7 @@ export class ViewEventDetailsDialog implements OnInit {
     }).afterClosed()
       .pipe(
         filter(isNotNullOrUndefined),
-        map(option => ({ userId: option.value, sequenceId: this.data.event.sequenceId }) as ShareEventSequenceRequest),
+        map(option => ({userId: option.value, sequenceId: this.data.event.sequenceId}) as ShareEventSequenceRequest),
         switchMap(request => this.#calendarEventService.shareEventSequence(request))
       )
       .subscribe({
@@ -174,5 +175,22 @@ export class ViewEventDetailsDialog implements OnInit {
           error: err => this.#toastrService.error(err.error)
         }
       );
+  }
+
+  onAddEmailNotification() {
+    this.#matDialog.open(AddEmailNotificationDialog, {
+      width: '30rem',
+      height: '10rem',
+    }).afterClosed()
+      .pipe(
+        switchMap(value => this.#calendarEventService.addOrUpdateEmailNotificationForEvent(this.data.event.id, value))
+      )
+      .subscribe({
+        next: () => this.#toastrService.success('Successfully added email notification'),
+        error: err => {
+          this.#toastrService.error(err.error);
+          console.log(err);
+        }
+      });
   }
 }
