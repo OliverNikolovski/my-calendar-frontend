@@ -1,8 +1,9 @@
 import {ChangeDetectionStrategy, Component, inject} from "@angular/core";
 import {MatDialogRef} from "@angular/material/dialog";
 import {MatButton} from "@angular/material/button";
-import {MatInput} from "@angular/material/input";
+import {MatInput, MatInputModule} from "@angular/material/input";
 import {FormsModule} from "@angular/forms";
+import {MatFormFieldModule} from "@angular/material/form-field";
 
 @Component({
   standalone: true,
@@ -11,7 +12,8 @@ import {FormsModule} from "@angular/forms";
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     MatButton,
-    MatInput,
+    MatInputModule,
+    MatFormFieldModule,
     FormsModule
   ]
 })

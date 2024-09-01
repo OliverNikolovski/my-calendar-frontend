@@ -179,10 +179,11 @@ export class ViewEventDetailsDialog implements OnInit {
 
   onAddEmailNotification() {
     this.#matDialog.open(AddEmailNotificationDialog, {
-      width: '30rem',
-      height: '10rem',
+      width: '45rem',
+      height: '10.5rem',
     }).afterClosed()
       .pipe(
+        filter(Boolean),
         switchMap(value => this.#calendarEventService.addOrUpdateEmailNotificationForEvent(this.data.event.id, value))
       )
       .subscribe({
