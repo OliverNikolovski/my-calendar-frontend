@@ -187,7 +187,10 @@ export class ViewEventDetailsDialog implements OnInit {
         switchMap(value => this.#calendarEventService.addOrUpdateEmailNotificationForEvent(this.data.event.id, value))
       )
       .subscribe({
-        next: () => this.#toastrService.success('Successfully added email notification'),
+        next: () => {
+          this.#matDialogRef.close();
+          this.#toastrService.success('Successfully added email notification');
+        },
         error: err => {
           this.#toastrService.error(err.error);
           console.log(err);
