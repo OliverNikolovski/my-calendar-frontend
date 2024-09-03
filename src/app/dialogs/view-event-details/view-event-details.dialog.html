@@ -1,29 +1,40 @@
 <div class='container'>
   <div class='actions'>
-    @if (data.event.isPublic) {
-      <mat-icon aria-hidden="false" aria-label="Make event private" fontIcon="visibility_off" class="visibility-private-btn" matTooltip='Make event private' (click)="onUpdateVisibility()"></mat-icon>
-    } @else {
-      <mat-icon aria-hidden="false" aria-label="make event public" fontIcon="visibility" class="visibility-public-btn" matTooltip='Make event public' (click)="onUpdateVisibility()"></mat-icon>
+    @if (showActions) {
+      @if (data.event.isPublic) {
+        <mat-icon aria-hidden="false" aria-label="Make event private" fontIcon="visibility_off"
+                  class="visibility-private-btn" matTooltip='Make event private'
+                  (click)="onUpdateVisibility()"></mat-icon>
+      } @else {
+        <mat-icon aria-hidden="false" aria-label="make event public" fontIcon="visibility" class="visibility-public-btn"
+                  matTooltip='Make event public' (click)="onUpdateVisibility()"></mat-icon>
+      }
+      <mat-icon aria-hidden="false" aria-label="Add email notification" fontIcon="email" class="notification-btn"
+                matTooltip='Add email notification' (click)="onAddEmailNotification()"></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="Export" fontIcon="import_export" class="export-btn" matTooltip='Export'
+                (click)="onExport()"></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="Share" fontIcon="share" class="share-btn" matTooltip='Share'
+                (click)="onShare()"></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="Edit" fontIcon="edit" class="edit-btn" matTooltip='Edit'
+                (click)="onEdit()"></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="Delete" fontIcon="delete" class="delete-btn" matTooltip='Delete'
+                (click)="onDelete()"></mat-icon>
+      <mat-icon aria-hidden="false" aria-label="Close" fontIcon="close" class="close-btn" matTooltip='Close'
+                (click)="onClose()"></mat-icon>
     }
-    <mat-icon aria-hidden="false" aria-label="Add email notification" fontIcon="email" class="notification-btn" matTooltip='Add email notification' (click)="onAddEmailNotification()"></mat-icon>
-    <mat-icon aria-hidden="false" aria-label="Export" fontIcon="import_export" class="export-btn" matTooltip='Export' (click)="onExport()"></mat-icon>
-    <mat-icon aria-hidden="false" aria-label="Share" fontIcon="share" class="share-btn" matTooltip='Share' (click)="onShare()"></mat-icon>
-    <mat-icon aria-hidden="false" aria-label="Edit" fontIcon="edit" class="edit-btn" matTooltip='Edit' (click)="onEdit()"></mat-icon>
-    <mat-icon aria-hidden="false" aria-label="Delete" fontIcon="delete" class="delete-btn" matTooltip='Delete' (click)="onDelete()"></mat-icon>
-    <mat-icon aria-hidden="false" aria-label="Close" fontIcon="close" class="close-btn" matTooltip='Close' (click)="onClose()"></mat-icon>
   </div>
-  <h1>{{data.event.title | title}}</h1>
+  <h1>{{ data.event.title | title }}</h1>
   @if (data.event.description) {
-    <p>{{data.event.description}}</p>
+    <p>{{ data.event.description }}</p>
   }
-  <p><b>Start date:</b> {{data.event.startDate | date : 'MMMM d, yyyy'}}</p>
-  <p><b>Start time:</b> {{data.event.startDate | date : 'shortTime'}}</p>
+  <p><b>Start date:</b> {{ data.event.startDate | date : 'MMMM d, yyyy' }}</p>
+  <p><b>Start time:</b> {{ data.event.startDate | date : 'shortTime' }}</p>
   @if (data.event.isRepeating) {
-    <p><b>End date:</b> {{data.event.repeatingPattern!.endDate | date : 'MMMM d, yyyy'}}</p>
+    <p><b>End date:</b> {{ data.event.repeatingPattern!.endDate | date : 'MMMM d, yyyy' }}</p>
   }
-  <p><b>Duration:</b> {{data.event.duration | minutesToHoursAndMinutes}}</p>
+  <p><b>Duration:</b> {{ data.event.duration | minutesToHoursAndMinutes }}</p>
   @if (data.event.isRepeating) {
-    <p><b>Repeats:</b> {{data.event.repeatingPattern!.rruleText}}</p>
+    <p><b>Repeats:</b> {{ data.event.repeatingPattern!.rruleText }}</p>
   } @else {
     <p><b>Does not repeat</b></p>
   }

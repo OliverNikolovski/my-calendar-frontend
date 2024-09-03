@@ -16,9 +16,6 @@ import {DatePipe, NgStyle} from "@angular/common";
 import {ApplyPipe} from "../../pipes/apply.pipe";
 import {ComponentStore} from "@ngrx/component-store";
 import {MousePositionState} from "../../states/mouse-position.state";
-import {CalendarStore} from "../../states/calendar.state";
-import {CalendarEventInstancesContainer} from "../../interfaces/calendar-event-instances-container";
-import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instance-info";
 
 const components = [DayColumnComponent];
 const pipes = [WeekDayPipe, IsCurrentDatePipe, DatePipe, ApplyPipe]

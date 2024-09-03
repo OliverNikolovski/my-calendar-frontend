@@ -7,7 +7,7 @@ import {MinutesToHoursAndMinutesPipe} from "../../pipes/minutes-to-hours-and-min
 import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
 import {DeleteEventDialog} from "../delete-event/delete-event.dialog";
-import {filter, map, pipe, switchMap} from "rxjs";
+import {filter, map, pipe, switchMap, tap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarStore} from "../../states/calendar.state";
 import {UpdateEventDialog} from "../update-event/update-event.dialog";
@@ -20,6 +20,7 @@ import {ShareEventSequenceRequest} from "../../interfaces/requests/share-event-s
 import {ToastrService} from "ngx-toastr";
 import {ConfirmDialog} from "../confirm/confirm.dialog";
 import {AddEmailNotificationDialog} from "../add-email-notification/add-email-notification.dialog";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
@@ -37,6 +38,7 @@ export class ViewEventDetailsDialog implements OnInit {
     event: CalendarEvent;
     instanceDate: string;
     order: number;
+    route: ActivatedRoute;
   } = inject(MAT_DIALOG_DATA);
   readonly #matDialogRef = inject(MatDialogRef);
   readonly #matDialog = inject(MatDialog);
@@ -52,9 +54,15 @@ export class ViewEventDetailsDialog implements OnInit {
       })
     )
   );
+  showActions = false;
 
   ngOnInit() {
     this.loadEventContainer(this.shouldLoadEventContainerForSequence);
+    this.data.route.paramMap
+      .pipe(
+        tap(paramMap => console.log(paramMap))
+      )
+      .subscribe(paramMap => this.showActions = !paramMap.has('userId'));
   }
 
   onClose() {

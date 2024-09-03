@@ -5,6 +5,7 @@ import {InstanceRangeString} from "../../pipes/instance-range-string";
 import {MatDialog} from "@angular/material/dialog";
 import {ViewEventDetailsDialog} from "../../dialogs/view-event-details/view-event-details.dialog";
 import {CalendarStore} from "../../states/calendar.state";
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'day-events',
@@ -18,19 +19,14 @@ import {CalendarStore} from "../../states/calendar.state";
   styleUrl: 'day-events.component.scss'
 })
 export class DayEventsComponent {
-  #matDialog = inject(MatDialog);
+  readonly #matDialog = inject(MatDialog);
+  readonly #route = inject(ActivatedRoute);
 
   calendarEventInstances = input.required<CalendarEventInstanceInfo[]>();
   intervalHeight = input.required<number>();
   intervalDuration = input.required<number>();
   minSlotDuration = input.required<number>();
   pixelsPerMinute = computed(() => this.intervalHeight() / this.intervalDuration());
-
-  constructor() {
-    // effect(() => {
-    //   console.log('calendarEventInstances', this.calendarEventInstances());
-    // });
-  }
 
   eventOffsetTop(instance: CalendarEventInstanceInfo): number {
     const instanceDate = new Date(instance.date);
@@ -47,7 +43,8 @@ export class DayEventsComponent {
       data: {
         event: instance.event,
         instanceDate: instance.date,
-        order: instance.order
+        order: instance.order,
+        route: this.#route
       },
       width: '600px'
     });
