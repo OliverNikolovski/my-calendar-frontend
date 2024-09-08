@@ -22,10 +22,6 @@ export class CalendarEventService {
     return this.#http.post<number>(`${this.#baseUrl}`, request);
   }
 
-  getInstancesForEvents(from: Date): Observable<CalendarEventInstancesContainer> {
-    return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/generate-instances-for-events?from=${from.toISOString()}`);
-  }
-
   getCalendarEventInstancesForAuthenticatedUser(): Observable<CalendarEventInstancesContainer> {
     return this.#http.get<CalendarEventInstancesContainer>(`${this.#baseUrl}/generate-calendar-event-instances-for-authenticated-user`);
   }

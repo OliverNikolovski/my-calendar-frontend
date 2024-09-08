@@ -2,11 +2,11 @@
   <div class='actions'>
     @if (showActions) {
       @if (data.event.isPublic) {
-        <mat-icon aria-hidden="false" aria-label="Make event private" fontIcon="visibility_off"
+        <mat-icon aria-hidden="false" aria-label="Make event private" fontIcon="visibility"
                   class="visibility-private-btn" matTooltip='Make event private'
                   (click)="onUpdateVisibility()"></mat-icon>
       } @else {
-        <mat-icon aria-hidden="false" aria-label="make event public" fontIcon="visibility" class="visibility-public-btn"
+        <mat-icon aria-hidden="false" aria-label="make event public" fontIcon="visibility_off" class="visibility-public-btn"
                   matTooltip='Make event public' (click)="onUpdateVisibility()"></mat-icon>
       }
       <mat-icon aria-hidden="false" aria-label="Add email notification" fontIcon="email" class="notification-btn"

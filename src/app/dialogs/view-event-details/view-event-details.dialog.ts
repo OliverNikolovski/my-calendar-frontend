@@ -59,9 +59,6 @@ export class ViewEventDetailsDialog implements OnInit {
   ngOnInit() {
     this.loadEventContainer(this.shouldLoadEventContainerForSequence);
     this.data.route.paramMap
-      .pipe(
-        tap(paramMap => console.log(paramMap))
-      )
       .subscribe(paramMap => this.showActions = !paramMap.has('userId'));
   }
 
@@ -146,7 +143,8 @@ export class ViewEventDetailsDialog implements OnInit {
       fromDate: this.data.instanceDate,
       actionType: partial.actionType!,
       newStartDate: partial.newStartDate!,
-      newDuration: partial.newDuration!
+      newDuration: partial.newDuration!,
+      order: this.data.order
     }
   }
 

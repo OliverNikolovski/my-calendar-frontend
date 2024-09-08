@@ -8,11 +8,11 @@
   </div>
   <div class='calendar-visibility-setting'>
     @if (isCalendarPublic()) {
-      <mat-icon aria-hidden="false" aria-label="Make calendar private" fontIcon="visibility_off"
+      <mat-icon aria-hidden="false" aria-label="Make calendar private" fontIcon="visibility"
                 class="visibility-private-btn" matTooltip='Make calendar private'
                 (click)="onUpdateVisibility()"></mat-icon>
     } @else {
-      <mat-icon aria-hidden="false" aria-label="make calendar public" fontIcon="visibility"
+      <mat-icon aria-hidden="false" aria-label="make calendar public" fontIcon="visibility_off"
                 class="visibility-public-btn" matTooltip='Make calendar public' (click)="onUpdateVisibility()"></mat-icon>
     }
   </div>
