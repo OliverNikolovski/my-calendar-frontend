@@ -6,7 +6,7 @@ import {FormsModule} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {NgxMatTimepickerModule} from "ngx-mat-timepicker";
 import {MatFormField, MatInput} from "@angular/material/input";
-import {calculateDurationInMinutes, calculateNewTime} from "../../util/date-utils";
+import {calculateDurationInMinutes, calculateNewTime, getHoursAndMinutesFromDateString} from "../../util/date-utils";
 import { format, parse } from "date-fns";
 
 @Component({
@@ -19,12 +19,12 @@ import { format, parse } from "date-fns";
 export class UpdateEventDialog {
   readonly #matDialogRef = inject(MatDialogRef);
   protected readonly data: {
-    instanceDate: Date;
+    instanceDate: string;
     duration: number;
   } = inject(MAT_DIALOG_DATA);
 
   protected selectedActionType = ActionType.THIS_EVENT;
-  protected newStartTime = format(this.data.instanceDate, 'h:mm a');
+  protected newStartTime = this.formatTime(getHoursAndMinutesFromDateString(this.data.instanceDate));
   protected newDuration = this.data.duration;
   protected newEndTime = calculateNewTime(this.newStartTime, this.newDuration);
   protected readonly ActionType = ActionType;
@@ -59,6 +59,10 @@ export class UpdateEventDialog {
     this.newDuration = +inputElement.value;
     this.newEndTime = calculateNewTime(this.newStartTime, this.newDuration);
     this.#pristine = false;
+  }
+
+  private formatTime({hours, minutes, period}: {hours: number, minutes: number, period: string}): string {
+    return `${hours}:${(minutes).toString().padStart(2, '0')} ${period}`;
   }
 
   get newStartDate(): Date {

@@ -26,7 +26,7 @@ import {WeekdayDetails} from "../../interfaces/weekday-details";
 import {CommonModule} from "@angular/common";
 import {endDateAfterStartDateValidator} from "../../dialogs/create-event.dialog/create-event-validators";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
-import {getDay, set} from "date-fns";
+import {format, getDay, set} from "date-fns";
 
 interface WeekDay {
   index: number;
@@ -68,7 +68,7 @@ export class RepeatingPatternControl implements OnInit, OnDestroy {
   readonly formBuilder = inject(FormBuilder);
   readonly #destroyRef = inject(DestroyRef);
 
-  readonly formGroup = this.initForm()
+  readonly formGroup = this.initForm();
   protected readonly Freq = Freq;
   protected readonly EventEndType = EventEndType;
   monthlyOptionControl = new FormControl<string>('0');
@@ -141,7 +141,10 @@ export class RepeatingPatternControl implements OnInit, OnDestroy {
       this.occurrenceCountControl.disable();
     } else if (event.value === EventEndType.ON_DATE) {
       this.endDateControl.enable();
-      this.endDateControl.setValue(this.startDate());
+      //this.endDateControl.setValue(this.startDate());
+      this.endDateControl.setValue(
+        format(this.startDate(), "yyyy-MM-dd'T'HH:mm:ssXXX")
+      );
       this.occurrenceCountControl.disable();
     } else { // EventEndType.AFTER_N_OCCURRENCES
       this.endDateControl.disable();
@@ -160,10 +163,12 @@ export class RepeatingPatternControl implements OnInit, OnDestroy {
 
   onDateChange(event: MatDatepickerInputEvent<Date>) {
     this.endDateControl.setValue(
-      set(event.value!, {
-        hours: this.endDate()?.getHours(),
-        minutes: this.endDate()?.getMinutes()
-      })
+      format(
+        set(event.value!, {
+          hours: this.endDate()?.getHours(),
+          minutes: this.endDate()?.getMinutes()
+        }), "yyyy-MM-dd'T'HH:mm:ssXXX"
+      )
     );
   }
 

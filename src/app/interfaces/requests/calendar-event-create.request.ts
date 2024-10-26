@@ -1,9 +1,8 @@
 import {RepeatingPattern} from "../repeating-pattern";
 
 export interface CalendarEventCreateRequest {
-  startDate: Date;
+  startDate: string;
   duration: number;
-  endDate?: Date;
   isRepeating: boolean;
   repeatingPattern?: RepeatingPattern;
   title?: string;

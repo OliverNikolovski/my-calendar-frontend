@@ -23,3 +23,14 @@ export function calculateNewTime(timeStr: string, durationInMinutes: number): st
   // Format the new time back to the desired string format
   return format(newTime, formatString);
 }
+
+export function getHoursAndMinutesFromDateString(dateStr: string): { hours: number, minutes: number, period: 'am' | 'pm' } {
+  const [hours, minutes] = dateStr.split('T')[1].split(':', 2).map(Number);
+  const transformedHours = hours === 0 || hours === 12 ? 12 : hours % 12;
+  const period = hours < 12 ? 'am' : 'pm';
+  return {
+    hours: transformedHours,
+    minutes,
+    period
+  }
+}

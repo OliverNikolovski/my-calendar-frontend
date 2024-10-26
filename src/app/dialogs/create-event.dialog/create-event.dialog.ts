@@ -1,4 +1,4 @@
-import { Component, computed, OnInit, signal, ViewChild, inject } from '@angular/core';
+import { Component, computed, signal, inject } from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
 import {
   AbstractControl,
@@ -7,7 +7,6 @@ import {
   ReactiveFormsModule,
   Validators
 } from "@angular/forms";
-import {Freq} from "../../rrule/rrule-constants";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatDatepickerModule,} from "@angular/material/datepicker";
@@ -20,7 +19,7 @@ import {MatSelectChange, MatSelectModule} from "@angular/material/select";
 import {
   addMinutes,
   differenceInMinutes,
-  getDay,
+  format,
   set,
   startOfDay,
 } from "date-fns";
@@ -116,6 +115,7 @@ export class CreateEventDialog {
   private get _eventCreationRequest(): CalendarEventCreateRequest {
     return {
       ...this.form.value,
+      startDate: format(this.startDateControl.value, "yyyy-MM-dd'T'HH:mm:ssXXX"),
       duration: this.duration()
     }
   }

@@ -21,13 +21,16 @@ import {ToastrService} from "ngx-toastr";
 import {ConfirmDialog} from "../confirm/confirm.dialog";
 import {AddEmailNotificationDialog} from "../add-email-notification/add-email-notification.dialog";
 import {ActivatedRoute} from "@angular/router";
+import {ToUtcSameLocalPipe} from "../../pipes/to-utc-same-local.pipe";
+import {FormatDatePipe} from "../../pipes/format-date.pipe";
+import {FormatTimePipe} from "../../pipes/format-time.pipe";
 
 @Component({
   templateUrl: 'view-event-details.dialog.html',
   styleUrl: 'view-event-details.dialog.scss',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TitlePipe, DatePipe, MinutesToHoursAndMinutesPipe, MatIcon, MatTooltip]
+  imports: [TitlePipe, DatePipe, MinutesToHoursAndMinutesPipe, MatIcon, MatTooltip, ToUtcSameLocalPipe, FormatDatePipe, FormatTimePipe]
 })
 export class ViewEventDetailsDialog implements OnInit {
 
@@ -78,7 +81,6 @@ export class ViewEventDetailsDialog implements OnInit {
       )
       .subscribe({
         next: () => {
-          console.log('Successfully shared');
           this.#toastrService.success("Successfully shared.");
         },
         error: err => {
