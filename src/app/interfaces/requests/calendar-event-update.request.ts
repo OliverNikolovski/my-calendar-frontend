@@ -4,7 +4,7 @@ export interface CalendarEventUpdateRequest {
   eventId: number;
   fromDate: string;
   actionType: ActionType;
-  newStartDate: Date;
+  newStartDate: string;
   newDuration: number;
   order: number;
 }

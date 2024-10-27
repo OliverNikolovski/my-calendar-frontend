@@ -65,8 +65,37 @@ export class UpdateEventDialog {
     return `${hours}:${(minutes).toString().padStart(2, '0')} ${period}`;
   }
 
-  get newStartDate(): Date {
-    return parse(this.newStartTime, 'h:mm a', this.data.instanceDate);
+  private getHoursAndMinutesFrom12HTimeString(time: string): { hours: number, minutes: number } {
+    const [hoursStr, minutesStr, period] = time.split(/[:\s]/);
+    const hours = +hoursStr;
+    const minutes = +minutesStr;
+    let hoursIn24hFormat: number;
+    if (period.toUpperCase() === 'AM') {
+      if (hours === 12) {
+        hoursIn24hFormat = 0;
+      } else {
+        hoursIn24hFormat = hours;
+      }
+    } else {
+      if (hours === 12) {
+        hoursIn24hFormat = 12;
+      } else {
+        hoursIn24hFormat = hours + 12;
+      }
+    }
+    return {
+      hours: hoursIn24hFormat,
+      minutes
+    }
+  }
+
+  get newStartDate(): string {
+    console.log('newStartTime',this.newStartTime);
+    console.log('instanceDate',this.data.instanceDate);
+    const { hours, minutes } = this.getHoursAndMinutesFrom12HTimeString(this.newStartTime);
+    const hoursMinutesStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+    //return parse(this.newStartTime, 'h:mm a', this.data.instanceDate);
+    return this.data.instanceDate.replace(/\d{2}:\d{2}/, hoursMinutesStr);
   }
 
   get disabled(): boolean {
