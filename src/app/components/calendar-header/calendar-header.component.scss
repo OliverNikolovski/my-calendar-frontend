@@ -4,6 +4,7 @@
   display: flex;
   height: 100%;
   align-items: center;
+  gap: 1rem;
 }
 
 .header-right-side {
@@ -23,13 +24,17 @@
 }
 
 .user-search {
-  margin-left: 3rem;
-}
-
-.user-search {
   width: 20rem;
 }
 
 .full-width {
   width: 100%;
+}
+
+#file-input {
+  clip-path: inset(100%);
+}
+
+#file-input-label {
+  cursor: pointer;
 }

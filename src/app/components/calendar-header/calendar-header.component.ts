@@ -14,7 +14,7 @@ import {CalendarNavigationComponent} from "../calendar-navigation/calendar-navig
 import {UserService} from "../../services/user.service";
 import {MatTooltip} from "@angular/material/tooltip";
 import {ConfirmDialog} from "../../dialogs/confirm/confirm.dialog";
-import {debounceTime, distinctUntilChanged, filter, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, filter, finalize, switchMap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarStore} from "../../states/calendar.state";
 import {ToastrService} from "ngx-toastr";
@@ -45,7 +45,8 @@ import {Router} from "@angular/router";
     MatInput,
     MatLabel,
     MatOption,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ConfirmDialog
   ],
   styleUrl: 'calendar-header.component.scss'
 })
@@ -117,5 +118,30 @@ export class CalendarHeaderComponent implements OnInit {
   onSelectionChange(event: MatOptionSelectionChange<SelectOption>) {
     const userId = event.source.value.value as number;
     this.#router.navigate(['/calendar', userId]);
+  }
+
+  onFileChange(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    const file = fileInput.files!.item(0);
+    if (!file) {
+      return;
+    }
+    this.#matDialog.open(ConfirmDialog, {
+      data: {
+        confirmationMessage: `Import calendar from file "${file.name}"?`
+      }
+    }).afterClosed()
+      .pipe(
+        filter(Boolean),
+        finalize(() => fileInput.value = ''),
+        switchMap(() => this.#calendarEventService.importCalendar(file))
+      )
+      .subscribe({
+        next: message => this.#toastrService.success(message),
+        error: err => {
+          console.log('error',err);
+          this.#toastrService.error(err.message);
+        }
+      });
   }
 }

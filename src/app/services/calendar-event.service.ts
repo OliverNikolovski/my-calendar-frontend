@@ -72,4 +72,12 @@ export class CalendarEventService {
   addOrUpdateEmailNotificationForEvent(eventId: number, minutes: number): Observable<void> {
     return this.#http.patch<void>(`${this.#baseUrl}/add-or-update-email-notification-config?eventId=${eventId}&minutes=${minutes}`, {});
   }
+
+  importCalendar(icsFile: File): Observable<string> {
+    const formData = new FormData();
+    formData.set('file', icsFile);
+    return this.#http.post(`${this.#baseUrl}/import`, formData, {
+      responseType: 'text'
+    });
+  }
 }

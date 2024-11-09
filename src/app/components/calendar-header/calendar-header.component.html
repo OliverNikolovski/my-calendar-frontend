@@ -32,4 +32,11 @@
       </mat-autocomplete>
     </mat-form-field>
   </div>
+  <div class="upload">
+    <label for='file-input' id='file-input-label'>
+      <mat-icon aria-hidden="false" aria-label="Import calendar" fontIcon="cloud_upload" class="upload-btn"
+                matTooltip='Import calendar'></mat-icon>
+    </label>
+    <input type='file' id='file-input' accept='.ics' required (change)='onFileChange($event)'>
+  </div>
 </div>
