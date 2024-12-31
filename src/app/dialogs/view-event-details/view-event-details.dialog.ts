@@ -7,14 +7,13 @@ import {MinutesToHoursAndMinutesPipe} from "../../pipes/minutes-to-hours-and-min
 import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
 import {DeleteEventDialog} from "../delete-event/delete-event.dialog";
-import {filter, map, pipe, switchMap, tap} from "rxjs";
+import {filter, map, pipe, switchMap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarStore} from "../../states/calendar.state";
 import {UpdateEventDialog} from "../update-event/update-event.dialog";
 import {CalendarEventUpdateRequest} from "../../interfaces/requests/calendar-event-update.request";
 import {isNotNullOrUndefined} from "../../util/common-utils";
 import {rxMethod} from "@ngrx/signals/rxjs-interop";
-import {tapResponse} from "@ngrx/component-store";
 import {ShareEventDialog} from "../share-event/share-event.dialog";
 import {ShareEventSequenceRequest} from "../../interfaces/requests/share-event-sequence.request";
 import {ToastrService} from "ngx-toastr";
@@ -51,7 +50,7 @@ export class ViewEventDetailsDialog implements OnInit {
       filter(Boolean),
       switchMap(sequenceId => this.#calendarEventService.getInstancesForSequence(this.data.event.sequenceId)),
       tapResponse({
-        next: container => this.#calendarStore.updateContainer(this.data.event.sequenceId, container),
+        next: (container: any) => this.#calendarStore.updateContainer(this.data.event.sequenceId, container),
         error: console.log
       })
     )
