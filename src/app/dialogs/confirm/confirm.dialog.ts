@@ -3,13 +3,12 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {MatButton} from "@angular/material/button";
 
 @Component({
-  standalone: true,
-  templateUrl: 'confirm.dialog.html',
-  styleUrl: 'confirm.dialog.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MatButton
-  ]
+    templateUrl: 'confirm.dialog.html',
+    styleUrl: 'confirm.dialog.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        MatButton
+    ]
 })
 export class ConfirmDialog {
   readonly #matDialogRef = inject(MatDialogRef);

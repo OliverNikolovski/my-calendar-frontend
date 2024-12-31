@@ -39,16 +39,15 @@ import {CalendarStore} from "../../states/calendar.state";
 import {rxMethod} from "@ngrx/signals/rxjs-interop";
 
 @Component({
-  selector: 'app-day-column',
-  standalone: true,
-  imports: [
-    WeekDayPipe,
-    NgStyle,
-    DayEventsComponent
-  ],
-  templateUrl: './day-column.component.html',
-  styleUrl: './day-column.component.scss',
-  changeDetection: ChangeDetectionStrategy.Default,
+    selector: 'app-day-column',
+    imports: [
+        WeekDayPipe,
+        NgStyle,
+        DayEventsComponent
+    ],
+    templateUrl: './day-column.component.html',
+    styleUrl: './day-column.component.scss',
+    changeDetection: ChangeDetectionStrategy.Default
 })
 export class DayColumnComponent implements OnInit, OnDestroy {
   private readonly renderer = inject(Renderer2);

@@ -36,32 +36,31 @@ interface WeekDay {
 }
 
 @Component({
-  standalone: true,
-  selector: 'repeating-pattern',
-  templateUrl: './repeating-pattern.control.html',
-  styleUrl: './repeating-pattern.control.scss',
-  imports: [
-    GetDayPipe,
-    MatDatepicker,
-    MatDatepickerInput,
-    MatDatepickerToggle,
-    MatFormField,
-    MatInput,
-    MatOption,
-    MatRadioButton,
-    MatRadioGroup,
-    MatSelect,
-    MatSuffix,
-    ReactiveFormsModule,
-    WeekdayDetailsToStringPipe,
-    CommonModule
-  ],
-  viewProviders: [
-    {
-      provide: ControlContainer,
-      useFactory: () => inject(ControlContainer, {skipSelf: true})
-    }
-  ]
+    selector: 'repeating-pattern',
+    templateUrl: './repeating-pattern.control.html',
+    styleUrl: './repeating-pattern.control.scss',
+    imports: [
+        GetDayPipe,
+        MatDatepicker,
+        MatDatepickerInput,
+        MatDatepickerToggle,
+        MatFormField,
+        MatInput,
+        MatOption,
+        MatRadioButton,
+        MatRadioGroup,
+        MatSelect,
+        MatSuffix,
+        ReactiveFormsModule,
+        WeekdayDetailsToStringPipe,
+        CommonModule
+    ],
+    viewProviders: [
+        {
+            provide: ControlContainer,
+            useFactory: () => inject(ControlContainer, { skipSelf: true })
+        }
+    ]
 })
 export class RepeatingPatternControl implements OnInit, OnDestroy {
   readonly #controlContainer = inject(ControlContainer);

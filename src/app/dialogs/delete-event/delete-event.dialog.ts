@@ -6,11 +6,10 @@ import {FormsModule} from "@angular/forms";
 import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
-  standalone: true,
-  templateUrl: 'delete-event.dialog.html',
-  styleUrl: 'delete-event.dialog.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatRadioModule, MatButtonModule, FormsModule]
+    templateUrl: 'delete-event.dialog.html',
+    styleUrl: 'delete-event.dialog.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [MatRadioModule, MatButtonModule, FormsModule]
 })
 export class DeleteEventDialog {
   readonly #matDialogRef = inject(MatDialogRef);

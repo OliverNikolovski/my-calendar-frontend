@@ -13,18 +13,17 @@ import {ToastrService} from "ngx-toastr";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
-  selector: 'app-calendar',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.Default,
-  imports: [
-    WeeklyCalendarComponent,
-    SidebarComponent,
-    DayColumnComponent,
-    CalendarHeaderComponent,
-    MatButtonModule
-  ],
-  templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.scss'
+    selector: 'app-calendar',
+    changeDetection: ChangeDetectionStrategy.Default,
+    imports: [
+        WeeklyCalendarComponent,
+        SidebarComponent,
+        DayColumnComponent,
+        CalendarHeaderComponent,
+        MatButtonModule
+    ],
+    templateUrl: './calendar.component.html',
+    styleUrl: './calendar.component.scss'
 })
 export class CalendarComponent implements OnInit {
   readonly #calendarStore = inject(CalendarStore);

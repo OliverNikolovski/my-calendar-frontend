@@ -11,18 +11,17 @@ import {toSignal} from "@angular/core/rxjs-interop";
 import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
-  templateUrl: 'share-event.dialog.html',
-  styleUrl: 'share-event.dialog.scss',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    FormsModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatAutocompleteModule,
-    ReactiveFormsModule
-  ]
+    templateUrl: 'share-event.dialog.html',
+    styleUrl: 'share-event.dialog.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        FormsModule,
+        MatFormFieldModule,
+        MatButtonModule,
+        MatInputModule,
+        MatAutocompleteModule,
+        ReactiveFormsModule
+    ]
 })
 export class ShareEventDialog {
   readonly #userService = inject(UserService);

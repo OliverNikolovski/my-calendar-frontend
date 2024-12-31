@@ -9,20 +9,19 @@ import {Router, RouterLink} from "@angular/router";
 import {MatIconModule} from "@angular/material/icon";
 
 @Component({
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: 'login.component.html',
-  imports: [
-    MatCardModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    FormsModule,
-    RouterLink
-  ],
-  styleUrl: 'login.component.scss'
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: 'login.component.html',
+    imports: [
+        MatCardModule,
+        MatFormFieldModule,
+        ReactiveFormsModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        FormsModule,
+        RouterLink
+    ],
+    styleUrl: 'login.component.scss'
 })
 export class LoginComponent {
 

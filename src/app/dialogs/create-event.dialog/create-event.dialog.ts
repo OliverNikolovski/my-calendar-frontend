@@ -47,30 +47,29 @@ interface WeekDay {
 }
 
 @Component({
-  standalone: true,
-  imports: [
-    ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatIconModule,
-    MatButtonModule,
-    MatSelectModule,
-    AsyncPipe,
-    DatePipe,
-    MatCheckboxModule,
-    MatRadioModule,
-    DayByIndexPipe,
-    NgClass,
-    GetDayPipe,
-    WeekdayDetailsToStringPipe,
-    RepeatingPatternControl
-  ],
-  providers: [
-    provideNativeDateAdapter()
-  ],
-  templateUrl: './create-event.dialog.html',
-  styleUrl: './create-event.dialog.scss'
+    imports: [
+        ReactiveFormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDatepickerModule,
+        MatIconModule,
+        MatButtonModule,
+        MatSelectModule,
+        AsyncPipe,
+        DatePipe,
+        MatCheckboxModule,
+        MatRadioModule,
+        DayByIndexPipe,
+        NgClass,
+        GetDayPipe,
+        WeekdayDetailsToStringPipe,
+        RepeatingPatternControl
+    ],
+    providers: [
+        provideNativeDateAdapter()
+    ],
+    templateUrl: './create-event.dialog.html',
+    styleUrl: './create-event.dialog.scss'
 })
 export class CreateEventDialog {
   private readonly dialogRef = inject<MatDialogRef<CreateEventDialog>>(MatDialogRef);

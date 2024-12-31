@@ -21,16 +21,15 @@ const components = [DayColumnComponent];
 const pipes = [WeekDayPipe, IsCurrentDatePipe, DatePipe, ApplyPipe]
 
 @Component({
-  selector: 'app-weekly-calendar',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.Default,
-  imports: [...components, ...pipes, NgStyle],
-  templateUrl: './weekly-calendar.component.html',
-  styleUrl: './weekly-calendar.component.scss',
-  providers: [ComponentStore],
-  host: {
-    '(mousedown)': 'onMouseDown($event)'
-  }
+    selector: 'app-weekly-calendar',
+    changeDetection: ChangeDetectionStrategy.Default,
+    imports: [...components, ...pipes, NgStyle],
+    templateUrl: './weekly-calendar.component.html',
+    styleUrl: './weekly-calendar.component.scss',
+    providers: [ComponentStore],
+    host: {
+        '(mousedown)': 'onMouseDown($event)'
+    }
 })
 export class WeeklyCalendarComponent implements OnInit, OnDestroy {
   private readonly componentStore = inject<ComponentStore<MousePositionState>>(ComponentStore);

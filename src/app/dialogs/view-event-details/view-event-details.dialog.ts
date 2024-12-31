@@ -26,11 +26,10 @@ import {FormatDatePipe} from "../../pipes/format-date.pipe";
 import {FormatTimePipe} from "../../pipes/format-time.pipe";
 
 @Component({
-  templateUrl: 'view-event-details.dialog.html',
-  styleUrl: 'view-event-details.dialog.scss',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TitlePipe, DatePipe, MinutesToHoursAndMinutesPipe, MatIcon, MatTooltip, ToUtcSameLocalPipe, FormatDatePipe, FormatTimePipe]
+    templateUrl: 'view-event-details.dialog.html',
+    styleUrl: 'view-event-details.dialog.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [TitlePipe, DatePipe, MinutesToHoursAndMinutesPipe, MatIcon, MatTooltip, ToUtcSameLocalPipe, FormatDatePipe, FormatTimePipe]
 })
 export class ViewEventDetailsDialog implements OnInit {
 

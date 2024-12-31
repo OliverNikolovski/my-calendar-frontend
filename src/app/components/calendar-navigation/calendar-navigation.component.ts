@@ -6,16 +6,15 @@ import {MatButton} from "@angular/material/button";
 import {addDays, addMonths, addWeeks, format, isSameMonth, lastDayOfMonth, startOfWeek, subWeeks} from "date-fns";
 
 @Component({
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-calendar-navigation',
-  templateUrl: 'calendar-navigation.component.html',
-  imports: [
-    DatePipe,
-    MatIcon,
-    MatButton,
-  ],
-  styleUrl: 'calendar-navigation.component.scss'
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-calendar-navigation',
+    templateUrl: 'calendar-navigation.component.html',
+    imports: [
+        DatePipe,
+        MatIcon,
+        MatButton,
+    ],
+    styleUrl: 'calendar-navigation.component.scss'
 })
 export class CalendarNavigationComponent {
 

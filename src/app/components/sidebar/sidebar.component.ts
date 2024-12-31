@@ -15,13 +15,12 @@ import {provideNativeDateAdapter} from "@angular/material/core";
 import {MatCard} from "@angular/material/card";
 
 @Component({
-  selector: 'app-sidebar',
-  standalone: true,
-  providers: [provideNativeDateAdapter()],
-  changeDetection: ChangeDetectionStrategy.Default,
-  imports: [MatDatepickerModule, MatCard],
-  templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.scss'
+    selector: 'app-sidebar',
+    providers: [provideNativeDateAdapter()],
+    changeDetection: ChangeDetectionStrategy.Default,
+    imports: [MatDatepickerModule, MatCard],
+    templateUrl: './sidebar.component.html',
+    styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
   selected = model(new Date);

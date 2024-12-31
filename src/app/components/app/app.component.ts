@@ -3,12 +3,11 @@ import { RouterOutlet } from '@angular/router';
 import {CalendarComponent} from "../calendar/calendar.component";
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.Default,
-  imports: [RouterOutlet, CalendarComponent],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    changeDetection: ChangeDetectionStrategy.Default,
+    imports: [RouterOutlet, CalendarComponent],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
 }

@@ -29,26 +29,25 @@ import {MatOptionSelectionChange} from "@angular/material/core";
 import {Router} from "@angular/router";
 
 @Component({
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  selector: 'app-calendar-header',
-  templateUrl: './calendar-header.component.html',
-  imports: [
-    MatIconModule,
-    DatePipe,
-    CalendarNavigationComponent,
-    MatTooltip,
-    FormsModule,
-    MatAutocomplete,
-    MatAutocompleteTrigger,
-    MatFormField,
-    MatInput,
-    MatLabel,
-    MatOption,
-    ReactiveFormsModule,
-    ConfirmDialog
-  ],
-  styleUrl: 'calendar-header.component.scss'
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-calendar-header',
+    templateUrl: './calendar-header.component.html',
+    imports: [
+        MatIconModule,
+        DatePipe,
+        CalendarNavigationComponent,
+        MatTooltip,
+        FormsModule,
+        MatAutocomplete,
+        MatAutocompleteTrigger,
+        MatFormField,
+        MatInput,
+        MatLabel,
+        MatOption,
+        ReactiveFormsModule,
+        ConfirmDialog
+    ],
+    styleUrl: 'calendar-header.component.scss'
 })
 export class CalendarHeaderComponent implements OnInit {
   readonly #userService = inject(UserService);

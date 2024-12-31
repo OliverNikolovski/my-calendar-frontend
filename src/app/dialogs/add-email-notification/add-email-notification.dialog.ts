@@ -6,16 +6,15 @@ import {FormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 
 @Component({
-  standalone: true,
-  templateUrl: 'add-email-notification.dialog.html',
-  styleUrl: 'add-email-notification.dialog.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    MatButton,
-    MatInputModule,
-    MatFormFieldModule,
-    FormsModule
-  ]
+    templateUrl: 'add-email-notification.dialog.html',
+    styleUrl: 'add-email-notification.dialog.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [
+        MatButton,
+        MatInputModule,
+        MatFormFieldModule,
+        FormsModule
+    ]
 })
 export class AddEmailNotificationDialog {
   readonly #matDialogRef = inject(MatDialogRef);

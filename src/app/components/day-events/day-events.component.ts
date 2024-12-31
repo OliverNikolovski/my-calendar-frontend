@@ -7,15 +7,14 @@ import {ViewEventDetailsDialog} from "../../dialogs/view-event-details/view-even
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
-  selector: 'day-events',
-  standalone: true,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  templateUrl: 'day-events.component.html',
-  imports: [
-    CommonModule,
-    InstanceRangeString
-  ],
-  styleUrl: 'day-events.component.scss'
+    selector: 'day-events',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    templateUrl: 'day-events.component.html',
+    imports: [
+        CommonModule,
+        InstanceRangeString
+    ],
+    styleUrl: 'day-events.component.scss'
 })
 export class DayEventsComponent {
   readonly #matDialog = inject(MatDialog);

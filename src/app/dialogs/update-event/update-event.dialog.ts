@@ -10,11 +10,10 @@ import {calculateDurationInMinutes, calculateNewTime, getHoursAndMinutesFromDate
 import { format, parse } from "date-fns";
 
 @Component({
-  standalone: true,
-  templateUrl: 'update-event.dialog.html',
-  styleUrl: 'update-event.dialog.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatRadioModule, MatButtonModule, FormsModule, NgxMatTimepickerModule, MatInput, MatFormField]
+    templateUrl: 'update-event.dialog.html',
+    styleUrl: 'update-event.dialog.scss',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [MatRadioModule, MatButtonModule, FormsModule, NgxMatTimepickerModule, MatInput, MatFormField]
 })
 export class UpdateEventDialog {
   readonly #matDialogRef = inject(MatDialogRef);
