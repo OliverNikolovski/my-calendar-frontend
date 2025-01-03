@@ -23,6 +23,7 @@ import {ActivatedRoute} from "@angular/router";
 import {ToUtcSameLocalPipe} from "../../pipes/to-utc-same-local.pipe";
 import {FormatDatePipe} from "../../pipes/format-date.pipe";
 import {FormatTimePipe} from "../../pipes/format-time.pipe";
+import { tapResponse } from "@ngrx/operators";
 
 @Component({
     templateUrl: 'view-event-details.dialog.html',

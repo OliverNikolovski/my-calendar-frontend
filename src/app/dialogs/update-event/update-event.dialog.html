@@ -1,34 +1,36 @@
-<div class='wrapper'>
+<form [formGroup]='form' class='form'>
   <h1>Update recurring event</h1>
-  <div class='update-data-container'>
-    <div class='start-time'>
-      <mat-form-field class='form-field'>
-        <label>Start time</label>
-        <input [ngxMatTimepicker]='startTime' placeholder='Click to select time' readonly [value]='newStartTime' matInput>
-        <ngx-mat-timepicker #startTime (timeChanged)='onStartTimeChange($event)' [defaultTime]='newStartTime'></ngx-mat-timepicker>
-      </mat-form-field>
-    </div>
-    <div class='end-time'>
-      <mat-form-field class='form-field'>
-        <label>End time</label>
-        <input [ngxMatTimepicker]='endTime' placeholder='Click to select time' readonly [value]='newEndTime' matInput>
-        <ngx-mat-timepicker #endTime (timeChanged)='onEndTimeChange($event)' [defaultTime]='newEndTime'></ngx-mat-timepicker>
-      </mat-form-field>
-    </div>
+  <div class='start-time'>
+    <mat-form-field class='form-field'>
+      <mat-label>Start time</mat-label>
+      <input matInput [matTimepicker]="startTimePicker" formControlName='startTime'>
+      <mat-timepicker-toggle matIconSuffix [for]="startTimePicker"/>
+      <mat-timepicker #startTimePicker/>
+    </mat-form-field>
+  </div>
+  <div class='end-time'>
+    <mat-form-field class='form-field'>
+      <mat-label>End time</mat-label>
+      <input matInput [matTimepicker]="endTimePicker" formControlName='endTime'>
+      <mat-timepicker-toggle matIconSuffix [for]="endTimePicker"/>
+      <mat-timepicker #endTimePicker/>
+    </mat-form-field>
   </div>
   <div class='duration'>
     <mat-form-field class='form-field'>
-      <label>Duration</label>
-      <input matInput type='number' min='15' [value]='newDuration' (input)='onDurationChange($event)'>
+      <mat-label>Duration</mat-label>
+      <input matInput type='number' min='15' formControlName='duration'>
     </mat-form-field>
   </div>
-  <mat-radio-group aria-label="Select a delete option" class='options' [(ngModel)]='selectedActionType'>
+  <mat-radio-group aria-label="Select a delete option" class='options' formControlName='actionType'>
     <mat-radio-button [value]='ActionType.THIS_EVENT'>This event</mat-radio-button>
     <mat-radio-button [value]='ActionType.THIS_AND_ALL_FOLLOWING_EVENTS'>This and following events</mat-radio-button>
     <mat-radio-button [value]='ActionType.ALL_EVENTS'>All events</mat-radio-button>
   </mat-radio-group>
   <div class='actions'>
     <button mat-stroked-button (click)='onCancel()' class='action'>Cancel</button>
-    <button mat-flat-button color='primary' (click)='onConfirm()' class='action' [disabled]='disabled'>OK</button>
+    <button mat-flat-button color='primary' (click)='onConfirm()' class='action'
+            [disabled]='form.invalid || form.pristine'>OK
+    </button>
   </div>
-</div>
+</form>
