@@ -4,7 +4,6 @@ import {ActionType} from "../../configs/deletion-type.enum";
 import {MatButtonModule} from "@angular/material/button";
 import {FormBuilder, FormControl, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
-import {NgxMatTimepickerModule} from "ngx-mat-timepicker";
 import {MatInputModule} from "@angular/material/input";
 import {addMinutes, differenceInMinutes} from "date-fns";
 import {MatTimepickerModule} from "@angular/material/timepicker";
@@ -17,7 +16,7 @@ import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
   styleUrl: 'update-event.dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideNativeDateAdapter()],
-  imports: [MatRadioModule, MatButtonModule, FormsModule, NgxMatTimepickerModule, MatInputModule, MatFormFieldModule, MatTimepickerModule, ReactiveFormsModule]
+  imports: [MatRadioModule, MatButtonModule, FormsModule, MatInputModule, MatFormFieldModule, MatTimepickerModule, ReactiveFormsModule]
 })
 export class UpdateEventDialog implements OnInit {
   readonly #matDialogRef = inject(MatDialogRef);
