@@ -1,4 +1,4 @@
-@import "variables";
+@use "variables";
 
 .container {
   display: flex;
@@ -22,7 +22,7 @@
     &:hover {
       cursor: pointer;
       border-radius: 50%;
-      background-color: $darker-gray-color;
+      background-color: variables.$darker-gray-color;
     }
     &:last-child {
       margin-right: 0.3rem;

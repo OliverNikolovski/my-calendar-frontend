@@ -1,75 +1,44 @@
-import { Component, computed, signal, inject } from '@angular/core';
+import {Component, computed, inject, signal} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators
-} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatDatepickerModule,} from "@angular/material/datepicker";
 import {MatButtonModule} from "@angular/material/button";
 import {MatIconModule} from "@angular/material/icon";
-import {
-  provideNativeDateAdapter
-} from "@angular/material/core";
+import {provideNativeDateAdapter} from "@angular/material/core";
 import {MatSelectChange, MatSelectModule} from "@angular/material/select";
-import {
-  addMinutes,
-  differenceInMinutes,
-  format,
-  set,
-  startOfDay,
-} from "date-fns";
+import {addMinutes, differenceInMinutes, format, set, startOfDay,} from "date-fns";
 import {Observable, of} from "rxjs";
-import {AsyncPipe, DatePipe, NgClass} from "@angular/common";
+import {AsyncPipe, DatePipe} from "@angular/common";
 import {MatCheckboxChange, MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
-import {EventEndType} from "../../configs/event-end-type";
-import {DayByIndexPipe} from "../../pipes/day-by-index.pipe";
-import {GetDayPipe} from "../../pipes/get-day.pipe";
-import {WeekdayDetails} from "../../interfaces/weekday-details";
-import {WeekdayDetailsToStringPipe} from "../../pipes/weekday-details-to-string.pipe";
 import {endDateAfterStartDateValidator} from "./create-event-validators";
 import {CalendarEventCreateRequest} from "../../interfaces/requests/calendar-event-create.request";
 import {
   RepeatingPatternControl
 } from "../../custom-form-controls/repeating-pattern-form-control/repeating-pattern.control";
-import {RepeatingPattern} from "../../interfaces/repeating-pattern";
-
-interface WeekDay {
-  index: number;
-  name: string;
-  label: string;
-  selected: boolean;
-}
 
 @Component({
-    imports: [
-        ReactiveFormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDatepickerModule,
-        MatIconModule,
-        MatButtonModule,
-        MatSelectModule,
-        AsyncPipe,
-        DatePipe,
-        MatCheckboxModule,
-        MatRadioModule,
-        DayByIndexPipe,
-        NgClass,
-        GetDayPipe,
-        WeekdayDetailsToStringPipe,
-        RepeatingPatternControl
-    ],
-    providers: [
-        provideNativeDateAdapter()
-    ],
-    templateUrl: './create-event.dialog.html',
-    styleUrl: './create-event.dialog.scss'
+  imports: [
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatIconModule,
+    MatButtonModule,
+    MatSelectModule,
+    AsyncPipe,
+    DatePipe,
+    MatCheckboxModule,
+    MatRadioModule,
+    RepeatingPatternControl
+  ],
+  providers: [
+    provideNativeDateAdapter()
+  ],
+  templateUrl: './create-event.dialog.html',
+  styleUrl: './create-event.dialog.scss'
 })
 export class CreateEventDialog {
   private readonly dialogRef = inject<MatDialogRef<CreateEventDialog>>(MatDialogRef);
@@ -117,18 +86,6 @@ export class CreateEventDialog {
       startDate: format(this.startDateControl.value, "yyyy-MM-dd'T'HH:mm:ssXXX"),
       duration: this.duration()
     }
-  }
-
-  get timeIntervals(): string[] {
-    const times: string[] = [];
-    for (let minutes = 0; minutes < 1440; minutes += this.data.slotDuration) { // 1440 minutes in a day
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutesInHour = minutes % 60;
-      const hoursStr = hours.toString().padStart(2, '0');
-      const remainingMinsStr = remainingMinutesInHour.toString().padStart(2, '0');
-      times.push(`${hoursStr}:${remainingMinsStr}`);
-    }
-    return times;
   }
 
   private get dates(): Date[] {

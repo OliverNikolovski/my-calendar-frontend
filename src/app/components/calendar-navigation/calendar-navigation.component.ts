@@ -1,20 +1,18 @@
 import {ChangeDetectionStrategy, Component, computed, input, model} from "@angular/core";
 import {CalendarView} from "../../configs/calendar-view";
-import {DatePipe} from "@angular/common";
 import {MatIcon} from "@angular/material/icon";
 import {MatButton} from "@angular/material/button";
 import {addDays, addMonths, addWeeks, format, isSameMonth, lastDayOfMonth, startOfWeek, subWeeks} from "date-fns";
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-calendar-navigation',
-    templateUrl: 'calendar-navigation.component.html',
-    imports: [
-        DatePipe,
-        MatIcon,
-        MatButton,
-    ],
-    styleUrl: 'calendar-navigation.component.scss'
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-calendar-navigation',
+  templateUrl: 'calendar-navigation.component.html',
+  imports: [
+    MatIcon,
+    MatButton,
+  ],
+  styleUrl: 'calendar-navigation.component.scss'
 })
 export class CalendarNavigationComponent {
 
@@ -73,13 +71,13 @@ export class CalendarNavigationComponent {
 
   private calculateNextDateForWeekly(): Date {
     const newDate = addWeeks(this.dateInput(), 1);
-    const mondayDate = startOfWeek(newDate, { weekStartsOn: 1 });
+    const mondayDate = startOfWeek(newDate, {weekStartsOn: 1});
     return mondayDate;
   }
 
   private calculateBeforeDateForWeekly(): Date {
     const newDate = subWeeks(this.dateInput(), 1);
-    const mondayDate = startOfWeek(newDate, { weekStartsOn: 1 });
+    const mondayDate = startOfWeek(newDate, {weekStartsOn: 1});
     return mondayDate;
   }
 

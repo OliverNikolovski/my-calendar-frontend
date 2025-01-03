@@ -1,4 +1,5 @@
-@import 'variables';
+@use "sass:color";
+@use 'variables';
 
 .calendar-grid {
   height: calc(100vh - 11.5rem);
@@ -22,8 +23,8 @@
 .calendar-grid-header {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  margin-left: $calendar-interval-width;
-  border-bottom: $calendar-grid-border-style;
+  margin-left: variables.$calendar-interval-width;
+  border-bottom: variables.$calendar-grid-border-style;
   min-height: 6.5rem;
   margin-right: 0.7rem;
   //padding-bottom: 1rem;
@@ -36,20 +37,20 @@
 
 .whole-day-event {
   height: 100%;
-  border-left: $calendar-grid-border-style;
+  border-left: variables.$calendar-grid-border-style;
 }
 
 .intervals {
-  width: $calendar-interval-width;
+  width: variables.$calendar-interval-width;
 }
 
 .interval {
-  height: $calendar-interval-height;
+  height: variables.$calendar-interval-height;
   text-align: center;
   position: relative;
 
   span {
-    color: darken($darker-gray-color, 20%);
+    color: color.adjust(variables.$darker-gray-color, $lightness: -20%);
     font-size: 0.7rem;
     position: relative;
     top: -0.7rem;
@@ -57,7 +58,7 @@
 
   &::after {
     content: '';
-    border-bottom: 1px solid $gray-color;
+    border-bottom: 1px solid variables.$gray-color;
     width: 10px;
     display: inline-block;
     position: absolute;
@@ -100,23 +101,23 @@
 }
 
 .day-of-month:hover {
-  background-color: $gray-color;
+  background-color: variables.$gray-color;
   cursor: pointer;
 }
 
 .active-day {
   .day-of-month {
     color: #fff;
-    border: 1px solid $active-day-color;
-    background-color: $active-day-color;
+    border: 1px solid variables.$active-day-color;
+    background-color: variables.$active-day-color;
   }
 
   .day-of-month:hover {
-    background-color: $active-day-hover-color;
-    border: 1px solid $active-day-hover-color;
+    background-color: variables.$active-day-hover-color;
+    border: 1px solid variables.$active-day-hover-color;
   }
 
   .day-of-week {
-    color: $active-day-color;
+    color: variables.$active-day-color;
   }
 }

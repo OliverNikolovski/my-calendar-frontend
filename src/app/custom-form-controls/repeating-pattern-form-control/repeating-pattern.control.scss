@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables';
 
 .interval-frequency-container {
   display: flex;
@@ -69,7 +69,7 @@
 
 .weekDay {
   border: none;
-  background-color: $gray-color;
+  background-color: variables.$gray-color;
   border-radius: 50%;
   width: 2rem;
   height: 2rem;
@@ -81,7 +81,7 @@
 }
 
 .active {
-  background-color: $active-day-color;
+  background-color: variables.$active-day-color;
 }
 
 .width-5rem {

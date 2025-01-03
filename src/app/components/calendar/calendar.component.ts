@@ -1,29 +1,27 @@
-import {ChangeDetectionStrategy, Component, DestroyRef, effect, inject, input, Input, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, DestroyRef, inject, Input, OnInit} from '@angular/core';
 import {WeeklyCalendarComponent} from "../weekly-calendar/weekly-calendar.component";
 import {SidebarComponent} from "../sidebar/sidebar.component";
-import {DayColumnComponent} from "../day-column/day-column.component";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarHeaderComponent} from "../calendar-header/calendar-header.component";
 import {CalendarView} from "../../configs/calendar-view";
 import {CalendarStore} from "../../states/calendar.state";
 import {MatButtonModule} from "@angular/material/button";
 import {ActivatedRoute, Router} from "@angular/router";
-import {iif, switchMap} from "rxjs";
+import {switchMap} from "rxjs";
 import {ToastrService} from "ngx-toastr";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Component({
-    selector: 'app-calendar',
-    changeDetection: ChangeDetectionStrategy.Default,
-    imports: [
-        WeeklyCalendarComponent,
-        SidebarComponent,
-        DayColumnComponent,
-        CalendarHeaderComponent,
-        MatButtonModule
-    ],
-    templateUrl: './calendar.component.html',
-    styleUrl: './calendar.component.scss'
+  selector: 'app-calendar',
+  changeDetection: ChangeDetectionStrategy.Default,
+  imports: [
+    WeeklyCalendarComponent,
+    SidebarComponent,
+    CalendarHeaderComponent,
+    MatButtonModule
+  ],
+  templateUrl: './calendar.component.html',
+  styleUrl: './calendar.component.scss'
 })
 export class CalendarComponent implements OnInit {
   readonly #calendarStore = inject(CalendarStore);

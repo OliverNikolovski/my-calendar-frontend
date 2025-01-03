@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables';
 
 .wrapper {
   display: flex;
@@ -8,7 +8,7 @@
 }
 
 .header-right-side {
-  width: $sidebar-width;
+  width: variables.$sidebar-width;
 }
 
 .calendar-nav-container {

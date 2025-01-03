@@ -1,8 +1,8 @@
-@import 'variables';
+@use 'variables';
 
 .event {
   position: absolute;
-  background-color: $calendar-event-color;
+  background-color: variables.$calendar-event-color;
   width: 95%;
   border-radius: 5px;
   cursor: pointer;

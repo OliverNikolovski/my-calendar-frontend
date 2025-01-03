@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from "@angul
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {CalendarEvent} from "../../interfaces/calendar-event";
 import {TitlePipe} from "../../pipes/title.pipe";
-import {DatePipe} from "@angular/common";
 import {MinutesToHoursAndMinutesPipe} from "../../pipes/minutes-to-hours-and-minutes.pipe";
 import {MatIcon} from "@angular/material/icon";
 import {MatTooltip} from "@angular/material/tooltip";
@@ -20,16 +19,15 @@ import {ToastrService} from "ngx-toastr";
 import {ConfirmDialog} from "../confirm/confirm.dialog";
 import {AddEmailNotificationDialog} from "../add-email-notification/add-email-notification.dialog";
 import {ActivatedRoute} from "@angular/router";
-import {ToUtcSameLocalPipe} from "../../pipes/to-utc-same-local.pipe";
 import {FormatDatePipe} from "../../pipes/format-date.pipe";
 import {FormatTimePipe} from "../../pipes/format-time.pipe";
-import { tapResponse } from "@ngrx/operators";
+import {tapResponse} from "@ngrx/operators";
 
 @Component({
     templateUrl: 'view-event-details.dialog.html',
     styleUrl: 'view-event-details.dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TitlePipe, DatePipe, MinutesToHoursAndMinutesPipe, MatIcon, MatTooltip, ToUtcSameLocalPipe, FormatDatePipe, FormatTimePipe]
+  imports: [TitlePipe, MinutesToHoursAndMinutesPipe, MatIcon, MatTooltip, FormatDatePipe, FormatTimePipe]
 })
 export class ViewEventDetailsDialog implements OnInit {
 

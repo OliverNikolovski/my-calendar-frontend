@@ -1,14 +1,5 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  input,
-  OnInit,
-  output, Signal,
-  signal, WritableSignal
-} from "@angular/core";
+import {ChangeDetectionStrategy, Component, inject, input, OnInit, output, Signal, signal} from "@angular/core";
 import {MatIconModule} from "@angular/material/icon";
-import {DatePipe} from "@angular/common";
 import {CalendarView} from "../../configs/calendar-view";
 import {CalendarNavigationComponent} from "../calendar-navigation/calendar-navigation.component";
 import {UserService} from "../../services/user.service";
@@ -29,25 +20,23 @@ import {MatOptionSelectionChange} from "@angular/material/core";
 import {Router} from "@angular/router";
 
 @Component({
-    changeDetection: ChangeDetectionStrategy.OnPush,
-    selector: 'app-calendar-header',
-    templateUrl: './calendar-header.component.html',
-    imports: [
-        MatIconModule,
-        DatePipe,
-        CalendarNavigationComponent,
-        MatTooltip,
-        FormsModule,
-        MatAutocomplete,
-        MatAutocompleteTrigger,
-        MatFormField,
-        MatInput,
-        MatLabel,
-        MatOption,
-        ReactiveFormsModule,
-        ConfirmDialog
-    ],
-    styleUrl: 'calendar-header.component.scss'
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'app-calendar-header',
+  templateUrl: './calendar-header.component.html',
+  imports: [
+    MatIconModule,
+    CalendarNavigationComponent,
+    MatTooltip,
+    FormsModule,
+    MatAutocomplete,
+    MatAutocompleteTrigger,
+    MatFormField,
+    MatInput,
+    MatLabel,
+    MatOption,
+    ReactiveFormsModule
+  ],
+  styleUrl: 'calendar-header.component.scss'
 })
 export class CalendarHeaderComponent implements OnInit {
   readonly #userService = inject(UserService);
@@ -138,7 +127,7 @@ export class CalendarHeaderComponent implements OnInit {
       .subscribe({
         next: message => this.#toastrService.success(message),
         error: err => {
-          console.log('error',err);
+          console.log('error', err);
           this.#toastrService.error(err.message);
         }
       });

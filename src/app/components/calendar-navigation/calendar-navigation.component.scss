@@ -1,4 +1,4 @@
-@import 'variables';
+@use 'variables';
 
 .wrapper {
   display: flex;
@@ -28,7 +28,7 @@ h3 {
   align-items: center;
 
   &:hover {
-    background-color: $gray-color;
+    background-color: variables.$gray-color;
     cursor: pointer;
   }
 }

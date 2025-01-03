@@ -1,53 +1,36 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
-  Component, computed,
-  DoCheck,
-  ElementRef, inject, input,
+  Component,
+  computed,
+  ElementRef,
+  inject,
   Input,
-  NgZone,
-  OnChanges,
   OnDestroy,
   OnInit,
-  Renderer2, signal,
-  SimpleChanges,
+  Renderer2,
   ViewChild
 } from '@angular/core';
-import {WeekDayPipe} from "../../pipes/week-day.pipe";
 import {ComponentStore} from "@ngrx/component-store";
 import {MousePositionState} from "../../states/mouse-position.state";
 import {NgStyle} from "@angular/common";
-import {
-  addMinutes,
-  differenceInMinutes,
-  endOfMonth,
-  format,
-  getDate,
-  getDay,
-  set,
-  startOfDay,
-  startOfMonth
-} from "date-fns";
+import {addMinutes, differenceInMinutes, endOfMonth, format, getDate, getDay, startOfDay, startOfMonth} from "date-fns";
 import {CreateEventDialog} from "../../dialogs/create-event.dialog/create-event.dialog";
 import {MatDialog} from "@angular/material/dialog";
 import {WeekdayDetails} from "../../interfaces/weekday-details";
 import {DayEventsComponent} from "../day-events/day-events.component";
-import {filter, of, pipe, switchMap} from "rxjs";
+import {filter, switchMap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
-import {CalendarEventInstanceInfo} from "../../interfaces/calendar-event-instance-info";
 import {CalendarStore} from "../../states/calendar.state";
-import {rxMethod} from "@ngrx/signals/rxjs-interop";
 
 @Component({
-    selector: 'app-day-column',
-    imports: [
-        WeekDayPipe,
-        NgStyle,
-        DayEventsComponent
-    ],
-    templateUrl: './day-column.component.html',
-    styleUrl: './day-column.component.scss',
-    changeDetection: ChangeDetectionStrategy.Default
+  selector: 'app-day-column',
+  imports: [
+    NgStyle,
+    DayEventsComponent
+  ],
+  templateUrl: './day-column.component.html',
+  styleUrl: './day-column.component.scss',
+  changeDetection: ChangeDetectionStrategy.Default
 })
 export class DayColumnComponent implements OnInit, OnDestroy {
   private readonly renderer = inject(Renderer2);

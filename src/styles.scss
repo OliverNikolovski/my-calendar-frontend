@@ -1,4 +1,4 @@
-@import 'ngx-toastr/toastr';
+@use "sass:color";
 
 *, *::before, *::after {
   box-sizing: border-box;
@@ -10,19 +10,28 @@ body {
   height: 100vh;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
 
 
 .margin-top-1rem {
   margin-top: 1rem;
 }
+
 .font-size-1rem {
   font-size: 1rem;
 }
+
 .margin-bottom-half-rem {
   margin-bottom: 0.5rem;
 }
+
 .error {
   color: red;
 }
@@ -46,5 +55,5 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:active {
-  background: darken(#c0c0c0, 20%);
+  background: color.adjust(#c0c0c0, $lightness: -20%);
 }
