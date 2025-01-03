@@ -17,8 +17,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {MatSelectChange, MatSelectModule} from "@angular/material/select";
 import {addMinutes, differenceInMinutes, format, set, startOfDay,} from "date-fns";
-import {Observable, of} from "rxjs";
-import {AsyncPipe, DatePipe} from "@angular/common";
+import {DatePipe} from "@angular/common";
 import {MatCheckboxChange, MatCheckboxModule} from "@angular/material/checkbox";
 import {MatRadioModule} from "@angular/material/radio";
 import {endDateAfterStartDateValidator} from "./create-event-validators";
@@ -37,7 +36,6 @@ import {AddEmailNotificationComponent} from "../../components/add-email-notifica
     MatIconModule,
     MatButtonModule,
     MatSelectModule,
-    AsyncPipe,
     DatePipe,
     MatCheckboxModule,
     MatRadioModule,
@@ -61,7 +59,17 @@ export class CreateEventDialog {
   private readonly duration = computed(() =>
     differenceInMinutes(this.eventEndTime(), this.eventStartTime()));
   form = this.initForm();
-  dates$: Observable<Date[]> = of(this.dates);
+  dates = computed(() => {
+    const dates: Date[] = [];
+    let date = startOfDay(new Date());
+    let timeIntervalCount = (24 * 60) / this.data.slotDuration;
+    while (timeIntervalCount > 0) {
+      dates.push(date);
+      date = addMinutes(date, this.data.slotDuration);
+      timeIntervalCount--;
+    }
+    return dates;
+  });
 
   protected readonly timeFormat = this.data.timeFormat;
   protected showAddNotification = false;
@@ -99,18 +107,6 @@ export class CreateEventDialog {
       startDate: format(this.startDateControl.value, "yyyy-MM-dd'T'HH:mm:ssXXX"),
       duration: this.duration()
     }
-  }
-
-  private get dates(): Date[] {
-    const dates: Date[] = [];
-    let date = startOfDay(new Date());
-    let timeIntervalCount = (24 * 60) / this.data.slotDuration;
-    while (timeIntervalCount > 0) {
-      dates.push(date);
-      date = addMinutes(date, this.data.slotDuration);
-      timeIntervalCount--;
-    }
-    return dates;
   }
 
   compareByTime(d1: Date, d2: Date): boolean {
