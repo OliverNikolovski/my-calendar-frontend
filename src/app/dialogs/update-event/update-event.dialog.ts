@@ -55,7 +55,7 @@ export class UpdateEventDialog implements OnInit {
   }
 
   onConfirm() {
-    this.#matDialogRef.close(this.form.value);
+    this.#matDialogRef.close(this.form.value as UpdateEventType);
   }
 
   get startTimeControl(): FormControl<Date> {
@@ -70,3 +70,10 @@ export class UpdateEventDialog implements OnInit {
     return this.form.get('duration') as FormControl;
   }
 }
+
+export type UpdateEventType = {
+  startTime: Date;
+  endTime: Date;
+  duration: number;
+  actionType: ActionType;
+};

@@ -1,0 +1,18 @@
+@if (!useShortMessage()) {
+  <p>
+    Send email notification
+    <ng-container *ngTemplateOutlet='minutesTemplate'></ng-container>
+    minutes before the start of the event.
+  </p>
+} @else {
+  <p>
+    Minutes before start of event:
+    <ng-container *ngTemplateOutlet='minutesTemplate'></ng-container>
+  </p>
+}
+
+<ng-template #minutesTemplate>
+  <mat-form-field>
+    <input type='number' matInput [(ngModel)]='minutes' [disabled]='isDisabled'/>
+  </mat-form-field>
+</ng-template>

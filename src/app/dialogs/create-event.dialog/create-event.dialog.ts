@@ -1,6 +1,14 @@
 import {Component, computed, inject, signal} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef,} from "@angular/material/dialog";
-import {AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
 import {MatDatepickerModule,} from "@angular/material/datepicker";
@@ -18,6 +26,7 @@ import {CalendarEventCreateRequest} from "../../interfaces/requests/calendar-eve
 import {
   RepeatingPatternControl
 } from "../../custom-form-controls/repeating-pattern-form-control/repeating-pattern.control";
+import {AddEmailNotificationComponent} from "../../components/add-email-notification/add-email-notification.component";
 
 @Component({
   imports: [
@@ -32,7 +41,9 @@ import {
     DatePipe,
     MatCheckboxModule,
     MatRadioModule,
-    RepeatingPatternControl
+    RepeatingPatternControl,
+    AddEmailNotificationComponent,
+    FormsModule
   ],
   providers: [
     provideNativeDateAdapter()
@@ -53,6 +64,7 @@ export class CreateEventDialog {
   dates$: Observable<Date[]> = of(this.dates);
 
   protected readonly timeFormat = this.data.timeFormat;
+  protected showAddNotification = false;
 
   constructor() {
     const dialogRef = this.dialogRef;
@@ -66,6 +78,7 @@ export class CreateEventDialog {
       description: [''],
       startDate: [this.data.start, [Validators.required]],
       isRepeating: [false, [Validators.required]],
+      minutes: [null]
     }, {
       validators: [endDateAfterStartDateValidator()]
     });
@@ -110,6 +123,10 @@ export class CreateEventDialog {
 
   get startDateControl(): AbstractControl {
     return this.form.get('startDate')!;
+  }
+
+  get minutes(): FormControl<number | null> {
+    return this.form.get('minutes') as FormControl;
   }
 
   get repeatingPattern(): FormGroup | null {

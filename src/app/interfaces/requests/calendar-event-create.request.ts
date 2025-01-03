@@ -7,4 +7,5 @@ export interface CalendarEventCreateRequest {
   repeatingPattern?: RepeatingPattern;
   title?: string;
   description?: string;
+  minutes: number | null;
 }

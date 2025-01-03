@@ -9,7 +9,7 @@ import {DeleteEventDialog} from "../delete-event/delete-event.dialog";
 import {filter, map, pipe, switchMap} from "rxjs";
 import {CalendarEventService} from "../../services/calendar-event.service";
 import {CalendarStore} from "../../states/calendar.state";
-import {UpdateEventDialog} from "../update-event/update-event.dialog";
+import {UpdateEventDialog, UpdateEventType} from "../update-event/update-event.dialog";
 import {CalendarEventUpdateRequest} from "../../interfaces/requests/calendar-event-update.request";
 import {isNotNullOrUndefined} from "../../util/common-utils";
 import {rxMethod} from "@ngrx/signals/rxjs-interop";
@@ -22,6 +22,7 @@ import {ActivatedRoute} from "@angular/router";
 import {FormatDatePipe} from "../../pipes/format-date.pipe";
 import {FormatTimePipe} from "../../pipes/format-time.pipe";
 import {tapResponse} from "@ngrx/operators";
+import {ActionType} from "../../configs/deletion-type.enum";
 
 @Component({
     templateUrl: 'view-event-details.dialog.html',
@@ -90,7 +91,7 @@ export class ViewEventDetailsDialog implements OnInit {
   onEdit() {
     this.#matDialog.open(UpdateEventDialog, {
       width: '30rem',
-      height: '35rem',
+      height: '30rem',
       data: {
         instanceDate: this.data.instanceDate,
         duration: this.data.event.duration
@@ -98,7 +99,8 @@ export class ViewEventDetailsDialog implements OnInit {
     }).afterClosed()
       .pipe(
         filter(isNotNullOrUndefined),
-        map(value => this.mapToUpdateRequest(value)),
+        map((value: UpdateEventType) =>
+          this.mapToUpdateRequest(value.startTime, value.duration, value.actionType)),
         switchMap(request => this.#calendarEventService.updateEvent(request))
       )
       .subscribe({
@@ -136,13 +138,13 @@ export class ViewEventDetailsDialog implements OnInit {
       });
   }
 
-  mapToUpdateRequest(partial: Partial<CalendarEventUpdateRequest>): CalendarEventUpdateRequest {
+  mapToUpdateRequest(startTime: Date, duration: number, actionType: ActionType): CalendarEventUpdateRequest {
     return {
       eventId: this.data.event.id,
       fromDate: this.data.instanceDate,
-      actionType: partial.actionType!,
-      newStartDate: partial.newStartDate!,
-      newDuration: partial.newDuration!,
+      actionType: actionType,
+      startTime: startTime.toISOString(),
+      duration: duration!,
       order: this.data.order
     }
   }

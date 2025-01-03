@@ -1,10 +1,8 @@
 import {inject, Injectable} from "@angular/core";
-import {Observable, of} from "rxjs";
+import {Observable} from "rxjs";
 import {CalendarEventCreateRequest} from "../interfaces/requests/calendar-event-create.request";
 import {HttpClient, HttpParams} from "@angular/common/http";
-import {CalendarEvent} from "../interfaces/calendar-event";
 import {CalendarEventInstancesContainer} from "../interfaces/calendar-event-instances-container";
-import {CalendarEventInstanceInfo} from "../interfaces/calendar-event-instance-info";
 import {ActionType} from "../configs/deletion-type.enum";
 import {CalendarEventUpdateRequest} from "../interfaces/requests/calendar-event-update.request";
 import {ShareEventSequenceRequest} from "../interfaces/requests/share-event-sequence.request";
@@ -19,6 +17,7 @@ export class CalendarEventService {
   readonly #http = inject(HttpClient);
 
   createEvent(request: CalendarEventCreateRequest): Observable<number> {
+    console.log(request)
     return this.#http.post<number>(`${this.#baseUrl}`, request);
   }
 

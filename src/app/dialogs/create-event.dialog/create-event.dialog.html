@@ -58,8 +58,14 @@
   @if (isRepeatingControl.value) {
     <repeating-pattern [startDate]='data.start'
                        [endDate]='data.end'
-                       [weekdayDetails]='data.weekdayDetails'
-                       #repeatingPattern></repeating-pattern>
+                       [weekdayDetails]='data.weekdayDetails'></repeating-pattern>
+  }
+
+  <mat-checkbox color='primary'
+                [(ngModel)]='showAddNotification'
+                [ngModelOptions]='{ standalone: true }'>Add email reminder</mat-checkbox>
+  @if (showAddNotification) {
+    <add-email-notification [useShortMessage]='true' formControlName='minutes'></add-email-notification>
   }
 
   <button mat-button mat-flat-button color='primary' type='submit' [disabled]='form.invalid'

@@ -1,15 +1,6 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  DoCheck,
-  inject,
-  Input,
-  OnDestroy,
-  OnInit, output,
-  Renderer2, Signal
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, Input, OnDestroy, OnInit, output, Renderer2} from '@angular/core';
 import {DayColumnComponent} from "../day-column/day-column.component";
-import {addDays, format, isFirstDayOfMonth, startOfWeek} from "date-fns";
+import {addDays, isFirstDayOfMonth, startOfWeek} from "date-fns";
 import {WeekDayPipe} from "../../pipes/week-day.pipe";
 import {IsCurrentDatePipe} from "../../pipes/is-current-date.pipe";
 import {DatePipe, NgStyle} from "@angular/common";
