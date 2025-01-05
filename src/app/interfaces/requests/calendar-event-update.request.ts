@@ -7,4 +7,5 @@ export interface CalendarEventUpdateRequest {
   startTime: string;
   duration: number;
   order: number;
+  minutes: number | null;
 }

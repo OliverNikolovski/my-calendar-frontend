@@ -10,13 +10,15 @@ import {MatTimepickerModule} from "@angular/material/timepicker";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
+import {AddEmailNotificationComponent} from "../../components/add-email-notification/add-email-notification.component";
+import {MatCheckbox} from "@angular/material/checkbox";
 
 @Component({
   templateUrl: 'update-event.dialog.html',
   styleUrl: 'update-event.dialog.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [provideNativeDateAdapter()],
-  imports: [MatRadioModule, MatButtonModule, FormsModule, MatInputModule, MatFormFieldModule, MatTimepickerModule, ReactiveFormsModule]
+  imports: [MatRadioModule, MatButtonModule, FormsModule, MatInputModule, MatFormFieldModule, MatTimepickerModule, ReactiveFormsModule, AddEmailNotificationComponent, MatCheckbox]
 })
 export class UpdateEventDialog implements OnInit {
   readonly #matDialogRef = inject(MatDialogRef);
@@ -26,16 +28,20 @@ export class UpdateEventDialog implements OnInit {
   protected readonly data: {
     instanceDate: string;
     duration: number;
+    minutes?: number | null;
   } = inject(MAT_DIALOG_DATA);
   protected readonly ActionType = ActionType;
-  form = this.#fb.nonNullable.group({
+  protected form = this.#fb.nonNullable.group({
     startTime: [new Date(this.data.instanceDate), Validators.required],
     endTime: [addMinutes(this.data.instanceDate, this.data.duration), Validators.required],
     duration: [this.data.duration, [Validators.required, Validators.min(15)]],
-    actionType: [ActionType.THIS_EVENT, Validators.required]
+    actionType: [ActionType.THIS_EVENT, Validators.required],
+    minutes: [this.data.minutes]
   });
+  protected showAddNotification = this.data.minutes != null;
 
   ngOnInit() {
+    console.log('data', this.data);
     this.startTimeControl.valueChanges
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(newStartTime =>
@@ -55,7 +61,9 @@ export class UpdateEventDialog implements OnInit {
   }
 
   onConfirm() {
-    this.#matDialogRef.close(this.form.value as UpdateEventType);
+    const value =
+      this.showAddNotification ? this.form.value : { ...this.form.value, minutes: null };
+    this.#matDialogRef.close(value as UpdateEventType);
   }
 
   get startTimeControl(): FormControl<Date> {
@@ -76,4 +84,5 @@ export type UpdateEventType = {
   endTime: Date;
   duration: number;
   actionType: ActionType;
+  minutes: number | null;
 };

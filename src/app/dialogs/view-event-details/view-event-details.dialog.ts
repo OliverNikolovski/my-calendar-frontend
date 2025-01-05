@@ -94,13 +94,14 @@ export class ViewEventDetailsDialog implements OnInit {
       height: '30rem',
       data: {
         instanceDate: this.data.instanceDate,
-        duration: this.data.event.duration
+        duration: this.data.event.duration,
+        minutes: this.data.event.minutes
       }
     }).afterClosed()
       .pipe(
         filter(isNotNullOrUndefined),
         map((value: UpdateEventType) =>
-          this.mapToUpdateRequest(value.startTime, value.duration, value.actionType)),
+          this.mapToUpdateRequest(value.startTime, value.duration, value.actionType, value.minutes)),
         switchMap(request => this.#calendarEventService.updateEvent(request))
       )
       .subscribe({
@@ -138,14 +139,15 @@ export class ViewEventDetailsDialog implements OnInit {
       });
   }
 
-  mapToUpdateRequest(startTime: Date, duration: number, actionType: ActionType): CalendarEventUpdateRequest {
+  mapToUpdateRequest(startTime: Date, duration: number, actionType: ActionType, minutes: number | null): CalendarEventUpdateRequest {
     return {
       eventId: this.data.event.id,
       fromDate: this.data.instanceDate,
       actionType: actionType,
       startTime: startTime.toISOString(),
       duration: duration!,
-      order: this.data.order
+      order: this.data.order,
+      minutes: minutes
     }
   }
 
@@ -186,6 +188,9 @@ export class ViewEventDetailsDialog implements OnInit {
 
   onAddEmailNotification() {
     this.#matDialog.open(AddEmailNotificationDialog, {
+      data: {
+        minutes: this.data.event.minutes
+      },
       width: '45rem',
       height: '10.5rem',
     }).afterClosed()

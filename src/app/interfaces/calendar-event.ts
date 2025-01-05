@@ -10,4 +10,5 @@ export interface CalendarEvent {
   description: string | null;
   sequenceId: string;
   isPublic: boolean;
+  minutes: number | null;
 }

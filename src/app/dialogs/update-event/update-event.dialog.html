@@ -1,5 +1,6 @@
 <form [formGroup]='form' class='form'>
   <h1>Update recurring event</h1>
+
   <div class='start-time'>
     <mat-form-field class='form-field'>
       <mat-label>Start time</mat-label>
@@ -8,6 +9,7 @@
       <mat-timepicker #startTimePicker/>
     </mat-form-field>
   </div>
+
   <div class='end-time'>
     <mat-form-field class='form-field'>
       <mat-label>End time</mat-label>
@@ -16,17 +18,28 @@
       <mat-timepicker #endTimePicker/>
     </mat-form-field>
   </div>
+
   <div class='duration'>
     <mat-form-field class='form-field'>
       <mat-label>Duration</mat-label>
       <input matInput type='number' min='15' formControlName='duration'>
     </mat-form-field>
   </div>
+
   <mat-radio-group aria-label="Select a delete option" class='options' formControlName='actionType'>
     <mat-radio-button [value]='ActionType.THIS_EVENT'>This event</mat-radio-button>
     <mat-radio-button [value]='ActionType.THIS_AND_ALL_FOLLOWING_EVENTS'>This and following events</mat-radio-button>
     <mat-radio-button [value]='ActionType.ALL_EVENTS'>All events</mat-radio-button>
   </mat-radio-group>
+
+  <mat-checkbox color='primary'
+                [(ngModel)]='showAddNotification'
+                [ngModelOptions]='{ standalone: true }'>Email reminder
+  </mat-checkbox>
+  @if (showAddNotification) {
+    <add-email-notification [useShortMessage]='true' formControlName='minutes'></add-email-notification>
+  }
+
   <div class='actions'>
     <button mat-stroked-button (click)='onCancel()' class='action'>Cancel</button>
     <button mat-flat-button color='primary' (click)='onConfirm()' class='action'
