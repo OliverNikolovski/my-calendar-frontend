@@ -7,20 +7,22 @@ import {MatButtonModule} from "@angular/material/button";
 import {AuthenticationService} from "../../services/authentication.service";
 import {Router, RouterLink} from "@angular/router";
 import {MatIconModule} from "@angular/material/icon";
+import {CalendarAnimationComponent} from "../calendar-animation/calendar-animation.component";
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: 'login.component.html',
-    imports: [
-        MatCardModule,
-        MatFormFieldModule,
-        ReactiveFormsModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        FormsModule,
-        RouterLink
-    ],
+  imports: [
+    MatCardModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    FormsModule,
+    RouterLink,
+    CalendarAnimationComponent
+  ],
     styleUrl: 'login.component.scss'
 })
 export class LoginComponent {
@@ -34,11 +36,6 @@ export class LoginComponent {
     password: new FormControl(''),
   });
   errorMessage = signal('');
-
-  monthNames = ['JAN','FEB','MAR','APR','MAY','JUN','JUL','AUG','SEP','OCT','NOV','DEC'];
-  today = new Date();
-  month = this.monthNames[this.today.getMonth()];
-  day = this.today.getDate();
 
   onSubmit() {
     this.#authService.login({

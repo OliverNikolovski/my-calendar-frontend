@@ -1,0 +1,48 @@
+<div class='wrapper'>
+  <app-calendar-animation></app-calendar-animation>
+
+  <form [formGroup]='form' (ngSubmit)='onSubmit()'>
+    <mat-form-field class='first-name'>
+      <mat-label>First name</mat-label>
+      <input type='text' formControlName='firstName' matInput/>
+    </mat-form-field>
+    <mat-form-field class='last-name'>
+      <mat-label>Last name</mat-label>
+      <input type='text' formControlName='lastName' matInput/>
+    </mat-form-field>
+    <mat-form-field class='email'>
+      <mat-label>Email</mat-label>
+      <input type='email' formControlName='username' matInput/>
+    </mat-form-field>
+    <mat-form-field class='password'>
+      <mat-label>Password</mat-label>
+      <input [type]='passwordType()' formControlName='password' matInput/>
+      <button
+        type="button"
+        mat-icon-button
+        matSuffix
+        (click)="onShowPasswordClicked()"
+        [attr.aria-label]="'Show/Hide password'"
+        [attr.aria-pressed]="showPasswordPressed()">
+        <mat-icon>{{passwordVisibilityIcon()}}</mat-icon>
+      </button>
+    </mat-form-field>
+    <mat-form-field class='repeat-password'>
+      <mat-label>Repeat password</mat-label>
+      <input [type]='repeatedPasswordType()' formControlName='repeatedPassword' matInput/>
+      <button
+        type="button"
+        mat-icon-button
+        matSuffix
+        (click)="onShowRepeatedPasswordClicked()"
+        [attr.aria-label]="'Show/Hide password'"
+        [attr.aria-pressed]='showRepeatedPasswordPressed()'>
+        <mat-icon>{{repeatedPasswordVisibilityIcon()}}</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button type="submit" mat-button mat-flat-button color='primary' [disabled]="form.invalid || form.pending" class="confirm-btn">Create account</button>
+
+    <p class='login-text'>Already have an account? <a routerLink='/login'>Log in</a></p>
+  </form>
+</div>

@@ -1,10 +1,5 @@
 <div class="wrapper">
-  <div class="container">
-    <div class="calendar">
-      <div id="js-month" class="calendar__month">{{month}}</div>
-      <div id="js-day" class="calendar__day">{{day}}</div>
-    </div>
-  </div>
+  <app-calendar-animation></app-calendar-animation>
 
   <div class="login-content">
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()"  class="login-container">
@@ -45,7 +40,7 @@
         <p class="forgot-password">Forgot password</p>
       </div>
 
-      <button type="submit" mat-button mat-flat-button color='primary' [disabled]="loginForm.invalid" class="confirm-btn">Confirm</button>
+      <button type="submit" mat-button mat-flat-button color='primary' [disabled]="loginForm.invalid" class="confirm-btn">Login</button>
     </form>
 
     <div class="create-acc">Don't have an account? Create one <a routerLink="/register" class="link-highlight">here</a>.</div>

@@ -8,8 +8,12 @@ import {CalendarComponent} from "./components/calendar/calendar.component";
 export const routes: Routes = [
   {
     path: 'login',
-    component: LoginComponent,
+    loadComponent: () => import('./components/login/login.component').then(m => m.LoginComponent),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./components/register/register.component').then(m => m.RegisterComponent)
   },
   {
     path: '',
@@ -18,13 +22,13 @@ export const routes: Routes = [
   },
   {
     path: 'calendar',
-    component: HomeComponent,
+    loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent),
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
   },
   {
     path: 'calendar/:userId',
-    component: HomeComponent,
+    loadComponent: () => import('./components/home/home.component').then(m => m.HomeComponent),
     canActivate: [AuthGuard],
     canActivateChild: [AuthGuard],
   },
