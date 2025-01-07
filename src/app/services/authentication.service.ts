@@ -3,6 +3,7 @@ import {AuthenticationRequest} from "../interfaces/requests/authentication.reque
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {AuthenticationResponse} from "../interfaces/responses/authentication.response";
+import {RegistrationRequest} from "../interfaces/requests/registration.request";
 
 @Injectable({
   providedIn: 'root'
@@ -19,6 +20,10 @@ export class AuthenticationService {
 
   refreshToken(): Observable<AuthenticationResponse> {
     return this.#http.post<AuthenticationResponse>(`${this.#url}/refresh-token`, {});
+  }
+
+  register(request: RegistrationRequest): Observable<AuthenticationResponse> {
+    return this.#http.post<AuthenticationResponse>(`${this.#url}/register`, request);
   }
 
 }

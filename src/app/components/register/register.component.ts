@@ -15,7 +15,10 @@ import {MatInput} from "@angular/material/input";
 import {MatIcon} from "@angular/material/icon";
 import {MatButton, MatIconButton} from "@angular/material/button";
 import {UserPublicService} from "../../services/user-public.service";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
+import {AuthenticationService} from "../../services/authentication.service";
+import {RegistrationRequest} from "../../interfaces/requests/registration.request";
+import {ToastrService} from "ngx-toastr";
 
 const imports: any[] = [
   ReactiveFormsModule,
@@ -49,6 +52,9 @@ const passwordsMatchValidator = (control: AbstractControl): ValidationErrors | n
 export class RegisterComponent {
   readonly #fb = inject(FormBuilder);
   readonly #userPublicService = inject(UserPublicService);
+  readonly #authService = inject(AuthenticationService);
+  readonly #router = inject(Router);
+  readonly #toastService = inject(ToastrService);
 
   uniqueUsernameValidator = (control: AbstractControl): Observable<ValidationErrors | null> => {
     return control.valueChanges
@@ -65,7 +71,7 @@ export class RegisterComponent {
       )
   }
 
-  protected readonly form = this.#fb.group({
+  protected readonly form = this.#fb.nonNullable.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
     username: ['', [Validators.required, Validators.email], [this.uniqueUsernameValidator]],
@@ -95,6 +101,14 @@ export class RegisterComponent {
   }
 
   onSubmit() {
-    console.log('submitted')
+    this.#authService.register(this.form.value as RegistrationRequest)
+      .subscribe({
+        next: response => {
+          localStorage.setItem('accessToken', response.accessToken);
+          localStorage.setItem('refreshToken', response.refreshToken);
+          this.#router.navigate(['/']);
+        },
+        error: err => this.#toastService.error(err.message)
+      });
   }
 }
