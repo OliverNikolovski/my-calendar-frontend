@@ -1,7 +1,15 @@
 import {ChangeDetectionStrategy, Component, inject, signal} from "@angular/core";
 import {MatCardModule} from "@angular/material/card";
 import {MatFormFieldModule} from "@angular/material/form-field";
-import {AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from "@angular/forms";
 import {MatInputModule} from "@angular/material/input";
 import {MatButtonModule} from "@angular/material/button";
 import {AuthenticationService} from "../../services/authentication.service";
@@ -27,13 +35,15 @@ import {CalendarAnimationComponent} from "../calendar-animation/calendar-animati
 })
 export class LoginComponent {
 
-  hide = signal(true);
   readonly #authService = inject(AuthenticationService);
   readonly #router = inject(Router);
+  readonly #fb = inject(FormBuilder);
 
-  loginForm: FormGroup = new FormGroup({
-    email: new FormControl(''),
-    password: new FormControl(''),
+  hide = signal(true);
+
+  loginForm: FormGroup = this.#fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required]
   });
   errorMessage = signal('');
 
