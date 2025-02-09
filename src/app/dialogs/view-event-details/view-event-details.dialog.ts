@@ -91,7 +91,7 @@ export class ViewEventDetailsDialog implements OnInit {
   onEdit() {
     this.#matDialog.open(UpdateEventDialog, {
       width: '30rem',
-      height: '30rem',
+      height: '37rem',
       data: {
         instanceDate: this.data.instanceDate,
         duration: this.data.event.duration,
