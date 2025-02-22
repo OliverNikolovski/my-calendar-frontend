@@ -24,17 +24,17 @@ export const CalendarStore = signalStore(
     },
     mergeCurrentContainerWith(newContainer: CalendarEventInstancesContainer): void {
       patchState(store, (state) => {
-        const container = state.calendarEventInstancesContainer;
-        if (!container) {
+        if (!state.calendarEventInstancesContainer) {
           return {
             calendarEventInstancesContainer: {...newContainer}
           }
         }
+        const container = { ...state.calendarEventInstancesContainer };
         const oldKeys = Object.keys(container);
         const newKeys = Object.keys(newContainer);
         const intersection = oldKeys.filter(key => newKeys.includes(key));
         const difference = newKeys.filter(key => !oldKeys.includes(key));
-        intersection.forEach(key => container[key] = [...container[key], ...newContainer[key]]);
+        intersection.forEach(key => container[key] = [...container[key], ...newContainer[key]]); // tuka frla error
         difference.forEach(key => container[key] = newContainer[key]);
         return {
           calendarEventInstancesContainer: {...container}

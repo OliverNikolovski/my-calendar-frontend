@@ -17,7 +17,6 @@ export class CalendarEventService {
   readonly #http = inject(HttpClient);
 
   createEvent(request: CalendarEventCreateRequest): Observable<number> {
-    console.log(request)
     return this.#http.post<number>(`${this.#baseUrl}`, request);
   }
 

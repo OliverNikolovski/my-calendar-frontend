@@ -41,7 +41,6 @@ export class UpdateEventDialog implements OnInit {
   protected showAddNotification = this.data.minutes != null;
 
   ngOnInit() {
-    console.log('data', this.data);
     this.startTimeControl.valueChanges
       .pipe(takeUntilDestroyed(this.#destroyRef))
       .subscribe(newStartTime =>

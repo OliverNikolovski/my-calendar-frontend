@@ -48,7 +48,7 @@ export class ViewEventDetailsDialog implements OnInit {
   loadEventContainer = rxMethod<boolean>(
     pipe(
       filter(Boolean),
-      switchMap(sequenceId => this.#calendarEventService.getInstancesForSequence(this.data.event.sequenceId)),
+      switchMap(() => this.#calendarEventService.getInstancesForSequence(this.data.event.sequenceId)),
       tapResponse({
         next: (container: any) => this.#calendarStore.updateContainer(this.data.event.sequenceId, container),
         error: console.log

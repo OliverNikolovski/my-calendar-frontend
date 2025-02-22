@@ -1,35 +1,24 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  EventEmitter,
-  model,
-  output,
-  Output,
-  ViewChild
-} from '@angular/core';
-import {MatFormFieldModule} from "@angular/material/form-field";
-import {MatInputModule} from "@angular/material/input";
-import {MatCalendar, MatDatepicker, MatDatepickerModule} from "@angular/material/datepicker";
+import {ChangeDetectionStrategy, Component, effect, model, output, viewChild} from '@angular/core';
+import {MatCalendar, MatDatepickerModule} from "@angular/material/datepicker";
 import {provideNativeDateAdapter} from "@angular/material/core";
 import {MatCard} from "@angular/material/card";
 
 @Component({
-    selector: 'app-sidebar',
-    providers: [provideNativeDateAdapter()],
-    changeDetection: ChangeDetectionStrategy.Default,
-    imports: [MatDatepickerModule, MatCard],
-    templateUrl: './sidebar.component.html',
-    styleUrl: './sidebar.component.scss'
+  selector: 'app-sidebar',
+  providers: [provideNativeDateAdapter()],
+  changeDetection: ChangeDetectionStrategy.Default,
+  imports: [MatDatepickerModule, MatCard],
+  templateUrl: './sidebar.component.html',
+  styleUrl: './sidebar.component.scss'
 })
 export class SidebarComponent {
   selected = model(new Date);
   dateChange = output<Date>();
-  @ViewChild('calendar') calendar!: MatCalendar<Date>;
+  calendar = viewChild<MatCalendar<Date>>('calendar');
 
   constructor() {
     effect(() => {
-      this.calendar.activeDate = this.selected();
+      this.calendar() && (this.calendar()!.activeDate = this.selected());
     });
   }
 
