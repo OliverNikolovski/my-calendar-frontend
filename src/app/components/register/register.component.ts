@@ -106,6 +106,7 @@ export class RegisterComponent {
         next: response => {
           localStorage.setItem('accessToken', response.accessToken);
           localStorage.setItem('refreshToken', response.refreshToken);
+          localStorage.setItem('username', response.username);
           this.#router.navigate(['/']);
         },
         error: err => this.#toastService.error(err.message)
