@@ -70,6 +70,7 @@ export class CalendarComponent implements OnInit {
   logout() {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('username');
     this.#router.navigate(['/login']);
   }
 }

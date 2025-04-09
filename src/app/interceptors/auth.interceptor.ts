@@ -21,9 +21,10 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
         if (error.status === 401 && error.error === 'Token expired') {
           localStorage.setItem('accessToken', localStorage.getItem('refreshToken')!);
           return authService.refreshToken().pipe(
-            tap(({accessToken, refreshToken}) => {
+            tap(({accessToken, refreshToken, username}) => {
               localStorage.setItem('accessToken', accessToken);
               localStorage.setItem('refreshToken', refreshToken);
+              localStorage.setItem('username', username)
             }),
             switchMap(({accessToken, refreshToken}) => {
               const clonedReq = req.clone({
@@ -36,6 +37,7 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
             catchError(err => {
               localStorage.removeItem('accessToken');
               localStorage.removeItem('refreshToken');
+              localStorage.removeItem('username');
               router.navigate(['/login']);
               return throwError(() => new Error(`Error handling expired access token: ${error}`));
             })

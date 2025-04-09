@@ -55,6 +55,7 @@ export class LoginComponent {
       next: response => {
         localStorage.setItem('accessToken', response.accessToken);
         localStorage.setItem('refreshToken', response.refreshToken);
+        localStorage.setItem('username', response.username)
         this.errorMessage.set('');
         this.#router.navigate(['/']);
       },

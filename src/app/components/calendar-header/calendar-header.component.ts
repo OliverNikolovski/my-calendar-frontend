@@ -132,4 +132,8 @@ export class CalendarHeaderComponent implements OnInit {
         }
       });
   }
+
+  get username(): string | null {
+    return localStorage.getItem('username');
+  }
 }
