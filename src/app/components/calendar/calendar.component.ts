@@ -53,7 +53,8 @@ export class CalendarComponent implements OnInit {
         next: eventContainer => this.#calendarStore.initEventContainer(eventContainer),
         error: err => {
           console.log(err);
-          this.#toastrService.error("There was a problem while fetching the events.");
+          // TODO: check why fails when user is idle
+          //this.#toastrService.error("There was a problem while fetching the events.");
         }
       });
   }

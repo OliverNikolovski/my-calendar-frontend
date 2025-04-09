@@ -30,7 +30,11 @@
   <p><b>Start date:</b> {{ data.event.startDate | formatDate }}</p>
   <p><b>Start time:</b> {{ data.instanceDate | formatTime }}</p>
   @if (data.event.isRepeating) {
-    <p><b>End date:</b> {{ data.event.repeatingPattern!.endDate! | formatDate }}</p>
+    @if (data.event.repeatingPattern!.endDate) {
+      <p><b>End date:</b> {{ data.event.repeatingPattern!.endDate! | formatDate }}</p>
+    } @else if (data.event.repeatingPattern!.occurrenceCount) {
+      <p><b>Ends after:</b> {{ data.event.repeatingPattern!.occurrenceCount }}</p>
+    }
   }
   <p><b>Duration:</b> {{ data.event.duration | minutesToHoursAndMinutes }}</p>
   @if (data.event.isRepeating) {
